@@ -1,0 +1,55 @@
+.navbar-brand {
+    margin-top: -10px !important;
+}
+
+.vcenter {
+    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh; /* These two lines are counted as one :-)       */
+  
+    display: flex;
+    align-items: center;
+}
+
+.login_form {
+    margin-top: -126px;
+    padding-top: 130px;
+}
+
+.navbar {
+    margin-bottom: 0px !important;
+}
+
+.alert {
+    margin: 5px 0px !important;
+}
+
+.uppercase {
+    text-transform: uppercase
+}
+
+.tabulacao1 {
+    margin-left: 2em;
+}
+
+.tabulacao2 {
+    margin-left: 4em;
+}
+
+.tabulacao3 {
+    margin-left: 6em;
+}
+
+.report-table {
+    margin-bottom: 0px !important;
+}
+
+@media print {
+tr.vendorListHeading {
+    background-color: #1a4567 !important;
+    -webkit-print-color-adjust: exact; 
+}}
+
+@media print {
+    .vendorListHeading th {
+    color: white !important;
+}}
