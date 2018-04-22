@@ -520,7 +520,7 @@ class AbastecimentoController extends Controller
                     $departamento->abastecimentos = $abastecimentos;
                 }
             }
-            return View('relatorios.abastecimentos.relatorio_abastecimentos_analitico')->withClientes($clientes)->withTitulo('Relatório de Abastecimentos - Analítico')->withParametros($parametros)->withParametro(Parametro::first());
+             return View('relatorios.abastecimentos.relatorio_abastecimentos_analitico')->withClientes($clientes)->withTitulo('Relatório de Abastecimentos - Analítico')->withParametros($parametros)->withParametro(Parametro::first());
         }
     }
 
