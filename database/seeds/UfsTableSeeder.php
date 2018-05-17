@@ -12,6 +12,11 @@ class UfsTableSeeder extends Seeder
      */
     public function run()
     {
+        $this->command->info('Limpando tabela ufs');
+        $this->truncateUfsTable();
+
+        $this->command->info('Criando UFs');
+
         DB::table('ufs')->insert([
             ['uf' => 'AC'],
             ['uf' => 'AL'],
@@ -41,5 +46,12 @@ class UfsTableSeeder extends Seeder
             ['uf' => 'SP'],
             ['uf' => 'TO']
         ]);
+    }
+
+    public function truncateUfsTable() {
+        Schema::disableForeignKeyConstraints();
+        DB::table('ufs')->truncate();
+        \App\Uf::truncate();
+        Schema::enableForeignKeyConstraints();
     }
 }

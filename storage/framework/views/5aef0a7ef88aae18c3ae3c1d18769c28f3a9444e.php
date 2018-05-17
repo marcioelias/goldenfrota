@@ -114,12 +114,13 @@
             </ul>
 
             <!-- Right Side Of Navbar -->
+            <?php if(auth()->guard()->check()): ?>
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
-                <?php if(auth()->guard()->guest()): ?>
-                    <li><a href="<?php echo e(route('login')); ?>"><span class="glyphicon glyphicon-user"></span> Entrar</a></li>
+                
                     
-                <?php else: ?>
+                    
+                
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <span class="glyphicon glyphicon-user"></span>  <?php echo e(Auth::user()->name); ?> <span class="caret"></span>
@@ -140,8 +141,8 @@
                             </li>
                         </ul>
                     </li>
-                <?php endif; ?>
             </ul>
+            <?php endif; ?>
         </div>
     </div>
 </nav>

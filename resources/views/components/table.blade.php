@@ -75,7 +75,9 @@
                 @if ($colorLineCondition) 
                 <tr {{ ($row->$lineConditionField == $lineConditionValue) ? 'class='.$lineCondicionClass : '' }}>
                 @else
+                @if(isset($row->ativo)) 
                 <tr {{(!$row->ativo) ? 'class=danger' : ''}}>
+                @endif
                 @endif
                     @foreach($captions as $field => $caption)
                         @if(is_array($caption))

@@ -77,7 +77,9 @@
                 <?php if($colorLineCondition): ?> 
                 <tr <?php echo e(($row->$lineConditionField == $lineConditionValue) ? 'class='.$lineCondicionClass : ''); ?>>
                 <?php else: ?>
+                <?php if(isset($row->ativo)): ?> 
                 <tr <?php echo e((!$row->ativo) ? 'class=danger' : ''); ?>>
+                <?php endif; ?>
                 <?php endif; ?>
                     <?php $__currentLoopData = $captions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $field => $caption): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <?php if(is_array($caption)): ?>

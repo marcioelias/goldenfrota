@@ -117,12 +117,13 @@
             </ul>
 
             <!-- Right Side Of Navbar -->
+            @auth
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
-                @guest
-                    <li><a href="{{ route('login') }}"><span class="glyphicon glyphicon-user"></span> Entrar</a></li>
+                
+                    {{--  <li><a href="{{ route('login') }}"><span class="glyphicon glyphicon-user"></span> Entrar</a></li>  --}}
                     {{--  <li><a href="{{ route('register') }}">Register</a></li>  --}}
-                @else
+                
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <span class="glyphicon glyphicon-user"></span>  {{ Auth::user()->name }} <span class="caret"></span>
@@ -142,8 +143,8 @@
                             </li>
                         </ul>
                     </li>
-                @endguest
             </ul>
+            @endauth
         </div>
     </div>
 </nav>

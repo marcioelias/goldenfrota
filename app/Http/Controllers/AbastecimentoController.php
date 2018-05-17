@@ -9,11 +9,12 @@ use App\Atendente;
 use App\Parametro;
 use App\Departamento;
 use App\Abastecimento;
-use Barryvdh\DomPDF\Facade as PDF;
 use App\TanqueMovimentacao;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -50,49 +51,54 @@ class AbastecimentoController extends Controller
      */
     public function index(Request $request) 
     {
-        $data_inicial = $request->data_inicial;
-        $data_final = $request->data_final;
+        if (Auth::user()->canListarAbastecimentos()) {
+            $data_inicial = $request->data_inicial;
+            $data_final = $request->data_final;
 
-        if($data_inicial && $data_final) {
-            $whereData = 'abastecimentos.data_hora_abastecimento between \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_inicial.'00:00:00'), 'Y-m-d H:i:s').'\' and \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_final.'23:59:59'), 'Y-m-d H:i:s').'\'';
-        } elseif ($data_inicial) {
-            $whereData = 'abastecimentos.data_hora_abastecimento >= \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_inicial.'00:00:00'), 'Y-m-d H:i:s').'\'';
-        } elseif ($data_final) {
-            $whereData = 'abastecimentos.data_hora_abastecimento <= \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_final.'23:59:59'), 'Y-m-d H:i:s').'\'';
-        } else {
-            $whereData = '1 = 1'; //busca qualquer coisa
-        }
-        
-        if (isset($request->searchField)) {
-            $abastecimentos = DB::table('abastecimentos')
-                                ->select('abastecimentos.*', 'bicos.num_bico', 'veiculos.placa', 'atendentes.nome_atendente')
-                                ->leftJoin('bicos', 'bicos.id', 'abastecimentos.bico_id')
-                                ->leftJoin('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
-                                ->leftJoin('atendentes', 'atendentes.id', 'abastecimentos.atendente_id')
-                                ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
-                                ->whereRaw('((abastecimentos.abastecimento_local = '.(isset($request->abast_local) ? $request->abast_local : -1).') or ('.(isset($request->abast_local) ? $request->abast_local : -1).' = -1))')
-                                ->whereRaw($whereData)
-                                ->where('veiculos.placa', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
-                                ->orderBy('abastecimentos.id', 'desc')
-                                ->paginate();
-        } else {
-            $abastecimentos = DB::table('abastecimentos')
-                                ->select('abastecimentos.*', 'bicos.num_bico', 'veiculos.placa', 'atendentes.nome_atendente')
-                                ->leftJoin('bicos', 'bicos.id', 'abastecimentos.bico_id')
-                                ->leftJoin('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
-                                ->leftJoin('atendentes', 'atendentes.id', 'abastecimentos.atendente_id')
-                                ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
-                                ->whereRaw('((abastecimentos.abastecimento_local = '.(isset($request->abast_local) ? $request->abast_local : -1).') or ('.(isset($request->abast_local) ? $request->abast_local : -1).' = -1))')
-                                ->whereRaw($whereData)
-                                ->orderBy('abastecimentos.id', 'desc')
-                                ->paginate();
-        }
+            if($data_inicial && $data_final) {
+                $whereData = 'abastecimentos.data_hora_abastecimento between \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_inicial.'00:00:00'), 'Y-m-d H:i:s').'\' and \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_final.'23:59:59'), 'Y-m-d H:i:s').'\'';
+            } elseif ($data_inicial) {
+                $whereData = 'abastecimentos.data_hora_abastecimento >= \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_inicial.'00:00:00'), 'Y-m-d H:i:s').'\'';
+            } elseif ($data_final) {
+                $whereData = 'abastecimentos.data_hora_abastecimento <= \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_final.'23:59:59'), 'Y-m-d H:i:s').'\'';
+            } else {
+                $whereData = '1 = 1'; //busca qualquer coisa
+            }
+            
+            if (isset($request->searchField)) {
+                $abastecimentos = DB::table('abastecimentos')
+                                    ->select('abastecimentos.*', 'bicos.num_bico', 'veiculos.placa', 'atendentes.nome_atendente')
+                                    ->leftJoin('bicos', 'bicos.id', 'abastecimentos.bico_id')
+                                    ->leftJoin('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
+                                    ->leftJoin('atendentes', 'atendentes.id', 'abastecimentos.atendente_id')
+                                    ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
+                                    ->whereRaw('((abastecimentos.abastecimento_local = '.(isset($request->abast_local) ? $request->abast_local : -1).') or ('.(isset($request->abast_local) ? $request->abast_local : -1).' = -1))')
+                                    ->whereRaw($whereData)
+                                    ->where('veiculos.placa', 'like', '%'.$request->searchField.'%')
+                                    ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
+                                    ->orderBy('abastecimentos.id', 'desc')
+                                    ->paginate();
+            } else {
+                $abastecimentos = DB::table('abastecimentos')
+                                    ->select('abastecimentos.*', 'bicos.num_bico', 'veiculos.placa', 'atendentes.nome_atendente')
+                                    ->leftJoin('bicos', 'bicos.id', 'abastecimentos.bico_id')
+                                    ->leftJoin('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
+                                    ->leftJoin('atendentes', 'atendentes.id', 'abastecimentos.atendente_id')
+                                    ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
+                                    ->whereRaw('((abastecimentos.abastecimento_local = '.(isset($request->abast_local) ? $request->abast_local : -1).') or ('.(isset($request->abast_local) ? $request->abast_local : -1).' = -1))')
+                                    ->whereRaw($whereData)
+                                    ->orderBy('abastecimentos.id', 'desc')
+                                    ->paginate();
+            }
 
-        return View('abastecimento.index', [
-            'abastecimentos' => $abastecimentos->appends(Input::except('page')),
-            'fields' => $this->fields
-        ]);
+            return View('abastecimento.index', [
+                'abastecimentos' => $abastecimentos->appends(Input::except('page')),
+                'fields' => $this->fields
+            ]);
+        } else {
+            Session::flash('error', env('ACCESS_DENIED_MSG'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -102,8 +108,13 @@ class AbastecimentoController extends Controller
      */
     public function create()
     {
-        $clientes = Cliente::where('ativo', true)->get();
-        return View('abastecimento.create')->withClientes($clientes); 
+        if (Auth::user()->canCadastrarAbastecimentos()) {
+            $clientes = Cliente::where('ativo', true)->get();
+            return View('abastecimento.create')->withClientes($clientes); 
+        } else {
+            Session::flash('error', env('ACCESS_DENIED_MSG'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -163,40 +174,45 @@ class AbastecimentoController extends Controller
      */
     public function edit(Abastecimento $abastecimento)
     {
-        $abastecimento = Abastecimento::find($abastecimento->id);
+        if (Auth::user()->canEditarAbastecimentos()) {
+            $abastecimento = Abastecimento::find($abastecimento->id);
 
-        $cliente = Cliente::select('clientes.id')
-                            ->leftJoin('veiculos', 'veiculos.cliente_id', 'clientes.id')
-                            ->where('veiculos.id', $abastecimento->veiculo_id)
-                            ->get()->first();
+            $cliente = Cliente::select('clientes.id')
+                                ->leftJoin('veiculos', 'veiculos.cliente_id', 'clientes.id')
+                                ->where('veiculos.id', $abastecimento->veiculo_id)
+                                ->get()->first();
 
-        $clientes = Cliente::select('clientes.*')
-                            ->leftJoin('veiculos', 'veiculos.cliente_id', 'clientes.id')
-                            ->where('clientes.ativo', true)
-                            ->orWhere('veiculos.id', $abastecimento->veiculo_id)
-                            ->distinct()
-                            ->get();
+            $clientes = Cliente::select('clientes.*')
+                                ->leftJoin('veiculos', 'veiculos.cliente_id', 'clientes.id')
+                                ->where('clientes.ativo', true)
+                                ->orWhere('veiculos.id', $abastecimento->veiculo_id)
+                                ->distinct()
+                                ->get();
 
-        $bicos = Bico::where('ativo', true)
-                            ->orWhere('id', $abastecimento->bico_id)
-                            ->get();
+            $bicos = Bico::where('ativo', true)
+                                ->orWhere('id', $abastecimento->bico_id)
+                                ->get();
 
-        $veiculos = Veiculo::where('ativo', true)
-                            ->orWhere('id', $abastecimento->veiculo_id)
-                            ->get();
+            $veiculos = Veiculo::where('ativo', true)
+                                ->orWhere('id', $abastecimento->veiculo_id)
+                                ->get();
 
-        $atendentes = Atendente::where('ativo', true)
-                            ->orWhere('id', $abastecimento->atendente_id)
-                            ->get();
+            $atendentes = Atendente::where('ativo', true)
+                                ->orWhere('id', $abastecimento->atendente_id)
+                                ->get();
 
-        return View('abastecimento.edit', [
-            'abastecimento' => $abastecimento,
-            'clientes' => $clientes,
-            'cliente' => $cliente,
-            'bicos' => $bicos,
-            'veiculos' => $veiculos,
-            'atendentes' => $atendentes
-        ]);
+            return View('abastecimento.edit', [
+                'abastecimento' => $abastecimento,
+                'clientes' => $clientes,
+                'cliente' => $cliente,
+                'bicos' => $bicos,
+                'veiculos' => $veiculos,
+                'atendentes' => $atendentes
+            ]);
+        } else {
+            Session::flash('error', env('ACCESS_DENIED_MSG'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -269,27 +285,32 @@ class AbastecimentoController extends Controller
      */
     public function destroy(Abastecimento $abastecimento)
     {
-        try {
-            $abastecimento = Abastecimento::find($abastecimento->id);
-            if ($abastecimento->abastecimento_local) {
-                //abastecimento local, tem movimentação de estoque. Remove a movimentação e a abastecida
-                $movimentacao = TanqueMovimentacao::find($abastecimento->tanque_movimentacao_id);
-                if ($movimentacao->delete()) {
-                    Session::flash('success', 'Abastecimento '.$abastecimento->id.' removido com sucesso.');
-                    
-                    return redirect()->action('AbastecimentoController@index');
+        if (Auth::user()->canExcluirAbastecimentos()) {
+            try {
+                $abastecimento = Abastecimento::find($abastecimento->id);
+                if ($abastecimento->abastecimento_local) {
+                    //abastecimento local, tem movimentação de estoque. Remove a movimentação e a abastecida
+                    $movimentacao = TanqueMovimentacao::find($abastecimento->tanque_movimentacao_id);
+                    if ($movimentacao->delete()) {
+                        Session::flash('success', 'Abastecimento '.$abastecimento->id.' removido com sucesso.');
+                        
+                        return redirect()->action('AbastecimentoController@index');
+                    }
+                } else {
+                    //abastecimento externo, não tem movimentação de estoque, por isso remove somente a abastecida
+                    if ($abastecimento->delete()) {
+                        Session::flash('success', 'Abastecimento '.$abastecimento->id.' removido com sucesso.');
+                        
+                        return redirect()->action('AbastecimentoController@index');
+                    }
                 }
-            } else {
-                //abastecimento externo, não tem movimentação de estoque, por isso remove somente a abastecida
-                if ($abastecimento->delete()) {
-                    Session::flash('success', 'Abastecimento '.$abastecimento->id.' removido com sucesso.');
-                    
-                    return redirect()->action('AbastecimentoController@index');
-                }
+            } catch (\Exception $e) {
+                Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
+                return redirect()->action('AbastecimentoController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('AbastecimentoController@index');
+        } else {
+            Session::flash('error', env('ACCESS_DENIED_MSG'));
+            return redirect()->back();
         }
     }
 

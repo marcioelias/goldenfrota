@@ -1,4 +1,5 @@
 <?php $__env->startSection('content'); ?>
+<div class="clearfix">
 <div class="jumbotron vcenter login_form">
     <div class="container">
         <div class="row">
@@ -66,6 +67,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <?php $__env->stopSection(); ?>
 
