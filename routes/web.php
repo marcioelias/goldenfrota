@@ -21,12 +21,16 @@ Route::middleware(['auth:web'])->group(function() {
 
     Route::get('/', 'HomeController@index')->name('home');
 
+    Route::get('/perfil', 'UserController@profile')->name('user.profile');
+    Route::get('/alterar_senha', 'UserController@showChangePassword')->name('user.form.change.password');
+    Route::put('/alterar_senha/{user}', 'UserController@changePassword')->name('user.change.password');
+
     Route::resource('/combustivel', 'CombustivelController');
     Route::resource('/tipo_bomba', 'TipoBombaController');
     Route::resource('/modelo_bomba', 'ModeloBombaController');
     Route::resource('/tanque', 'TanqueController');
     Route::resource('/bomba', 'BombaController');
-    Route::resource('/user', 'UserController');
+    Route::resource('/user', 'UserController')->except('show');
     Route::resource('/grupo_produto', 'GrupoProdutoController');
     Route::resource('/unidade', 'UnidadeController');
     Route::resource('/produto', 'ProdutoController');

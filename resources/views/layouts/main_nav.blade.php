@@ -128,8 +128,9 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <span class="glyphicon glyphicon-user"></span>  {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
-
                         <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{route('user.profile')}}"><i class="glyphicon glyphicon-cog"></i> Minha Conta</a></li>
+                            <li class="divider"></li>
                             <li>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();

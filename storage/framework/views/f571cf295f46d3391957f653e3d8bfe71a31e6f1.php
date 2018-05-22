@@ -3,7 +3,7 @@
 <?php $__env->startSection('content'); ?>
     <div class="panel panel-default">
         <?php $__env->startComponent('components.form', [
-            'title' => 'Change Role User', 
+            'title' => 'Alterar Perfil x Usuário', 
             'routeUrl' => route('role_user.update', $roleUser->id), 
             'method' => 'PUT',
             'formButtons' => [
@@ -17,7 +17,7 @@
                         [
                             'type' => 'select',
                             'field' => 'role_id',
-                            'label' => 'Role',
+                            'label' => 'Perfil',
                             'required' => true,
                             'items' => $roles,
                             'inputSize' => 6,
@@ -29,7 +29,7 @@
                         [
                             'type' => 'select',
                             'field' => 'user_id',
-                            'label' => 'User',
+                            'label' => 'Usuário',
                             'required' => true,
                             'items' => $users,
                             'inputSize' => 6,
