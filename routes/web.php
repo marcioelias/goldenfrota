@@ -40,7 +40,7 @@ Route::middleware(['auth:web'])->group(function() {
     Route::resource('/cliente', 'ClienteController');
     Route::resource('/veiculo', 'VeiculoController');
     Route::resource('/grupo_veiculo', 'GrupoVeiculoController');
-    Route::resource('/atendente', 'AtendenteController');
+    Route::resource('/atendente', 'AtendenteController')->except('show');
     Route::resource('/abastecimento', 'AbastecimentoController')->except('show');
     Route::resource('/tanque_movimentacao', 'TanqueMovimentacaoController');
     Route::resource('/departamento', 'DepartamentoController');
