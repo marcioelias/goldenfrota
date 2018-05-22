@@ -11,10 +11,6 @@
 |
 */
 
-/* Route::get('/', function () {
-    return view('/');
-}); */
-
 Auth::routes();
 
 Route::middleware(['auth:web'])->group(function() {
@@ -25,29 +21,29 @@ Route::middleware(['auth:web'])->group(function() {
     Route::get('/alterar_senha', 'UserController@showChangePassword')->name('user.form.change.password');
     Route::put('/alterar_senha/{user}', 'UserController@changePassword')->name('user.change.password');
 
-    Route::resource('/combustivel', 'CombustivelController');
-    Route::resource('/tipo_bomba', 'TipoBombaController');
-    Route::resource('/modelo_bomba', 'ModeloBombaController');
-    Route::resource('/tanque', 'TanqueController');
-    Route::resource('/bomba', 'BombaController');
+    Route::resource('/combustivel', 'CombustivelController')->except('show');
+    Route::resource('/tipo_bomba', 'TipoBombaController')->except('show');
+    Route::resource('/modelo_bomba', 'ModeloBombaController')->except('show');
+    Route::resource('/tanque', 'TanqueController')->except('show');
+    Route::resource('/bomba', 'BombaController')->except('show');
     Route::resource('/user', 'UserController')->except('show');
     Route::resource('/grupo_produto', 'GrupoProdutoController');
-    Route::resource('/unidade', 'UnidadeController');
-    Route::resource('/produto', 'ProdutoController');
-    Route::resource('/bico', 'BicoController');
-    Route::resource('/marca_veiculo', 'MarcaVeiculoController');
-    Route::resource('/modelo_veiculo', 'ModeloVeiculoController');
-    Route::resource('/cliente', 'ClienteController');
-    Route::resource('/veiculo', 'VeiculoController');
-    Route::resource('/grupo_veiculo', 'GrupoVeiculoController');
+    Route::resource('/unidade', 'UnidadeController')->except('show');
+    Route::resource('/produto', 'ProdutoController')->except('show');
+    Route::resource('/bico', 'BicoController')->except('show');
+    Route::resource('/marca_veiculo', 'MarcaVeiculoController')->except('show');
+    Route::resource('/modelo_veiculo', 'ModeloVeiculoController')->except('show');
+    Route::resource('/cliente', 'ClienteController')->except('show');
+    Route::resource('/veiculo', 'VeiculoController')->except('show');
+    Route::resource('/grupo_veiculo', 'GrupoVeiculoController')->except('show');
     Route::resource('/atendente', 'AtendenteController')->except('show');
     Route::resource('/abastecimento', 'AbastecimentoController')->except('show');
-    Route::resource('/tanque_movimentacao', 'TanqueMovimentacaoController');
-    Route::resource('/departamento', 'DepartamentoController');
-    Route::resource('/parametro', 'ParametroController');
+    Route::resource('/tanque_movimentacao', 'TanqueMovimentacaoController')->except('show');
+    Route::resource('/departamento', 'DepartamentoController')->except('show');
+    Route::resource('/parametro', 'ParametroController')->except('show');
 
-    Route::resource('/role_user', 'RoleUsersController');
-    Route::resource('/role', 'RolesController');
+    Route::resource('/role_user', 'RoleUsersController')->except('show');
+    Route::resource('/role', 'RolesController')->except('show');
 
     /* Route::get('/parametro', 'ParametroController@index')->name('parametro.index');
     Route::post('/parametro', 'ParametroController@store')->name('parametro.store');

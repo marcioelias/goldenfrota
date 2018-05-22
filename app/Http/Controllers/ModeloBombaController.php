@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ModeloBomba;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ModeloBombaController extends Controller
@@ -16,31 +17,26 @@ class ModeloBombaController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-    
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        if (isset($request->searchField)) {
-            $modelo_bombas = ModeloBomba::where('modelo_bomba', 'like', '%'.$request->searchField.'%')->paginate();
+        if (Auth::user()->canListarModeloBombas()) {
+            if (isset($request->searchField)) {
+                $modelo_bombas = ModeloBomba::where('modelo_bomba', 'like', '%'.$request->searchField.'%')->paginate();
+            } else {
+                $modelo_bombas = ModeloBomba::paginate();
+            }
+            return View('modelo_bomba.index', [
+                'modelo_bombas' => $modelo_bombas,
+                'fields' => $this->fields
+            ]);
         } else {
-            $modelo_bombas = ModeloBomba::paginate();
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
-        return View('modelo_bomba.index', [
-            'modelo_bombas' => $modelo_bombas,
-            'fields' => $this->fields
-        ]);
     }
 
     /**
@@ -50,7 +46,12 @@ class ModeloBombaController extends Controller
      */
     public function create()
     {
-        return View('modelo_bomba.create');
+        if (Auth::user()->canCadastrarModeloBombas()) {
+            return View('modelo_bomba.create');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -61,33 +62,31 @@ class ModeloBombaController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'modelo_bomba' => 'required|string|unique:modelo_bombas',
-            'num_bicos' => 'required|numeric'
-        ]);
+        if (Auth::user()->canCadastrarModeloBombas()) {
+            $this->validate($request, [
+                'modelo_bomba' => 'required|string|unique:modelo_bombas',
+                'num_bicos' => 'required|numeric'
+            ]);
 
-        try {
-            $modelo_bomba = new ModeloBomba($request->all());
-            if ($modelo_bomba->save()) {
-                Session::flash('success', 'Modelo de Bomba '.$modelo_bomba->modelo_bomba.' cadastrado com sucesso.');
-
-                return redirect()->action('ModeloBombaController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return redirect()->back()->withModelo_bomba($request->all());
-        } 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ModeloBomba  $modeloBomba
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ModeloBomba $modeloBomba)
-    {
-        //
+            try {
+                $modelo_bomba = new ModeloBomba($request->all());
+                if ($modelo_bomba->save()) {
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('modelo_bomba'),
+                        'name' => $modelo_bomba->modelo_bomba
+                    ]));
+                    return redirect()->action('ModeloBombaController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            } 
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -98,10 +97,14 @@ class ModeloBombaController extends Controller
      */
     public function edit(ModeloBomba $modeloBomba)
     {
-        $modelo_bomba = ModeloBomba::find($modeloBomba->id);
-        return View('modelo_bomba.edit', [
-            'modelo_bomba' => $modelo_bomba
-        ]);
+        if (Auth::user()->canAlterarModeloBombas()) {
+            return View('modelo_bomba.edit', [
+                'modelo_bomba' => $modelo_bomba
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -113,25 +116,33 @@ class ModeloBombaController extends Controller
      */
     public function update(Request $request, ModeloBomba $modeloBomba)
     {
-        $this->validate($request, [
-            'modelo_bomba' => 'required|string|unique:modelo_bombas,id,'.$modeloBomba->id,
-            'num_bicos' => 'required|numeric'
-        ]);
+        if (Auth::user()->canAlterarModeloBombas()) {
+            $this->validate($request, [
+                'modelo_bomba' => 'required|string|unique:modelo_bombas,id,'.$modeloBomba->id,
+                'num_bicos' => 'required|numeric'
+            ]);
 
-        try {
-            $modelo_bomba = ModeloBomba::find($modeloBomba->id);
-            $modelo_bomba->modelo_bomba = $request->modelo_bomba;
-            $modelo_bomba->num_bicos = $request->num_bicos;
-            $modelo_bomba->ativo = $request->ativo;
+            try {
+                $modelo_bomba->modelo_bomba = $request->modelo_bomba;
+                $modelo_bomba->num_bicos = $request->num_bicos;
+                $modelo_bomba->ativo = $request->ativo;
 
-            if ($modelo_bomba->save()) {
-                Session::flash('success', 'Modelo de Bomba '.$modelo_bomba->modelo_bomba.' alterado com sucesso.');
-
-                return redirect()->action('ModeloBombaController@index');
+                if ($modelo_bomba->save()) {
+                    Session::flash('success', __('messages.update_success', [
+                        'model' => __('modelo_bomba'),
+                        'name' => $modelo_bomba->modelo_bomba
+                    ]));
+                    return redirect()->action('ModeloBombaController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao alterar o registro. '.$e->getMessage());
-            return redirect()->back()->withModelo_bomba($request->all());
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
@@ -143,16 +154,31 @@ class ModeloBombaController extends Controller
      */
     public function destroy(ModeloBomba $modeloBomba)
     {
-        try {
-            $modelo_bomba = ModeloBomba::find($modeloBomba->id);
-            if ($modelo_bomba->delete()) {
-                Session::flash('success', 'Modelo de Bomba '.$modelo_bomba->modelo_bomba.' removido com sucesso.');
-                
+        if (Auth::user()->canAlterarModeloBombas()) {
+            try {
+                if ($modelo_bomba->delete()) {
+                    Session::flash('success', __('messages.delete_success', [
+                        'model' => __('modelo_bomba'),
+                        'name' => $modelo_bomba->modelo_bomba
+                    ]));
+                    return redirect()->action('ModeloBombaController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('ModeloBombaController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('ModeloBombaController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 }

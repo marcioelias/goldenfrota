@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\GrupoProduto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class GrupoProdutoController extends Controller
@@ -16,33 +17,28 @@ class GrupoProdutoController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        if (isset($request->searchField)) {
-            $grupoProdutos = GrupoProduto::where('grupo_produto', 'like', '%'.$request->searchField.'%')
-                                            ->paginate();
-        } else {
-            $grupoProdutos = GrupoProduto::paginate();
-        }
+        if (Auth::user()->canListarGrupoProduto()) {
+            if (isset($request->searchField)) {
+                $grupoProdutos = GrupoProduto::where('grupo_produto', 'like', '%'.$request->searchField.'%')
+                                                ->paginate();
+            } else {
+                $grupoProdutos = GrupoProduto::paginate();
+            }
 
-        return View('grupo_produto.index', [
-            'grupoProdutos' => $grupoProdutos,
-            'fields' => $this->fields
-        ]);
+            return View('grupo_produto.index', [
+                'grupoProdutos' => $grupoProdutos,
+                'fields' => $this->fields
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        } 
     }
 
     /**
@@ -52,7 +48,12 @@ class GrupoProdutoController extends Controller
      */
     public function create()
     {
-        return View('grupo_produto.create');
+        if (Auth::user()->canCadastrarGrupoProduto()) {
+            return View('grupo_produto.create');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -63,34 +64,31 @@ class GrupoProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'grupo_produto' => 'required|string|min:3|max:80|unique:grupo_produtos'
-        ]);
-
-        try {
-            $grupoProduto = new GrupoProduto($request->all());
-
-            if ($grupoProduto->save()) {
-                Session::flash('success', 'Grupo de Produto '.$grupoProduto->grupo_produto.' cadastrado com sucesso.');
-                return redirect()->action('GrupoProdutoController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('grupo_produto.create', [
-                'grupoProduto' => new GrupoProduto($request->all())
+        if (Auth::user()->canCadastrarGrupoProduto()) {
+            $this->validate($request, [
+                'grupo_produto' => 'required|string|min:3|max:80|unique:grupo_produtos'
             ]);
-        }
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\GrupoProduto  $grupoProduto
-     * @return \Illuminate\Http\Response
-     */
-    public function show(GrupoProduto $grupoProduto)
-    {
-        //
+            try {
+                $grupoProduto = new GrupoProduto($request->all());
+
+                if ($grupoProduto->save()) {
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('grupo_produto'),
+                        'name' => $grupoProduto->grupo_produto
+                    ]));
+                    return redirect()->action('GrupoProdutoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -101,11 +99,14 @@ class GrupoProdutoController extends Controller
      */
     public function edit(GrupoProduto $grupoProduto)
     {
-        $grupoProduto = GrupoProduto::find($grupoProduto->id);
-
-        return View('grupo_produto.edit', [
-            'grupoProduto' => $grupoProduto
-        ]);
+        if (Auth::user()->canAlterarGrupoProduto()) {
+            return View('grupo_produto.edit', [
+                'grupoProduto' => $grupoProduto
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        } 
     }
 
     /**
@@ -117,25 +118,32 @@ class GrupoProdutoController extends Controller
      */
     public function update(Request $request, GrupoProduto $grupoProduto)
     {
-        $this->validate($request, [
-            'grupo_produto' => 'required|string|min:3|max:80|unique:grupo_produtos,id,'.$grupoProduto->id
-        ]);
-
-        try {
-            $grupoProduto = GrupoProduto::find($grupoProduto->id);
-            $grupoProduto->grupo_produto = $request->grupo_produto;
-            $grupoProduto->ativo = $request->ativo;
-
-            if ($grupoProduto->save()) {
-                Session::flash('success', 'Grupo de Produto '.$grupoProduto->grupo_produto.' alterado com sucesso.');
-                return redirect()->action('GrupoProdutoController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('grupo_produto.edit', [
-                'grupoProduto' => new GrupoProduto($request->all())
+        if (Auth::user()->canAlterarGrupoProduto()) {
+            $this->validate($request, [
+                'grupo_produto' => 'required|string|min:3|max:80|unique:grupo_produtos,id,'.$grupoProduto->id
             ]);
-        }
+
+            try {
+                $grupoProduto->grupo_produto = $request->grupo_produto;
+                $grupoProduto->ativo = $request->ativo;
+
+                if ($grupoProduto->save()) {
+                    Session::flash('success', __('messages.update_success', [
+                        'model' => __('grupo_produto'),
+                        'name' => $grupoProduto->grupo_produto
+                    ]));
+                    return redirect()->action('GrupoProdutoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        } 
     }
 
     /**
@@ -146,16 +154,31 @@ class GrupoProdutoController extends Controller
      */
     public function destroy(GrupoProduto $grupoProduto)
     {
-        try {
-            $grupoProduto = GrupoProduto::find($grupoProduto->id);
-            if ($grupoProduto->delete()) {
-                Session::flash('success', 'Grupo de Produto '.$grupoProduto->grupo_produto.' removido com sucesso.');
-                
+        if (Auth::user()->canAlterarGrupoProduto()) {
+            try {
+                if ($grupoProduto->delete()) {
+                    Session::flash('success', __('messages.delete_success', [
+                        'model' => __('grupo_produto'),
+                        'name' => $grupoProduto->grupo_produto
+                    ]));
+                    return redirect()->action('GrupoProdutoController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('GrupoProdutoController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('GrupoProdutoController@index');
-        }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        } 
     }
 }
