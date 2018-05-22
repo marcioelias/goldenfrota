@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\Permission;
-use App\RolePermission;
 use App\PermissionRole;
+use App\RolePermission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 
@@ -27,20 +28,25 @@ class RolesController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->SearchField) {
-            $roles = DB::table('roles')
-                        ->where('name', 'like', '%'.$request->searchField.'%')
-                        ->orWhere('display_name', 'like', '%'.$request->searchField.'%')
-                        ->orWhere('description', 'like', '%'.$request->searchField.'%')
-                        ->paginate();
-        } else {
-            $roles = Role::paginate();
-        }
+        if (Auth::user()->canListarRoles()) {
+            if ($request->SearchField) {
+                $roles = DB::table('roles')
+                            ->where('name', 'like', '%'.$request->searchField.'%')
+                            ->orWhere('display_name', 'like', '%'.$request->searchField.'%')
+                            ->orWhere('description', 'like', '%'.$request->searchField.'%')
+                            ->paginate();
+            } else {
+                $roles = Role::paginate();
+            }
 
-        return View('role.index', [
-            'roles' => $roles,
-            'fields' => $this->fields
-        ]);
+            return View('role.index', [
+                'roles' => $roles,
+                'fields' => $this->fields
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -50,11 +56,16 @@ class RolesController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::orderBy('name', 'asc')->get();
+        if (Auth::user()->canCadastrarRoles()) {
+            $permissions = Permission::orderBy('name', 'asc')->get();
 
-        return View('role.create', [
-            'permissions' => $permissions
-        ]);
+            return View('role.create', [
+                'permissions' => $permissions
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -65,48 +76,47 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     { 
-        $this->validate($request, [
-            'name' => 'required|string|min:5|max:100|unique:roles',
-            'display_name' => 'required|string|max:100|unique:roles'
-        ]);
-
-        try {
-            DB::beginTransaction();
-
-            $role_id = DB::table('roles')->insertGetId([
-                'name' => $request->name,
-                'display_name' => $request->display_name,
-                'description' => $request->description
+        if (Auth::user()->canCadastrarRoles()) {
+            $this->validate($request, [
+                'name' => 'required|string|min:5|max:100|unique:roles',
+                'display_name' => 'required|string|max:100|unique:roles'
             ]);
 
-            foreach ($request->permissions as $permission) {
-                DB::table('permission_role')->insert([
-                    'permission_id' => $permission,
-                    'role_id' => $role_id
+            try {
+                DB::beginTransaction();
+
+                $role_id = DB::table('roles')->insertGetId([
+                    'name' => $request->name,
+                    'display_name' => $request->display_name,
+                    'description' => $request->description
                 ]);
+
+                foreach ($request->permissions as $permission) {
+                    DB::table('permission_role')->insert([
+                        'permission_id' => $permission,
+                        'role_id' => $role_id
+                    ]);
+                }
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
             }
-        } catch (\Exception $e) {
-            DB::rollback();
 
-            Session::flash('error', 'Oops, have one error...'.$e->getMessage());
-            return redirect()->back(Input::all());
+            DB::commit();
+            
+            Session::flash('success', __('messages.create_success', [
+                'model' => __('role'),
+                'name' => $request->display_name 
+            ]));
+            return redirect()->action('RolesController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
-
-        DB::commit();
-        
-        Session::flash('success', 'Role '.$request->display_name.' successfull created');
-        return redirect()->action('RolesController@index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Role $role)
-    {
-        //
     }
 
     /**
@@ -117,18 +127,22 @@ class RolesController extends Controller
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::orderBy('id', 'asc')->get();
-        $role = Role::find($role->id);
+        if (Auth::user()->canAlterarRoles()) {
+            $permissions = Permission::orderBy('id', 'asc')->get();        
 
-        foreach ($role->permissions as $permission) {
-            $assigned_permissions[] = $permission->id;
+            foreach ($role->permissions as $permission) {
+                $assigned_permissions[] = $permission->id;
+            }
+
+            return View('role.edit', [
+                'role' => $role,
+                'permissions' => $permissions,
+                'assigned_permissions' => $assigned_permissions
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
-
-        return View('role.edit', [
-            'role' => $role,
-            'permissions' => $permissions,
-            'assigned_permissions' => $assigned_permissions
-        ]);
     }
 
     /**
@@ -140,31 +154,41 @@ class RolesController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $this->validate($request, [
-            'name' => 'required|string|min:5|max:100|unique:roles,id,'.$role->id,
-            'display_name' => 'required|string|max:100|unique:roles,id,'.$role->id
-        ]);
+        if (Auth::user()->canAlterarRoles()) {
+            $this->validate($request, [
+                'name' => 'required|string|min:5|max:100|unique:roles,id,'.$role->id,
+                'display_name' => 'required|string|max:100|unique:roles,id,'.$role->id
+            ]);
 
-        DB::beginTransaction();
-        try {
-            DB::table('roles')
-                    ->where('id', $role->id)
-                    ->update([
-                        'display_name' => $request->display_name,
-                        'description' => $request->description
-                    ]);
-            
-            $this->updatePermissions($request, $role);
-                    
-            DB::commit();
+            DB::beginTransaction();
+            try {
+                DB::table('roles')
+                        ->where('id', $role->id)
+                        ->update([
+                            'display_name' => $request->display_name,
+                            'description' => $request->description
+                        ]);
+                
+                $this->updatePermissions($request, $role);
+                        
+                DB::commit();
 
-            Session::flash('success', 'Role '.$request->display_name.' successfull updated');
-            return redirect()->action('RolesController@index');
-            
-        } catch (\Exception $e) {
-            DB::rollback();
-            Session::flash('error', 'Oops, have one error...'.$e->getMessage());
-            return redirect()->back(Input::all());
+                Session::flash('success', __('messages.update_success', [
+                    'model' => __('role'),
+                    'name' => $request->display_name
+                ]));
+                return redirect()->action('RolesController@index');
+                
+            } catch (\Exception $e) {
+                DB::rollback();
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
@@ -176,16 +200,31 @@ class RolesController extends Controller
      */
     public function destroy(Role $role)
     {
-        try {
-            $role = Role::find($role->id);
-            if ($role->delete()) {
-                Session::flash('success', 'Role '.$role->display_name.' successfull removed.');
-                
+        if (Auth::user()->canExcluirRoles()) {
+            try {
+                if ($role->delete()) {
+                    Session::flash('success', __('messages.delete_success', [
+                        'model' => __('role'),
+                        'name' => $role->display_name
+                    ]));
+                    return redirect()->action('RolesController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('RolesController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Oops, have one error...'.$e->getMessage());
-            return redirect()->action('RolesController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();   
         }
     }
 

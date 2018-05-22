@@ -6,6 +6,7 @@ use App\MarcaVeiculo;
 use App\ModeloVeiculo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ModeloVeiculoController extends Controller
@@ -18,39 +19,34 @@ class ModeloVeiculoController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-    
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) 
     {
-        if ($request->searchField) {
-            $modeloVeiculos = DB::table('modelo_veiculos')
-                                ->select('modelo_veiculos.*', 'marca_veiculos.marca_veiculo')
-                                ->join('marca_veiculos', 'marca_veiculos.id', 'modelo_veiculos.marca_veiculo_id')
-                                ->where('modelo_veiculo', 'like', '%'.$request->searchField.'%')
-                                ->paginate();
-        } else {
-            $modeloVeiculos = DB::table('modelo_veiculos')
-            ->select('modelo_veiculos.*', 'marca_veiculos.marca_veiculo')
-            ->join('marca_veiculos', 'marca_veiculos.id', 'modelo_veiculos.marca_veiculo_id')
-            ->paginate();
-        }
+        if (Auth::user()->canListarModeloVeiculos()) {
+            if ($request->searchField) {
+                $modeloVeiculos = DB::table('modelo_veiculos')
+                                    ->select('modelo_veiculos.*', 'marca_veiculos.marca_veiculo')
+                                    ->join('marca_veiculos', 'marca_veiculos.id', 'modelo_veiculos.marca_veiculo_id')
+                                    ->where('modelo_veiculo', 'like', '%'.$request->searchField.'%')
+                                    ->paginate();
+            } else {
+                $modeloVeiculos = DB::table('modelo_veiculos')
+                ->select('modelo_veiculos.*', 'marca_veiculos.marca_veiculo')
+                ->join('marca_veiculos', 'marca_veiculos.id', 'modelo_veiculos.marca_veiculo_id')
+                ->paginate();
+            }
 
-        return View('modelo_veiculo.index', [
-            'modeloVeiculos' => $modeloVeiculos,
-            'fields' => $this->fields
-        ]);
+            return View('modelo_veiculo.index', [
+                'modeloVeiculos' => $modeloVeiculos,
+                'fields' => $this->fields
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        } 
     }
 
     /**
@@ -60,11 +56,14 @@ class ModeloVeiculoController extends Controller
      */
     public function create()
     {
-        $marcaVeiculos = MarcaVeiculo::all();
-
-        return View('modelo_veiculo.create', [
-            'marcaVeiculos' => $marcaVeiculos
-        ]);
+        if (Auth::user()->canCadastrarModeloVeiculos()) {
+            return View('modelo_veiculo.create', [
+                'marcaVeiculos' => MarcaVeiculo::all()
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        } 
     }
 
     /**
@@ -75,37 +74,33 @@ class ModeloVeiculoController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'modelo_veiculo' => 'required|string|min:3|max:30|unique:modelo_veiculos',
-            'marca_veiculo_id' => 'required|integer|exists:marca_veiculos,id',
-            'capacidade_tanque' => 'required|integer|min:0'
-        ]);
-
-        try {
-            $modeloVeiculo = new ModeloVeiculo($request->all());
-
-            if ($modeloVeiculo->save()) {
-                Session::flash('success', 'Modelo de Veículo '.$modeloVeiculo->modelo_veiculo.' cadastrado com sucesso.');
-                return redirect()->action('ModeloVeiculoController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('modelo_veiculo.create', [
-                'modeloVeiculo' => new ModeloVeiculo($request->all()),
-                'marcaVeiculos' => MarcaVeiculo::all()
+        if (Auth::user()->canCadastrarModeloVeiculos()) {
+            $this->validate($request, [
+                'modelo_veiculo' => 'required|string|min:3|max:30|unique:modelo_veiculos',
+                'marca_veiculo_id' => 'required|integer|exists:marca_veiculos,id',
+                'capacidade_tanque' => 'required|integer|min:0'
             ]);
-        }
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ModeloVeiculo  $modeloVeiculo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ModeloVeiculo $modeloVeiculo)
-    {
-        //
+            try {
+                $modeloVeiculo = new ModeloVeiculo($request->all());
+
+                if ($modeloVeiculo->save()) {
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('modelo_veiculo'),
+                        'name' => $modeloVeiculo->modelo_veiculo
+                    ]));
+                    return redirect()->action('ModeloVeiculoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -116,13 +111,15 @@ class ModeloVeiculoController extends Controller
      */
     public function edit(ModeloVeiculo $modeloVeiculo)
     {
-        $marcaVeiculos = MarcaVeiculo::all();
-        $modeloVeiculo = ModeloVeiculo::find($modeloVeiculo->id);
-
-        return View('modelo_veiculo.edit', [
-            'marcaVeiculos' => $marcaVeiculos,
-            'modeloVeiculo' => $modeloVeiculo
-        ]);
+        if (Auth::user()->canAlterarModeloVeiculos()) {
+            return View('modelo_veiculo.edit', [
+                'marcaVeiculos' => MarcaVeiculo::all(),
+                'modeloVeiculo' => $modeloVeiculo
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -134,29 +131,35 @@ class ModeloVeiculoController extends Controller
      */
     public function update(Request $request, ModeloVeiculo $modeloVeiculo)
     {
-        $this->validate($request, [
-            'modelo_veiculo' => 'required|string|min:3|max:30|unique:modelo_veiculos,id,'.$modeloVeiculo->id,
-            'marca_veiculo_id' => 'required|integer|exists:marca_veiculos,id',
-            'capacidade_tanque' => 'required|integer|min:0'
-        ]);
-
-        try {
-            $modeloVeiculo = ModeloVeiculo::find($modeloVeiculo->id);
-            $modeloVeiculo->modelo_veiculo = $request->modelo_veiculo;
-            $modeloVeiculo->marca_veiculo_id = $request->marca_veiculo_id;
-            $modeloVeiculo->capacidade_tanque = $request->capacidade_tanque;
-            $modeloVeiculo->ativo = $request->ativo;
-
-            if ($modeloVeiculo->save()) {
-                Session::flash('success', 'Modelo de Veículo '.$modeloVeiculo->modelo_veiculo.' alterado com sucesso.');
-                return redirect()->action('ModeloVeiculoController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('modelo_veiculo.edit', [
-                'modeloVeiculo' => new ModeloVeiculo($request->all()),
-                'marcaVeiculos' => MarcaVeiculo::all()
+        if (Auth::user()->canAlterarModeloVeiculos()) {
+            $this->validate($request, [
+                'modelo_veiculo' => 'required|string|min:3|max:30|unique:modelo_veiculos,id,'.$modeloVeiculo->id,
+                'marca_veiculo_id' => 'required|integer|exists:marca_veiculos,id',
+                'capacidade_tanque' => 'required|integer|min:0'
             ]);
+
+            try {
+                $modeloVeiculo->modelo_veiculo = $request->modelo_veiculo;
+                $modeloVeiculo->marca_veiculo_id = $request->marca_veiculo_id;
+                $modeloVeiculo->capacidade_tanque = $request->capacidade_tanque;
+                $modeloVeiculo->ativo = $request->ativo;
+
+                if ($modeloVeiculo->save()) {
+                    Session::flash('success', __('messages.update_success', [
+                        'model' => __('modelo_veiculo'),
+                        'name' => $modeloVeiculo->modelo_veiculo
+                    ]));
+                    return redirect()->action('ModeloVeiculoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
@@ -168,16 +171,31 @@ class ModeloVeiculoController extends Controller
      */
     public function destroy(ModeloVeiculo $modeloVeiculo)
     {
-        try {
-            $modeloVeiculo = ModeloVeiculo::find($modeloVeiculo->id);
-            if ($modeloVeiculo->delete()) {
-                Session::flash('success', 'Modelo de Veículo '.$modeloVeiculo->modelo_veiculo.' removido com sucesso.');
-                
+        if (Auth::user()->canExcluirModeloVeiculos()) {
+            try {
+                if ($modeloVeiculo->delete()) {
+                    Session::flash('success', __('messages.delete_success', [
+                        'model' => __('modelo_veiculo'),
+                        'name' => $modeloVeiculo->modelo_veiculo
+                    ]));
+                    return redirect()->action('ModeloVeiculoController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('ModeloVeiculoController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('ModeloVeiculoController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
