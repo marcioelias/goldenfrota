@@ -35,16 +35,6 @@ class AbastecimentoController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -96,7 +86,7 @@ class AbastecimentoController extends Controller
                 'fields' => $this->fields
             ]);
         } else {
-            Session::flash('error', env('ACCESS_DENIED_MSG'));
+            Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
     }
@@ -112,7 +102,7 @@ class AbastecimentoController extends Controller
             $clientes = Cliente::where('ativo', true)->get();
             return View('abastecimento.create')->withClientes($clientes); 
         } else {
-            Session::flash('error', env('ACCESS_DENIED_MSG'));
+            Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
     }
@@ -125,46 +115,46 @@ class AbastecimentoController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
-            'veiculo_id' => 'required',
-            'km_veiculo' => 'required|numeric|min:0',
-            'volume_abastecimento' => 'required|numeric|min:0',
-            'valor_litro' => 'required|numeric|min:0',
-            'valor_abastecimento' => 'required|numeric|min:0'
-        ]); 
+        if (Auth::user()->canCadastrarAbastecimentos()) {
+            $this->validate($request, [
+                'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
+                'veiculo_id' => 'required',
+                'km_veiculo' => 'required|numeric|min:0',
+                'volume_abastecimento' => 'required|numeric|min:0',
+                'valor_litro' => 'required|numeric|min:0',
+                'valor_abastecimento' => 'required|numeric|min:0'
+            ]); 
 
-        try {
-            $abastecimento = new Abastecimento;
-            $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
-            $abastecimento->veiculo_id = $request->veiculo_id;
-            $abastecimento->km_veiculo = $request->km_veiculo;
-            $abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
-            $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
-            $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
-            $abastecimento->abastecimento_local = false;
-            $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
-            
-            if ($abastecimento->save()) {
-                Session::flash('success', 'Abastecimento '.$abastecimento->id.' cadastrado com sucesso.');
-                return redirect()->action('AbastecimentoController@index');
+            try {
+                $abastecimento = new Abastecimento;
+                $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
+                $abastecimento->veiculo_id = $request->veiculo_id;
+                $abastecimento->km_veiculo = $request->km_veiculo;
+                $abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
+                $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
+                $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
+                $abastecimento->abastecimento_local = false;
+                $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
+                
+                if ($abastecimento->save()) {
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('abastecimento'),
+                        'name' => $abastecimento->id
+                    ]));
+                    return redirect()->action('AbastecimentoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return Redirect::back()->withInput(Input::all());
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return Redirect::back()->withInput(Input::all());
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Abastecimento  $abastecimento
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Abastecimento $abastecimento)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -210,7 +200,7 @@ class AbastecimentoController extends Controller
                 'atendentes' => $atendentes
             ]);
         } else {
-            Session::flash('error', env('ACCESS_DENIED_MSG'));
+            Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
     }
@@ -224,55 +214,65 @@ class AbastecimentoController extends Controller
      */
     public function update(Request $request, Abastecimento $abastecimento)
     {
-        $this->validate($request, [
-            'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
-            'veiculo_id' => 'required',
-            'km_veiculo' => 'required|numeric|min:0',
-            'volume_abastecimento' => 'required|numeric|min:0',
-            'valor_litro' => 'required|numeric|min:0',
-            'valor_abastecimento' => 'required|numeric|min:0',
-            'atendente_id' => 'required|numeric|min:1'
-        ]); 
+        if (Auth::user()->canAlterarAbastecimentos()) {
+            $this->validate($request, [
+                'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
+                'veiculo_id' => 'required',
+                'km_veiculo' => 'required|numeric|min:0',
+                'volume_abastecimento' => 'required|numeric|min:0',
+                'valor_litro' => 'required|numeric|min:0',
+                'valor_abastecimento' => 'required|numeric|min:0',
+                'atendente_id' => 'required|numeric|min:1'
+            ]); 
 
-        try {
-            $abastecimento = Abastecimento::find($abastecimento->id);
-            $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
-            $abastecimento->veiculo_id = $request->veiculo_id;
-            $abastecimento->km_veiculo = $request->km_veiculo;
-            $abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
-            $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
-            $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
-            $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
-            $abastecimento->atendente_id = $request->atendente_id;
-            $abastecimento->bico_id = $request->bico_id;
-            $abastecimento->encerrante_inicial= $request->encerrante_inicial;
-            $abastecimento->encerrante_final = $request->encerrante_final; 
-            $abastecimento->inconsistencias_importacao = $this->existemInconsisteciasImportacao($abastecimento);
+            try {
+                $abastecimento = Abastecimento::find($abastecimento->id);
+                $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
+                $abastecimento->veiculo_id = $request->veiculo_id;
+                $abastecimento->km_veiculo = $request->km_veiculo;
+                $abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
+                $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
+                $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
+                $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
+                $abastecimento->atendente_id = $request->atendente_id;
+                $abastecimento->bico_id = $request->bico_id;
+                $abastecimento->encerrante_inicial= $request->encerrante_inicial;
+                $abastecimento->encerrante_final = $request->encerrante_final; 
+                $abastecimento->inconsistencias_importacao = $this->existemInconsisteciasImportacao($abastecimento);
 
-            if ($abastecimento->inconsistencias_importacao) {
-                $abastecimento->obs_abastecimento = 'Ainda existem inconsistências relacionadas a importação deste abastecimento. Verifique.';
-            } else {
-                $abastecimento->obs_abastecimento = '';
-            }
-
-            if ($abastecimento->abastecimento_local) {
-                //abastecimento local tem movimentação de estoque, atualiza a movimentação
-                DB::transaction(function($dados) use($abastecimento) {
-                    $movimentacao = TanqueMovimentacao::find($abastecimento->tanque_movimentacao_id);
-                    $movimentacao->quantidade_combustivel = $abastecimento->volume_abastecimento;
-                    $movimentacao->save();
-                    $abastecimento->save();
-                });
-                Session::flash('success', 'Abastecimento '.$abastecimento->id.' alterado com sucesso.');
-                //return redirect()->action('AbastecimentoController@index');                
-            } else {
-                if ($abastecimento->save()) {
-                    Session::flash('success', 'Abastecimento '.$abastecimento->id.' alterado com sucesso.');
-                    return redirect()->action('AbastecimentoController@index');
+                if ($abastecimento->inconsistencias_importacao) {
+                    $abastecimento->obs_abastecimento = 'Ainda existem inconsistências relacionadas a importação deste abastecimento. Verifique.';
+                } else {
+                    $abastecimento->obs_abastecimento = '';
                 }
+
+                if ($abastecimento->abastecimento_local) {
+                    //abastecimento local tem movimentação de estoque, atualiza a movimentação
+                    DB::transaction(function($dados) use($abastecimento) {
+                        $movimentacao = TanqueMovimentacao::find($abastecimento->tanque_movimentacao_id);
+                        $movimentacao->quantidade_combustivel = $abastecimento->volume_abastecimento;
+                        $movimentacao->save();
+                        $abastecimento->save();
+                    });
+                    Session::flash('success', 'Abastecimento '.$abastecimento->id.' alterado com sucesso.');
+                    //return redirect()->action('AbastecimentoController@index');                
+                } else {
+                    if ($abastecimento->save()) {
+                        Session::flash('success', __('messages.update_success', [
+                            'model' => __('abastecimento'),
+                            'name' => $abastecimento->id
+                        ]));
+                        return redirect()->action('AbastecimentoController@index');
+                    }
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back();
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
+        } else {
+            Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
     }
@@ -292,20 +292,35 @@ class AbastecimentoController extends Controller
                     //abastecimento local, tem movimentação de estoque. Remove a movimentação e a abastecida
                     $movimentacao = TanqueMovimentacao::find($abastecimento->tanque_movimentacao_id);
                     if ($movimentacao->delete()) {
-                        Session::flash('success', 'Abastecimento '.$abastecimento->id.' removido com sucesso.');
+                        Session::flash('success', __('messages.delete_success', [
+                            'model' => __('abastecimento'),
+                            'name' => $abastecimento->id
+                        ]));
                         
                         return redirect()->action('AbastecimentoController@index');
                     }
                 } else {
                     //abastecimento externo, não tem movimentação de estoque, por isso remove somente a abastecida
                     if ($abastecimento->delete()) {
-                        Session::flash('success', 'Abastecimento '.$abastecimento->id.' removido com sucesso.');
+                        Session::flash('success', __('messages.delete_success', [
+                            'model' => __('abastecimento'),
+                            'name' => $abastecimento->id
+                        ]));
                         
                         return redirect()->action('AbastecimentoController@index');
                     }
                 }
             } catch (\Exception $e) {
-                Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('AbastecimentoController@index');
             }
         } else {
