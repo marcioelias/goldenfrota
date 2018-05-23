@@ -27,7 +27,7 @@ class BicoController extends Controller
      */
     public function index(Request $request) 
     {
-        if (Auth::user()->canListarBicos()) {
+        if (Auth::user()->canListarBico()) {
             if (isset($request->searchField)) {
                 $bicos = DB::table('bicos')
                             ->select('bicos.*', 'bombas.descricao_bomba', 'combustiveis.descricao')
@@ -60,7 +60,7 @@ class BicoController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarBicos()) {
+        if (Auth::user()->canCadastrarBico()) {
             return View('bico.create')->withTanques(Tanque::all())->withBombas(Bomba::all());
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -76,7 +76,7 @@ class BicoController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarBicos()) { 
+        if (Auth::user()->canCadastrarBico()) { 
             $this->validate($request, [
                 'num_bico' => 'required|integer|unique:bicos',
                 'tanque_id' => 'required|integer|exists:tanques,id',
@@ -114,7 +114,7 @@ class BicoController extends Controller
      */
     public function edit(Bico $bico)
     {
-        if (Auth::user()->canAlterarBicos()) {
+        if (Auth::user()->canAlterarBico()) {
             return View('bico.edit')
                         ->withBico($bico)
                         ->withTanques(Tanque::all())
@@ -134,7 +134,7 @@ class BicoController extends Controller
      */
     public function update(Request $request, Bico $bico)
     {
-        if (Auth::user()->canAlterarBicos()) {
+        if (Auth::user()->canAlterarBico()) {
             $this->validate($request, [
                 'num_bico' => 'required|integer|unique:bicos,id,'.$bico->id,
                 'tanque_id' => 'required|integer|exists:tanques,id',
@@ -177,7 +177,7 @@ class BicoController extends Controller
      */
     public function destroy(Bico $bico)
     {
-        if (Auth::user()->canExcluirBicos()) {
+        if (Auth::user()->canExcluirBico()) {
             try {
                 if ($bico->delete()) {
                     Session::flash('success', __('messages.delete_success', [

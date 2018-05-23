@@ -44,9 +44,11 @@
                     
                 </div>
                 <div class="col">
+                    @permission('cadastrar-'. str_replace('_', '-', $model))
                     <a href="{{ route($model.'.create') }}" class="btn btn-sm-12 btn-success" data-toggle="tooltip" data-placement="top" title="{{__('Novo')}}" data-original-title="{{__('Novo')}}">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </a>
+                    @endpermission
                 </div>
                 @if(isset($searchParms))
                     @component($searchParms)

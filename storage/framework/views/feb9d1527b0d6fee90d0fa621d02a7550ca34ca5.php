@@ -46,9 +46,11 @@
                     
                 </div>
                 <div class="col">
+                    <?php if (app('laratrust')->can('cadastrar-'. str_replace('_', '-', $model))) : ?>
                     <a href="<?php echo e(route($model.'.create')); ?>" class="btn btn-sm-12 btn-success" data-toggle="tooltip" data-placement="top" title="<?php echo e(__('Novo')); ?>" data-original-title="<?php echo e(__('Novo')); ?>">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </a>
+                    <?php endif; // app('laratrust')->can ?>
                 </div>
                 <?php if(isset($searchParms)): ?>
                     <?php $__env->startComponent($searchParms); ?>

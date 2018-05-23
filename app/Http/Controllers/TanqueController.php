@@ -29,7 +29,7 @@ class TanqueController extends Controller
      */
     public function index(Request $request) 
     {
-        if (Auth::user()->canListarTanques()) {
+        if (Auth::user()->canListarTanque()) {
             if (isset($request->searchField)) {
                 $tanques = DB::table('tanques')
                                 ->select('tanques.*', 'combustiveis.descricao')
@@ -57,7 +57,7 @@ class TanqueController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarTanques()) {
+        if (Auth::user()->canCadastrarTanque()) {
             return View('tanque.create')->withCombustiveis(Combustivel::all());
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -73,7 +73,7 @@ class TanqueController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarTanques()) {
+        if (Auth::user()->canCadastrarTanque()) {
             $this->validate($request, [
                 'descricao_tanque' => 'required|min:3|unique:tanques',
                 'combustivel_id' => 'required',
@@ -109,7 +109,7 @@ class TanqueController extends Controller
      */
     public function edit(Tanque $tanque)
     {
-        if (Auth::user()->canAlterarTanques()) {
+        if (Auth::user()->canAlterarTanque()) {
             return View('tanque.edit')->withTanque($tanque)->withCombustiveis(Combustivel::all());
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -126,7 +126,7 @@ class TanqueController extends Controller
      */
     public function update(Request $request, Tanque $tanque)
     {
-        if (Auth::user()->canAlterarTanques()) {
+        if (Auth::user()->canAlterarTanque()) {
             $this->validate($request, [
                 'descricao_tanque' => 'string|required|min:3|unique:tanques,id,'.$tanque->id,
                 'combustivel_id' => 'numeric|required',
@@ -168,7 +168,7 @@ class TanqueController extends Controller
      */
     public function destroy(Tanque $tanque)
     {
-        if (Auth::user()->canExcluirTanques()) {
+        if (Auth::user()->canExcluirTanque()) {
             try {
                 if ($tanque->delete()) {
                     Session::flash('success', __('messages.delete_success', [

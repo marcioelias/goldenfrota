@@ -27,7 +27,7 @@ class BombaController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarBombas()) {
+        if (Auth::user()->canListarBomba()) {
             if (isset($request->searchField)) {
                 $bombas = DB::table('bombas')
                                 ->select('bombas.*', 'tipo_bombas.tipo_bomba', 'modelo_bombas.modelo_bomba')
@@ -57,7 +57,7 @@ class BombaController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarBombas()) {
+        if (Auth::user()->canCadastrarBomba()) {
             return View('bomba.create', [
                 'tipoBombas' => TipoBomba::all(),
                 'modeloBombas' => ModeloBomba::all()
@@ -76,7 +76,7 @@ class BombaController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarBombas()) {
+        if (Auth::user()->canCadastrarBomba()) {
             $this->validate($request, [
                 'descricao_bomba' => 'string|required|min:3|unique:bombas',
                 'tipo_bomba_id' => 'numeric|required',
@@ -113,7 +113,7 @@ class BombaController extends Controller
      */
     public function edit(Bomba $bomba)
     {
-        if (Auth::user()->canAlterarBombas()) {
+        if (Auth::user()->canAlterarBomba()) {
             return View('bomba.edit', [
                 'bomba' => $bomba,
                 'tipoBombas' => TipoBomba::all(),
@@ -134,7 +134,7 @@ class BombaController extends Controller
      */
     public function update(Request $request, Bomba $bomba)
     {
-        if (Auth::user()->canAlterarBombas()) {
+        if (Auth::user()->canAlterarBomba()) {
             $this->validate($request, [
                 'descricao_bomba' => 'string|required|min:3|unique:bombas,id,'.$bomba->id,
                 'tipo_bomba_id' => 'numeric|required',
@@ -174,7 +174,7 @@ class BombaController extends Controller
      */
     public function destroy(Bomba $bomba)
     {
-        if (Auth::user()->canExcluirBombas()) {
+        if (Auth::user()->canExcluirBomba()) {
             try {
                 $bomba = Bomba::find($bomba->id);
                 if ($bomba->delete()) {

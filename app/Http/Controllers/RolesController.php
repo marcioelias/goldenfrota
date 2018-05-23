@@ -28,7 +28,7 @@ class RolesController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarRoles()) {
+        if (Auth::user()->canListarRole()) {
             if ($request->SearchField) {
                 $roles = DB::table('roles')
                             ->where('name', 'like', '%'.$request->searchField.'%')
@@ -56,7 +56,7 @@ class RolesController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarRoles()) {
+        if (Auth::user()->canCadastrarRole()) {
             $permissions = Permission::orderBy('name', 'asc')->get();
 
             return View('role.create', [
@@ -76,7 +76,7 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     { 
-        if (Auth::user()->canCadastrarRoles()) {
+        if (Auth::user()->canCadastrarRole()) {
             $this->validate($request, [
                 'name' => 'required|string|min:5|max:100|unique:roles',
                 'display_name' => 'required|string|max:100|unique:roles'
@@ -127,7 +127,7 @@ class RolesController extends Controller
      */
     public function edit(Role $role)
     {
-        if (Auth::user()->canAlterarRoles()) {
+        if (Auth::user()->canAlterarRole()) {
             $permissions = Permission::orderBy('id', 'asc')->get();        
 
             foreach ($role->permissions as $permission) {
@@ -154,7 +154,7 @@ class RolesController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        if (Auth::user()->canAlterarRoles()) {
+        if (Auth::user()->canAlterarRole()) {
             $this->validate($request, [
                 'name' => 'required|string|min:5|max:100|unique:roles,id,'.$role->id,
                 'display_name' => 'required|string|max:100|unique:roles,id,'.$role->id
@@ -200,7 +200,7 @@ class RolesController extends Controller
      */
     public function destroy(Role $role)
     {
-        if (Auth::user()->canExcluirRoles()) {
+        if (Auth::user()->canExcluirRole()) {
             try {
                 if ($role->delete()) {
                     Session::flash('success', __('messages.delete_success', [

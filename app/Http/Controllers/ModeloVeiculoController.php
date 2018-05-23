@@ -25,7 +25,7 @@ class ModeloVeiculoController extends Controller
      */
     public function index(Request $request) 
     {
-        if (Auth::user()->canListarModeloVeiculos()) {
+        if (Auth::user()->canListarModeloVeiculo()) {
             if ($request->searchField) {
                 $modeloVeiculos = DB::table('modelo_veiculos')
                                     ->select('modelo_veiculos.*', 'marca_veiculos.marca_veiculo')
@@ -56,7 +56,7 @@ class ModeloVeiculoController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarModeloVeiculos()) {
+        if (Auth::user()->canCadastrarModeloVeiculo()) {
             return View('modelo_veiculo.create', [
                 'marcaVeiculos' => MarcaVeiculo::all()
             ]);
@@ -74,7 +74,7 @@ class ModeloVeiculoController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarModeloVeiculos()) {
+        if (Auth::user()->canCadastrarModeloVeiculo()) {
             $this->validate($request, [
                 'modelo_veiculo' => 'required|string|min:3|max:30|unique:modelo_veiculos',
                 'marca_veiculo_id' => 'required|integer|exists:marca_veiculos,id',
@@ -111,7 +111,7 @@ class ModeloVeiculoController extends Controller
      */
     public function edit(ModeloVeiculo $modeloVeiculo)
     {
-        if (Auth::user()->canAlterarModeloVeiculos()) {
+        if (Auth::user()->canAlterarModeloVeiculo()) {
             return View('modelo_veiculo.edit', [
                 'marcaVeiculos' => MarcaVeiculo::all(),
                 'modeloVeiculo' => $modeloVeiculo
@@ -131,7 +131,7 @@ class ModeloVeiculoController extends Controller
      */
     public function update(Request $request, ModeloVeiculo $modeloVeiculo)
     {
-        if (Auth::user()->canAlterarModeloVeiculos()) {
+        if (Auth::user()->canAlterarModeloVeiculo()) {
             $this->validate($request, [
                 'modelo_veiculo' => 'required|string|min:3|max:30|unique:modelo_veiculos,id,'.$modeloVeiculo->id,
                 'marca_veiculo_id' => 'required|integer|exists:marca_veiculos,id',
@@ -171,7 +171,7 @@ class ModeloVeiculoController extends Controller
      */
     public function destroy(ModeloVeiculo $modeloVeiculo)
     {
-        if (Auth::user()->canExcluirModeloVeiculos()) {
+        if (Auth::user()->canExcluirModeloVeiculo()) {
             try {
                 if ($modeloVeiculo->delete()) {
                     Session::flash('success', __('messages.delete_success', [

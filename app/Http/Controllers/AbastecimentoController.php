@@ -41,7 +41,7 @@ class AbastecimentoController extends Controller
      */
     public function index(Request $request) 
     {
-        if (Auth::user()->canListarAbastecimentos()) {
+        if (Auth::user()->canListarAbastecimento()) {
             $data_inicial = $request->data_inicial;
             $data_final = $request->data_final;
 
@@ -98,7 +98,7 @@ class AbastecimentoController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarAbastecimentos()) {
+        if (Auth::user()->canCadastrarAbastecimento()) {
             $clientes = Cliente::where('ativo', true)->get();
             return View('abastecimento.create')->withClientes($clientes); 
         } else {
@@ -115,7 +115,7 @@ class AbastecimentoController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarAbastecimentos()) {
+        if (Auth::user()->canCadastrarAbastecimento()) {
             $this->validate($request, [
                 'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
                 'veiculo_id' => 'required',
@@ -164,7 +164,7 @@ class AbastecimentoController extends Controller
      */
     public function edit(Abastecimento $abastecimento)
     {
-        if (Auth::user()->canEditarAbastecimentos()) {
+        if (Auth::user()->canEditarAbastecimento()) {
             $abastecimento = Abastecimento::find($abastecimento->id);
 
             $cliente = Cliente::select('clientes.id')
@@ -214,7 +214,7 @@ class AbastecimentoController extends Controller
      */
     public function update(Request $request, Abastecimento $abastecimento)
     {
-        if (Auth::user()->canAlterarAbastecimentos()) {
+        if (Auth::user()->canAlterarAbastecimento()) {
             $this->validate($request, [
                 'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
                 'veiculo_id' => 'required',
@@ -285,7 +285,7 @@ class AbastecimentoController extends Controller
      */
     public function destroy(Abastecimento $abastecimento)
     {
-        if (Auth::user()->canExcluirAbastecimentos()) {
+        if (Auth::user()->canExcluirAbastecimento()) {
             try {
                 $abastecimento = Abastecimento::find($abastecimento->id);
                 if ($abastecimento->abastecimento_local) {
@@ -324,7 +324,7 @@ class AbastecimentoController extends Controller
                 return redirect()->action('AbastecimentoController@index');
             }
         } else {
-            Session::flash('error', env('ACCESS_DENIED_MSG'));
+            Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
     }

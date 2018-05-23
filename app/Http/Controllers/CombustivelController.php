@@ -24,7 +24,7 @@ class CombustivelController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarCombustiveis()) {
+        if (Auth::user()->canListarCombustivel()) {
             if (isset($request->searchField)) {
                 $combustiveis = Combustivel::where('descricao', 'like', '%'.$request->searchField.'%')->paginate();
             } else {
@@ -45,7 +45,7 @@ class CombustivelController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarCombustiveis()) {
+        if (Auth::user()->canCadastrarCombustivel()) {
             return View('combustivel.create');
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -61,7 +61,7 @@ class CombustivelController extends Controller
      */
     public function store(Request $request)
     { 
-        if (Auth::user()->canCadastrarCombustiveis()) {
+        if (Auth::user()->canCadastrarCombustivel()) {
             $this->validate($request, [
                 'descricao' => 'string|required|min:5|unique:combustiveis',
                 'descricao_reduzida' => 'string|required|min:3|max:8|unique:combustiveis',
@@ -99,7 +99,7 @@ class CombustivelController extends Controller
      */
     public function edit(Combustivel $combustivel)
     {
-        if (Auth::user()->canAlterarCombustiveis()) {
+        if (Auth::user()->canAlterarCombustivel()) {
             return View('combustivel.edit')->withCombustivel($combustivel);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -116,7 +116,7 @@ class CombustivelController extends Controller
      */
     public function update(Request $request, Combustivel $combustivel)
     {
-        if (Auth::user()->canAlterarCombustiveis()) {
+        if (Auth::user()->canAlterarCombustivel()) {
             $this->validate($request, [
                 'descricao' => 'string|required|min:5|unique:combustiveis,id,'.$combustivel->id,
                 'descricao_reduzida' => 'string|required|min:3|max:8|unique:combustiveis,id,'.$combustivel->id,
@@ -156,7 +156,7 @@ class CombustivelController extends Controller
      */
     public function destroy(Combustivel $combustivel)
     {
-        if (Auth::user()->canExcluirCombustiveis()) {   
+        if (Auth::user()->canExcluirCombustivel()) {   
             try {
                 if ($combustivel->delete()) {
                     Session::flash('success', __('messages.delete_success', [

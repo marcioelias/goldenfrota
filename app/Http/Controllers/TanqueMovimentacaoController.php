@@ -28,7 +28,7 @@ class TanqueMovimentacaoController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarTanqueMovimentacoes()) {
+        if (Auth::user()->canListarTanqueMovimentacao()) {
             if (isset($request->searchField)) {
                 $movimentacoes = DB::table('tanque_movimentacoes')
                                     ->select('tanque_movimentacoes.*', 'tanques.descricao_tanque', 'combustiveis.descricao')
@@ -65,7 +65,7 @@ class TanqueMovimentacaoController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarTanqueMovimentacoes()) {
+        if (Auth::user()->canCadastrarTanqueMovimentacao()) {
             $combustiveis = Combustivel::where('ativo', true)->get();
 
             return View('tanque_movimentacao.create')->withCombustiveis($combustiveis);
@@ -83,7 +83,7 @@ class TanqueMovimentacaoController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarTanqueMovimentacoes()) {
+        if (Auth::user()->canCadastrarTanqueMovimentacao()) {
             $this->validate($request, [
                 'data_movimentacao' => 'required',
                 'tanque_id' => 'required',
@@ -125,7 +125,7 @@ class TanqueMovimentacaoController extends Controller
      */
     public function edit(TanqueMovimentacao $tanqueMovimentacao)
     {
-        if (Auth::user()->canAlterarTanqueMovimentacoes()) {
+        if (Auth::user()->canAlterarTanqueMovimentacao()) {
             $movimentacao = TanqueMovimentacao::select('tanque_movimentacoes.*', 'combustiveis.id')
                                         ->join('tanques', 'tanques.id', 'tanque_movimentacoes.tanque_id')
                                         ->join('combustiveis', 'combustiveis.id', 'tanques.combustivel_id')
@@ -154,7 +154,7 @@ class TanqueMovimentacaoController extends Controller
      */
     public function update(Request $request, TanqueMovimentacao $tanqueMovimentacao)
     {
-        if (Auth::user()->canAlterarTanqueMovimentacoes()) {
+        if (Auth::user()->canAlterarTanqueMovimentacao()) {
             $this->validate($request, [
                 'data_movimentacao' => 'required',
                 'tanque_id' => 'required',
@@ -197,7 +197,7 @@ class TanqueMovimentacaoController extends Controller
      */
     public function destroy(TanqueMovimentacao $tanqueMovimentacao)
     {
-        if (Auth::user()->canExcluirTanqueMovimentacoes()) {
+        if (Auth::user()->canExcluirTanqueMovimentacao()) {
             try {
                 if ($tanqueMovimentacao->delete()) {
                     Session::flash('success', __('messages.delete_success', [

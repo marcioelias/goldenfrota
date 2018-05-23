@@ -22,7 +22,7 @@ class GrupoVeiculoController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarGrupoVeiculos()) {
+        if (Auth::user()->canListarGrupoVeiculo()) {
             if (isset($requet->searchField)) {
                 $grupoVeiculos = GrupoVeiculo::where('grupo_veiculo', 'like', '%'.$request->searchField.'%')->paginate();
             } else {
@@ -46,7 +46,7 @@ class GrupoVeiculoController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->catCadastrarGrupoVeiculos()) {
+        if (Auth::user()->canCadastrarGrupoVeiculo()) {
             return View('grupo_veiculo.create');
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -62,7 +62,7 @@ class GrupoVeiculoController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->catCadastrarGrupoVeiculos()) {
+        if (Auth::user()->canCadastrarGrupoVeiculo()) {
             $this->validate($request, [
                 'grupo_veiculo' => 'required|unique:grupo_veiculos'
             ]);
@@ -97,7 +97,7 @@ class GrupoVeiculoController extends Controller
      */
     public function edit(GrupoVeiculo $grupoVeiculo)
     {
-        if (Auth::user()->catAlterarGrupoVeiculos()) {
+        if (Auth::user()->canAlterarGrupoVeiculo()) {
             return View('grupo_veiculo.edit', [
                 'grupoVeiculo' => $grupoVeiculo
             ]);
@@ -116,7 +116,7 @@ class GrupoVeiculoController extends Controller
      */
     public function update(Request $request, GrupoVeiculo $grupoVeiculo)
     {
-        if (Auth::user()->catAlterarGrupoVeiculos()) {
+        if (Auth::user()->canAlterarGrupoVeiculo()) {
             $this->validate($request, [
                 'grupo_veiculo' => 'required|unique:grupo_veiculos,id,'.$grupoVeiculo->id
             ]);
@@ -152,7 +152,7 @@ class GrupoVeiculoController extends Controller
      */
     public function destroy(GrupoVeiculo $grupoVeiculo)
     {
-        if (Auth::user()->catAlterarGrupoVeiculos()) {
+        if (Auth::user()->canAlterarGrupoVeiculo()) {
             try {
                 if ($grupoVeiculo->delete()) {
                     Session::flash('success', __('messages.delete_success', [

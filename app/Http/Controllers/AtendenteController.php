@@ -22,7 +22,7 @@ class AtendenteController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarAtendentes()) {
+        if (Auth::user()->canListarAtendente()) {
             if (isset($request->searchField)) {
                 $atendentes = Atendente::where('nome_atendente', 'like', '%'.$request->searchField.'%')
                                 ->paginate();
@@ -44,7 +44,7 @@ class AtendenteController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarAtendentes()) {
+        if (Auth::user()->canCadastrarAtendente()) {
             return View('atendente.create');
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -60,7 +60,7 @@ class AtendenteController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarAtendentes()) {
+        if (Auth::user()->canCadastrarAtendente()) {
             $this->validate($request, [
                 'nome_atendente' => 'required|string',
                 'usuario_atendente' => 'required|string|max:10|unique:atendentes',
@@ -97,7 +97,7 @@ class AtendenteController extends Controller
      */
     public function edit(Atendente $atendente)
     {
-        if (Auth::user()->canAlterarAtendentes()) {
+        if (Auth::user()->canAlterarAtendente()) {
             return View('atendente.edit')->withAtendente($atendente);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -114,7 +114,7 @@ class AtendenteController extends Controller
      */
     public function update(Request $request, Atendente $atendente)
     {
-        if (Auth::user()->canAlterarAtendentes()) {
+        if (Auth::user()->canAlterarAtendente()) {
             $this->validate($request, [
                 'nome_atendente' => 'required|string',
                 'usuario_atendente' => 'required|string|max:10|unique:atendentes,id,'.$atendente->id,
@@ -156,7 +156,7 @@ class AtendenteController extends Controller
      */
     public function destroy(Atendente $atendente)
     {
-        if (Auth::user()->canExcluirAtendentes()) {
+        if (Auth::user()->canExcluirAtendente()) {
             try {
                 $atendente = Atendente::find($Atendente->id);
                 if ($atendente->delete()) {

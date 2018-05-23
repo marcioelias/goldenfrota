@@ -25,7 +25,7 @@ class DepartamentoController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarDepartamentos()) {
+        if (Auth::user()->canListarDepartamento()) {
             if ($request->searchField) {
                 $departamentos = DB::table('departamentos')
                                 ->select('departamentos.*', 'clientes.nome_razao')
@@ -54,7 +54,7 @@ class DepartamentoController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarDepartamentos()) {
+        if (Auth::user()->canCadastrarDepartamento()) {
             $clientes = Cliente::where('ativo', true)->get();
             return View('departamento.create')->withClientes($clientes);
         } else {
@@ -71,7 +71,7 @@ class DepartamentoController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarDepartamentos()) {
+        if (Auth::user()->canCadastrarDepartamento()) {
             $this->validate($request, [
                 'departamento' => 'required|string|unique:departamentos,departamento,NULL,id,cliente_id,'.$request->cliente_id,
                 'cliente_id' => 'required'
@@ -107,7 +107,7 @@ class DepartamentoController extends Controller
      */
     public function edit(Departamento $departamento)
     {
-        if (Auth::user()->canAlterarDepartamentos()) {
+        if (Auth::user()->canAlterarDepartamento()) {
             $clientes = Cliente::where('ativo', true)->orWhere('clientes.id', $departamento->cliente_id)->get();
 
             return View('departamento.edit')->withDepartamento($departamento)->withClientes($clientes);
@@ -126,7 +126,7 @@ class DepartamentoController extends Controller
      */
     public function update(Request $request, Departamento $departamento)
     {
-        if (Auth::user()->canAlterarDepartamentos()) {
+        if (Auth::user()->canAlterarDepartamento()) {
             $this->validate($request, [
                 'departamento' => 'required|string|unique:departamentos,cliente_id,'.$request->cliente_id,
                 'cliente_id' => 'required'
@@ -164,7 +164,7 @@ class DepartamentoController extends Controller
      */
     public function destroy(Departamento $departamento)
     {
-        if (Auth::user()->canExcluirDepartamentos()) {   
+        if (Auth::user()->canExcluirDepartamento()) {   
             try {
                 if ($departamento->delete()) {
                     Session::flash('success', __('messages.delete_success', [

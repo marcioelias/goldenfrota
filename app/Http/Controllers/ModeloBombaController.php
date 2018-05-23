@@ -23,7 +23,7 @@ class ModeloBombaController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarModeloBombas()) {
+        if (Auth::user()->canListarModeloBomba()) {
             if (isset($request->searchField)) {
                 $modelo_bombas = ModeloBomba::where('modelo_bomba', 'like', '%'.$request->searchField.'%')->paginate();
             } else {
@@ -46,7 +46,7 @@ class ModeloBombaController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarModeloBombas()) {
+        if (Auth::user()->canCadastrarModeloBomba()) {
             return View('modelo_bomba.create');
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -62,7 +62,7 @@ class ModeloBombaController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarModeloBombas()) {
+        if (Auth::user()->canCadastrarModeloBomba()) {
             $this->validate($request, [
                 'modelo_bomba' => 'required|string|unique:modelo_bombas',
                 'num_bicos' => 'required|numeric'
@@ -97,7 +97,7 @@ class ModeloBombaController extends Controller
      */
     public function edit(ModeloBomba $modeloBomba)
     {
-        if (Auth::user()->canAlterarModeloBombas()) {
+        if (Auth::user()->canAlterarModeloBomba()) {
             return View('modelo_bomba.edit', [
                 'modelo_bomba' => $modelo_bomba
             ]);
@@ -116,7 +116,7 @@ class ModeloBombaController extends Controller
      */
     public function update(Request $request, ModeloBomba $modeloBomba)
     {
-        if (Auth::user()->canAlterarModeloBombas()) {
+        if (Auth::user()->canAlterarModeloBomba()) {
             $this->validate($request, [
                 'modelo_bomba' => 'required|string|unique:modelo_bombas,id,'.$modeloBomba->id,
                 'num_bicos' => 'required|numeric'
@@ -154,7 +154,7 @@ class ModeloBombaController extends Controller
      */
     public function destroy(ModeloBomba $modeloBomba)
     {
-        if (Auth::user()->canAlterarModeloBombas()) {
+        if (Auth::user()->canAlterarModeloBomba()) {
             try {
                 if ($modelo_bomba->delete()) {
                     Session::flash('success', __('messages.delete_success', [

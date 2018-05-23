@@ -30,7 +30,7 @@ class ProdutoController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarProdutos()) {
+        if (Auth::user()->canListarProduto()) {
             if ($request->searchField) {
                 $produtos = DB::table('produtos')
                                 ->select('produtos.*', 'unidades.unidade', 'grupo_produtos.grupo_produto')
@@ -61,7 +61,7 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarProdutos()) {
+        if (Auth::user()->canCadastrarProduto()) {
             return View('produto.create', [
                 'unidades' => Unidade::all(),
                 'grupoProdutos' => GrupoProduto::all()
@@ -80,7 +80,7 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarProdutos()) {
+        if (Auth::user()->canCadastrarProduto()) {
             $this->validate($request, [
                 'produto_descricao' => 'required|string|min:3|max:60|unique:produtos',
                 'produto_desc_red' => 'nullable|string|min:3|max:10',
@@ -120,7 +120,7 @@ class ProdutoController extends Controller
      */
     public function edit(Produto $produto)
     {
-        if (Auth::user()->canAlterarProdutos()) {
+        if (Auth::user()->canAlterarProduto()) {
             return View('produto.edit', [
                 'produto' => $produto,
                 'unidades' => Unidade::all(),
@@ -141,7 +141,7 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, Produto $produto)
     {
-        if (Auth::user()->canAlterarProdutos()) {
+        if (Auth::user()->canAlterarProduto()) {
             $this->validate($request, [
                 'produto_descricao' => 'required|string|min:3|max:60|unique:produtos,id,'.$produto->id,
                 'produto_desc_red' => 'nullable|string|min:3|max:10',
@@ -187,7 +187,7 @@ class ProdutoController extends Controller
      */
     public function destroy(Produto $produto)
     {
-        if (Auth::user()->canExcluirProdutos()) {
+        if (Auth::user()->canExcluirProduto()) {
             try {
                 $produto = Produto::find($produto->id);
                 if ($produto->delete()) {

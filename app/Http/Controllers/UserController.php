@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarUsers()) {
+        if (Auth::user()->canListarUser()) {
             if (isset($request->searchField)) {
                 $users = DB::table('users')
                             ->where('name', 'like', '%'.$request->searchField.'%')
@@ -51,7 +51,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarUsers()) {
+        if (Auth::user()->canCadastrarUser()) {
             return View('user.create');
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -68,7 +68,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarUsers()) {
+        if (Auth::user()->canCadastrarUser()) {
             $this->validate($request, [
                 'name' => 'required|string|max:255',
                 'username' => 'required|string|min:4|max:12|unique:users',
@@ -110,7 +110,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        if (Auth::user()->canAlterarUsers()) {
+        if (Auth::user()->canAlterarUser()) {
             return View('user.edit')->withUser($user);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -127,7 +127,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        if (Auth::user()->canAlterarUsers()) {
+        if (Auth::user()->canAlterarUser()) {
             $this->validate($request, [
                 'name' => 'required|string|max:255',
                 'username' => 'nullable|string|min:4|max:12|unique:users,id,'.$user->id,
@@ -173,7 +173,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if (Auth::user()->canExcluirUsers()) {
+        if (Auth::user()->canExcluirUser()) {
             try {
                 $user = User::find($user->id);
                 if ($user->delete()) {

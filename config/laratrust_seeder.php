@@ -3,29 +3,27 @@
 return [
     'role_structure' => [
         'super' => [
-            'users' => 'c,r,u,d',
-            'acl' => 'c,r,u,d',
-            'role_user', 'c,r,u,d',
-            'profile' => 'r,u',
+            'user' => 'c,r,u,d',
+            'role' => 'c,r,u,d',
+            'role_user' => 'c,r,u,d',
             'tipo_pessoa' => 'c,r,u,d',
-            'abastecimentos' => 'c,r,u,d',
-            'atendentes' => 'c,r,u,d',
-            'bicos' => 'c,r,u,d',
-            'bombas' => 'c,r,u,d',
-            'clientes' => 'c,r,u,d',
-            'combustiveis' => 'c,r,u,d',
-            'departamentos' => 'c,r,u,d',
-            'grupo_veiculos' => 'c,r,u,d',
-            'marca_veiculos' => 'c,r,u,d',
-            'modelo_bombas' => 'c,r,u,d',
-            'modelo_veiculos' => 'c,r,u,d',
-            'produtos' => 'c,r,u,d',
-            'tanques' => 'c,r,u,d',
-            'tipo_bombas' => 'c,r,u,d',
-            'tipo_pessoas' => 'c,r,u,d',
-            'ufs' => 'c,r,u,d',
-            'unidades' => 'c,r,u,d',
-            /* relatorios */
+            'abastecimento' => 'c,r,u,d',
+            'atendente' => 'c,r,u,d',
+            'bico' => 'c,r,u,d',
+            'bomba' => 'c,r,u,d',
+            'cliente' => 'c,r,u,d',
+            'combustivel' => 'c,r,u,d',
+            'departamento' => 'c,r,u,d',
+            'grupo_veiculo' => 'c,r,u,d',
+            'marca_veiculo' => 'c,r,u,d',
+            'modelo_bomba' => 'c,r,u,d',
+            'modelo_veiculo' => 'c,r,u,d',
+            'produto' => 'c,r,u,d',
+            'tanque' => 'c,r,u,d',
+            'tipo_bomba' => 'c,r,u,d',
+            'tipo_pessoa' => 'c,r,u,d',
+            'uf' => 'c,r,u,d',
+            'unidade' => 'c,r,u,d',
             'posicao_tanques_grafico' => 'a',
             'media_consumo_veiculos_grafico' => 'a',
             'listagem_clientes' => 'a',
@@ -38,23 +36,18 @@ return [
             'exportar_exportar_dados_cadastrais' => 'a'
         ],
         'administrador' => [
-            'users' => 'c,r,u,d',
-            'profile' => 'r,u',
+            'user' => 'c,r,u,d',
         ],
         'usuario' => [
-            'profile' => 'r,u'
-        ],
-    ],
-    'permission_structure' => [
-        'cru_user' => [
-            'profile' => 'c,r,u'
+            'user' => 'r,u'
         ],
     ],
     'permissions_map' => [
         'c' => 'cadastrar',
         'r' => 'listar',
-        'u' => 'editar',
+        'u' => 'alterar',
         'd' => 'excluir',
+        'v' => 'visualizar',
         'a' => 'acesso'
     ]
 ];

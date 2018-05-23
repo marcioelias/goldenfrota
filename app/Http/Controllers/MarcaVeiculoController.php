@@ -24,7 +24,7 @@ class MarcaVeiculoController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarMarcaVeiculos()) {
+        if (Auth::user()->canListarMarcaVeiculo()) {
             if (isset($request->searchField)) {
                 $marcaVeiculos = MarcaVeiculo::where('marca_veiculo', 'like', '%'.$request->searchField.'%')
                                             ->paginate();
@@ -49,7 +49,7 @@ class MarcaVeiculoController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarMarcaVeiculos()) {
+        if (Auth::user()->canCadastrarMarcaVeiculo()) {
             return View('marca_veiculo.create');
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -65,7 +65,7 @@ class MarcaVeiculoController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarMarcaVeiculos()) {
+        if (Auth::user()->canCadastrarMarcaVeiculo()) {
             $this->validate($request, [
                 'marca_veiculo' => 'required|string|min:3|max:30|unique:marca_veiculos'
             ]);
@@ -100,7 +100,7 @@ class MarcaVeiculoController extends Controller
      */
     public function edit(MarcaVeiculo $marcaVeiculo)
     {
-        if (Auth::user()->canAlterarMarcaVeiculos()) {
+        if (Auth::user()->canAlterarMarcaVeiculo()) {
             return View('marca_veiculo.edit', [
                 'marcaVeiculo' => $marcaVeiculo
             ]);
@@ -119,7 +119,7 @@ class MarcaVeiculoController extends Controller
      */
     public function update(Request $request, MarcaVeiculo $marcaVeiculo)
     {
-        if (Auth::user()->canAlterarMarcaVeiculos()) {
+        if (Auth::user()->canAlterarMarcaVeiculo()) {
             $this->validate($request, [
                 'marca_veiculo' => 'required|string|min:3|max:30|unique:marca_veiculos,id,'.$marcaVeiculo->id
             ]);
@@ -155,7 +155,7 @@ class MarcaVeiculoController extends Controller
      */
     public function destroy(MarcaVeiculo $marcaVeiculo)
     {
-        if (Auth::user()->canAlterarMarcaVeiculos()) {
+        if (Auth::user()->canAlterarMarcaVeiculo()) {
             try {
                 if ($marcaVeiculo->delete()) {
                     Session::flash('success', __('messages.delete_success', [

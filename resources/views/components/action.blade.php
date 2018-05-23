@@ -4,16 +4,19 @@
             $btn_style = 'btn-success';
             $btn_icon = 'eye-open';
             $tooltip = 'Mostrar';
+            $permission = 'listar-'.$model;
             break;
         case 'edit':
             $btn_style = 'btn-warning';
             $btn_icon = 'edit'; 
             $tooltip = 'Editar';
+            $permission = 'alterar-'.$model;
             break;
         case 'destroy':
             $btn_style = 'btn-danger';
             $btn_icon = 'remove';
             $tooltip = 'Remover';
+            $permission = 'excluir-'.$model;
             break;
     }
 ?>
@@ -22,6 +25,7 @@
     $keyField = isset($keyField) ? $keyField : 'id';
 @endphp
 
+@permission($permission)
 @if($action == 'destroy')    
     <form id="deleteForm{{$row->id}}" action="{{route($model.'.'.$action, ['$model' => $row->$keyField])}}" method="POST" style="display: inline">
         <span data-toggle="tooltip" data-placement="top" title="{{$tooltip}}" data-original-title="{{$tooltip}}">
@@ -38,3 +42,5 @@
         <a href="{{route($model.'.'.$action, [$model => $row->$keyField])}}" class="btn btn-xs {{$btn_style}}"><span class="glyphicon glyphicon-{{$btn_icon}}" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="{{$tooltip}}" data-original-title="{{$tooltip}}"></span></a>
     </span>
 @endif
+@endpermission
+
