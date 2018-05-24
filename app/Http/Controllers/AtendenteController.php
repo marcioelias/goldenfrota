@@ -72,7 +72,7 @@ class AtendenteController extends Controller
 
                 if ($atendente->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('atendente'),
+                        'model' => __('models.atendente'),
                         'name' => $atendente->nome_atendente
                     ]));
                     return redirect()->action('AtendenteController@index');
@@ -131,7 +131,7 @@ class AtendenteController extends Controller
 
                 if ($atendente->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('atendente'),
+                        'model' => __('models.atendente'),
                         'name' => $atendente->nome_atendente
                     ]));
                     return redirect()->action('AtendenteController@index');
@@ -161,7 +161,7 @@ class AtendenteController extends Controller
                 $atendente = Atendente::find($Atendente->id);
                 if ($atendente->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('atendente'),
+                        'model' => __('models.atendente'),
                         'name' => $atendente->nome_atendnete
                     ]));
                     

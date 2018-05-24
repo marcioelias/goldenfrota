@@ -3,7 +3,7 @@
 @section('content')
     <div class="panel panel-default">
         @component('components.form', [
-            'title' => 'Alterar Perfil x Usuário', 
+            'title' => 'Alterar de Usuário e Perfil de Acesso', 
             'routeUrl' => route('role_user.update', $roleUser->id), 
             'method' => 'PUT',
             'formButtons' => [

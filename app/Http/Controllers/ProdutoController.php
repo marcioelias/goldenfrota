@@ -95,7 +95,7 @@ class ProdutoController extends Controller
 
                 if ($produto->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('produto'),
+                        'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
                     ]));
                     return redirect()->action('ProdutoController@index');
@@ -162,7 +162,7 @@ class ProdutoController extends Controller
 
                 if ($produto->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('produto'),
+                        'model' => __('models.produto'),
                         'name' => $produto->produto_descricao
                     ]));
                     return redirect()->action('ProdutoController@index');
@@ -192,7 +192,7 @@ class ProdutoController extends Controller
                 $produto = Produto::find($produto->id);
                 if ($produto->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('produto'),
+                        'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
                     ]));
                     return redirect()->action('ProdutoController@index');

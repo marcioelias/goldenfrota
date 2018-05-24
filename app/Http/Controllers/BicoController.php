@@ -89,7 +89,7 @@ class BicoController extends Controller
 
                 if ($bico->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('bico'),
+                        'model' => __('models.bico'),
                         'name' => $bico->num_bico
                     ]));
                     return redirect()->action('BicoController@index');
@@ -151,7 +151,7 @@ class BicoController extends Controller
 
                 if ($bico->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('bico'),
+                        'model' => __('models.bico'),
                         'name' => $bico->num_bico
                     ]));
                     return redirect()->action('BicoController@index');
@@ -181,7 +181,7 @@ class BicoController extends Controller
             try {
                 if ($bico->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('bico'),
+                        'model' => __('models.bico'),
                         'name' => $bico->num_bico
                     ]));
                     

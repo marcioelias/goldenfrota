@@ -4,19 +4,19 @@
             $btn_style = 'btn-success';
             $btn_icon = 'eye-open';
             $tooltip = 'Mostrar';
-            $permission = 'listar-'.$model;
+            $permission = 'listar-'.str_replace('_', '-', $model);
             break;
         case 'edit':
             $btn_style = 'btn-warning';
             $btn_icon = 'edit'; 
             $tooltip = 'Editar';
-            $permission = 'alterar-'.$model;
+            $permission = 'alterar-'.str_replace('_', '-', $model);
             break;
         case 'destroy':
             $btn_style = 'btn-danger';
             $btn_icon = 'remove';
             $tooltip = 'Remover';
-            $permission = 'excluir-'.$model;
+            $permission = 'excluir-'.str_replace('_', '-', $model);
             break;
     }
 ?>

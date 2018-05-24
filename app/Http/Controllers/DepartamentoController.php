@@ -82,7 +82,7 @@ class DepartamentoController extends Controller
 
                 if ($departamento->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('departamento'),
+                        'model' => __('models.departamento'),
                         'name' => $departamento->departamento
                     ]));
                     return redirect()->action('DepartamentoController@index');
@@ -139,7 +139,7 @@ class DepartamentoController extends Controller
 
                 if ($departamento->save()) {
                     Session::flash('success',  __('messages.update_success', [
-                        'model' => __('departamento'),
+                        'model' => __('models.departamento'),
                         'name' => $departamento->departamento
                     ]));
                     return redirect()->action('DepartamentoController@index');
@@ -168,7 +168,7 @@ class DepartamentoController extends Controller
             try {
                 if ($departamento->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('departamento'),
+                        'model' => __('models.departamento'),
                         'name' => $departamento->departamento
                     ]));
                     return redirect()->action('DepartamentoController@index');

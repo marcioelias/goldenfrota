@@ -5,7 +5,7 @@
         'captions' => $fields, 
         'rows' => $roleUsers, 
         'model' => 'role_user',
-        'tableTitle' => 'Role User Association',
+        'tableTitle' => 'Associação de Usuários e Perfis de Acesso',
         'displayField' => 'name',
         'actions' => ['edit', 'destroy'],
         ]);

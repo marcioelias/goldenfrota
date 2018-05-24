@@ -99,8 +99,8 @@ class TanqueMovimentacaoController extends Controller
 
 
                 if ($movimentacao->save()) {
-                    Session::flash('success', __('messages.create_success', [
-                        'model' => __('tanque_movimentacao'),
+                    Session::flash('success', __('messages.create_success_f', [
+                        'model' => __('models.tanque_movimentacao'),
                         'name' => $movimentacao->documento
                     ]));
                     return redirect()->action('TanqueMovimentacaoController@index');
@@ -171,8 +171,8 @@ class TanqueMovimentacaoController extends Controller
 
 
                 if ($movimentacao->save()) {
-                    Session::flash('success', __('messages.update_success', [
-                        'model' => __('tanque_movimentacao'),
+                    Session::flash('success', __('messages.update_success_f', [
+                        'model' => __('models.tanque_movimentacao'),
                         'name' => $movimentacao->documento
                     ]));
                     return redirect()->action('TanqueMovimentacaoController@index');
@@ -200,8 +200,8 @@ class TanqueMovimentacaoController extends Controller
         if (Auth::user()->canExcluirTanqueMovimentacao()) {
             try {
                 if ($tanqueMovimentacao->delete()) {
-                    Session::flash('success', __('messages.delete_success', [
-                        'model' => __('tanque_movimentacao'),
+                    Session::flash('success', __('messages.delete_success_f', [
+                        'model' => __('models.tanque_movimentacao'),
                         'name' => $tanqueMovimentacao->documento
                     ]));
                     return redirect()->action('TanqueMovimentacaoController@index');

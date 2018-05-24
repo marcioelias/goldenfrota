@@ -109,7 +109,7 @@ class RolesController extends Controller
             DB::commit();
             
             Session::flash('success', __('messages.create_success', [
-                'model' => __('role'),
+                'model' => __('models.role'),
                 'name' => $request->display_name 
             ]));
             return redirect()->action('RolesController@index');
@@ -174,7 +174,7 @@ class RolesController extends Controller
                 DB::commit();
 
                 Session::flash('success', __('messages.update_success', [
-                    'model' => __('role'),
+                    'model' => __('models.role'),
                     'name' => $request->display_name
                 ]));
                 return redirect()->action('RolesController@index');
@@ -184,7 +184,7 @@ class RolesController extends Controller
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));
-                return redirect()->back->withInput();
+                return redirect()->back()->withInput();
             }
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -204,7 +204,7 @@ class RolesController extends Controller
             try {
                 if ($role->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('role'),
+                        'model' => __('models.role'),
                         'name' => $role->display_name
                     ]));
                     return redirect()->action('RolesController@index');

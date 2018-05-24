@@ -74,8 +74,8 @@ class MarcaVeiculoController extends Controller
                 $marcaVeiculo = new MarcaVeiculo($request->all());
 
                 if ($marcaVeiculo->save()) {
-                    Session::flash('success', __('messages.create_success', [
-                        'model' => __('marca_veiculo'),
+                    Session::flash('success', __('messages.create_success_f', [
+                        'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
                     ]));
                     return redirect()->action('MarcaVeiculoController@index');
@@ -129,8 +129,8 @@ class MarcaVeiculoController extends Controller
                 $marcaVeiculo->ativo = $request->ativo;
 
                 if ($marcaVeiculo->save()) {
-                    Session::flash('success', __('messages.update_success', [
-                        'model' => __('marca_veiculo'),
+                    Session::flash('success', __('messages.update_success_f', [
+                        'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
                     ]));
                     return redirect()->action('MarcaVeiculoController@index');
@@ -158,8 +158,8 @@ class MarcaVeiculoController extends Controller
         if (Auth::user()->canAlterarMarcaVeiculo()) {
             try {
                 if ($marcaVeiculo->delete()) {
-                    Session::flash('success', __('messages.delete_success', [
-                        'model' => __('marca_veiculo'),
+                    Session::flash('success', __('messages.delete_success_f', [
+                        'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
                     ]));
                     return redirect()->action('MarcaVeiculoController@index');

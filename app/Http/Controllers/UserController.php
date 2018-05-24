@@ -85,7 +85,7 @@ class UserController extends Controller
 
                 if ($user->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('user'),
+                        'model' => __('models.user'),
                         'name' => $user->name
                     ]));
                     return redirect()->action('UserController@index');
@@ -148,7 +148,7 @@ class UserController extends Controller
 
                 if ($user->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('user'),
+                        'model' => __('models.user'),
                         'name' => $user->name
                     ]));
                     return redirect()->action('UserController@index');
@@ -178,7 +178,7 @@ class UserController extends Controller
                 $user = User::find($user->id);
                 if ($user->delete()) {
                     Session::flash('success', __('delete_success', [
-                        'model' => __('user'),
+                        'model' => __('models.user'),
                         'name' => $user->name
                     ]));
                     

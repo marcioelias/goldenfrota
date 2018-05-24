@@ -72,7 +72,7 @@ class ModeloBombaController extends Controller
                 $modelo_bomba = new ModeloBomba($request->all());
                 if ($modelo_bomba->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('modelo_bomba'),
+                        'model' => __('models.modelo_bomba'),
                         'name' => $modelo_bomba->modelo_bomba
                     ]));
                     return redirect()->action('ModeloBombaController@index');
@@ -129,7 +129,7 @@ class ModeloBombaController extends Controller
 
                 if ($modelo_bomba->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('modelo_bomba'),
+                        'model' => __('models.modelo_bomba'),
                         'name' => $modelo_bomba->modelo_bomba
                     ]));
                     return redirect()->action('ModeloBombaController@index');
@@ -158,7 +158,7 @@ class ModeloBombaController extends Controller
             try {
                 if ($modelo_bomba->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('modelo_bomba'),
+                        'model' => __('models.modelo_bomba'),
                         'name' => $modelo_bomba->modelo_bomba
                     ]));
                     return redirect()->action('ModeloBombaController@index');

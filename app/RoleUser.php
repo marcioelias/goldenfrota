@@ -13,6 +13,7 @@ class RoleUser extends Model
         'role_id'
     ];
 
+    public $timestamps = false;
     protected $table = 'role_user';
 
     public function user() {

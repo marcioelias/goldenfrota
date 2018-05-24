@@ -72,7 +72,7 @@ class CombustivelController extends Controller
                 $combustivel = new Combustivel($request->all());
                 if ($combustivel->save()){
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('combustivel'),
+                        'model' => __('models.combustivel'),
                         'name' => $combustivel->descricao
                     ]));
                     
@@ -160,7 +160,7 @@ class CombustivelController extends Controller
             try {
                 if ($combustivel->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('combustivel'),
+                        'model' => __('models.combustivel'),
                         'name' => $combustivel->descricao
                     ]));
                     return redirect()->action('ClienteController@index');

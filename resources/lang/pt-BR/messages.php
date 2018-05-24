@@ -10,6 +10,13 @@ return [
     'create_error' => 'Novo :Model :Name não pode ser salvo.',
     'update_error' => ':Model :Name não pode ser alterado.',
     'delete_error' => ':Model :Name não pode ser removido.',
+    /* CRUD Messages for female words */
+    'create_success_f' => 'Nova :Model :Name cadastrada com sucesso.',
+    'update_success_f' => ':Model :Name alterada com sucesso.',
+    'delete_success_f' => ':Model :Name removida com sucesso.',
+    'create_error_f' => 'Nova :Model :Name não pode ser salva.',
+    'update_error_f' => ':Model :Name não pode ser alterada.',
+    'delete_error_f' => ':Model :Name não pode ser removida.',
 
     /* Exceptions */
     'exception' => 'Oops... Ocorreu um erro. :exception.',

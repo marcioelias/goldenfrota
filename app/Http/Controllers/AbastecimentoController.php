@@ -138,7 +138,7 @@ class AbastecimentoController extends Controller
                 
                 if ($abastecimento->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('abastecimento'),
+                        'model' => __('models.abastecimento'),
                         'name' => $abastecimento->id
                     ]));
                     return redirect()->action('AbastecimentoController@index');
@@ -259,7 +259,7 @@ class AbastecimentoController extends Controller
                 } else {
                     if ($abastecimento->save()) {
                         Session::flash('success', __('messages.update_success', [
-                            'model' => __('abastecimento'),
+                            'model' => __('models.abastecimento'),
                             'name' => $abastecimento->id
                         ]));
                         return redirect()->action('AbastecimentoController@index');
@@ -293,7 +293,7 @@ class AbastecimentoController extends Controller
                     $movimentacao = TanqueMovimentacao::find($abastecimento->tanque_movimentacao_id);
                     if ($movimentacao->delete()) {
                         Session::flash('success', __('messages.delete_success', [
-                            'model' => __('abastecimento'),
+                            'model' => __('models.abastecimento'),
                             'name' => $abastecimento->id
                         ]));
                         
@@ -303,7 +303,7 @@ class AbastecimentoController extends Controller
                     //abastecimento externo, não tem movimentação de estoque, por isso remove somente a abastecida
                     if ($abastecimento->delete()) {
                         Session::flash('success', __('messages.delete_success', [
-                            'model' => __('abastecimento'),
+                            'model' => __('models.abastecimento'),
                             'name' => $abastecimento->id
                         ]));
                         

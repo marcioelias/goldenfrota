@@ -5,7 +5,7 @@
         'captions' => $fields, 
         'rows' => $roles, 
         'model' => 'role',
-        'tableTitle' => 'Role',
+        'tableTitle' => 'Perfil de Acesso',
         'displayField' => 'display_name',
         'actions' => ['edit', 'destroy']
         ]); ?>;

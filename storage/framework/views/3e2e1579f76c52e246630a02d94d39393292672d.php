@@ -3,7 +3,7 @@
 <?php $__env->startSection('content'); ?>
     <div class="panel panel-default">
         <?php $__env->startComponent('components.form', [
-            'title' => 'New Role User', 
+            'title' => 'Nova Associação de Usuaŕio Perfil de Acesso', 
             'routeUrl' => route('role_user.store'), 
             'method' => 'POST',
             'formButtons' => [
@@ -17,7 +17,7 @@
                         [
                             'type' => 'select',
                             'field' => 'role_id',
-                            'label' => 'Role',
+                            'label' => 'Perfil',
                             'required' => true,
                             'items' => $roles,
                             'inputSize' => 6,
@@ -28,7 +28,7 @@
                         [
                             'type' => 'select',
                             'field' => 'user_id',
-                            'label' => 'User',
+                            'label' => 'Usuário',
                             'required' => true,
                             'items' => $users,
                             'inputSize' => 6,

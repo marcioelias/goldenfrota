@@ -72,7 +72,7 @@ class GrupoVeiculoController extends Controller
 
                 if ($grupoVeiculo->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('grupo_veiculo'),
+                        'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
                     ]));
                     return redirect()->action('GrupoVeiculoController@index');
@@ -127,7 +127,7 @@ class GrupoVeiculoController extends Controller
 
                 if ($grupoVeiculo->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('grupo_veiculo'),
+                        'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
                     ]));
                     return redirect()->action('GrupoVeiculoController@index');
@@ -156,7 +156,7 @@ class GrupoVeiculoController extends Controller
             try {
                 if ($grupoVeiculo->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('grupo_veiculo'),
+                        'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
                     ]));
                     return redirect()->action('GrupoVeiculoController@index');

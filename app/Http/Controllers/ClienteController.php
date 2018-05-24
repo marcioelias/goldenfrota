@@ -103,7 +103,7 @@ class ClienteController extends Controller
                 
                 if ($cliente->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('cliente'),
+                        'model' => __('models.cliente'),
                         'name' => $cliente->nome_razao
                     ]));
                     return redirect()->action('ClienteController@index');
@@ -188,7 +188,7 @@ class ClienteController extends Controller
                 
                 if ($cliente->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('cliente'),
+                        'model' => __('models.cliente'),
                         '$cliente->nome_razao'
                     ]));
                     return redirect()->action('ClienteController@index');
@@ -218,7 +218,7 @@ class ClienteController extends Controller
             try {
                 if ($cliente->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('cliente'),
+                        'model' => __('models.cliente'),
                         'name' => $cliente->nome_razao
                     ]));
                     return redirect()->action('ClienteController@index');

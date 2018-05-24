@@ -97,8 +97,8 @@ class RoleUsersController extends Controller
                 $roleUser->user_type = 'App\User';
                 
                 if ($roleUser->save()) {
-                    Session::flash('success', __('messages.create_success', [
-                        'model' => __('role_user'),
+                    Session::flash('success', __('messages.create_success_f', [
+                        'model' => __('models.role_user'),
                         'name' => $roleUser->user->name.' - '.$roleUser->role->display_name
                     ]));
                     return redirect()->action('RoleUsersController@index');
@@ -107,7 +107,7 @@ class RoleUsersController extends Controller
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));
-                return redirect()->back->withInput();
+                return redirect()->back()->withInput();
             }
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -159,8 +159,8 @@ class RoleUsersController extends Controller
                 $roleUser->role_id = $request->role_id;
 
                 if ($roleUser->save()) {
-                    Session::flash('success', __('messages.update_success', [
-                        'model' => __('role_user'),
+                    Session::flash('success', __('messages.update_success_f', [
+                        'model' => __('models.role_user'),
                         'name' => $roleUser->user->name.' - '.$roleUser->role->display_name
                     ]));
                     return redirect()->action('RoleUsersController@index');
@@ -169,7 +169,7 @@ class RoleUsersController extends Controller
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));
-                return redirect()->back->withInput();
+                return redirect()->back()->withInput();
             }
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -189,8 +189,8 @@ class RoleUsersController extends Controller
             try {
                 $roleUser = RoleUser::find($roleUser->id);
                 if ($roleUser->delete()) {
-                    Session::flash('success', __('messages.delete_success', [
-                        'model' => __('role_user'),
+                    Session::flash('success', __('messages.delete_success_f', [
+                        'model' => __('models.role_user'),
                         'name' => $roleUser->user->name.' - '.$roleUser->role->display_name
                     ]));
                     

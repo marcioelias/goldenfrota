@@ -86,7 +86,7 @@ class ModeloVeiculoController extends Controller
 
                 if ($modeloVeiculo->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('modelo_veiculo'),
+                        'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
                     ]));
                     return redirect()->action('ModeloVeiculoController@index');
@@ -146,7 +146,7 @@ class ModeloVeiculoController extends Controller
 
                 if ($modeloVeiculo->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('modelo_veiculo'),
+                        'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
                     ]));
                     return redirect()->action('ModeloVeiculoController@index');
@@ -175,7 +175,7 @@ class ModeloVeiculoController extends Controller
             try {
                 if ($modeloVeiculo->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('modelo_veiculo'),
+                        'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
                     ]));
                     return redirect()->action('ModeloVeiculoController@index');

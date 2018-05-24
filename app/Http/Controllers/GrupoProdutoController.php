@@ -74,7 +74,7 @@ class GrupoProdutoController extends Controller
 
                 if ($grupoProduto->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('grupo_produto'),
+                        'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
                     ]));
                     return redirect()->action('GrupoProdutoController@index');
@@ -129,7 +129,7 @@ class GrupoProdutoController extends Controller
 
                 if ($grupoProduto->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('grupo_produto'),
+                        'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
                     ]));
                     return redirect()->action('GrupoProdutoController@index');
@@ -158,7 +158,7 @@ class GrupoProdutoController extends Controller
             try {
                 if ($grupoProduto->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('grupo_produto'),
+                        'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
                     ]));
                     return redirect()->action('GrupoProdutoController@index');

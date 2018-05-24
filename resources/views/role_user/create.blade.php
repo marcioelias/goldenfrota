@@ -3,7 +3,7 @@
 @section('content')
     <div class="panel panel-default">
         @component('components.form', [
-            'title' => 'Novo Perfil x Usuário', 
+            'title' => 'Nova Associação de Usuaŕio Perfil de Acesso', 
             'routeUrl' => route('role_user.store'), 
             'method' => 'POST',
             'formButtons' => [

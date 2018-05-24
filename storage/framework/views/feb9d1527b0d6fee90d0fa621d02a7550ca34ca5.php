@@ -141,7 +141,10 @@
     <div class="modal-content modal-default">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title"><strong></strong></h4>
+        <div class="row">
+            <div class="col-sm-1"><span class="glyphicon glyphicon-alert"></span></div>
+            <div class="col"><h4 class="modal-title"><strong></strong></h4></div>
+        </div>
       </div>
       <div class="modal-body">
         <p></p>

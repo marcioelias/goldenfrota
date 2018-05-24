@@ -84,7 +84,7 @@ class TanqueController extends Controller
 
                 if ($tanque->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('tanque'),
+                        'model' => __('models.tanque'),
                         'name' => $tanque->descricao_tanque 
                     ]));
                     return redirect()->action('TanqueController@index');
@@ -143,7 +143,7 @@ class TanqueController extends Controller
 
                 if ($tanque->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('tanque'),
+                        'model' => __('models.tanque'),
                         'name' => $tanque->descricao_tanque 
                     ]));
                     return redirect()->action('TanqueController@index');
@@ -172,7 +172,7 @@ class TanqueController extends Controller
             try {
                 if ($tanque->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('tanque'),
+                        'model' => __('models.tanque'),
                         'name' => $tanque->descricao_tanque 
                     ]));
                     

@@ -70,7 +70,7 @@ class TipoBombaController extends Controller
                 $tipo_bomba = new TipoBomba($request->all());
                 if ($tipo_bomba->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => __('tipo_bomba'),
+                        'model' => __('models.tipo_bomba'),
                         'name' => $tipo_bomba->tipo_bomba
                     ]));
 
@@ -126,7 +126,7 @@ class TipoBombaController extends Controller
 
                 if ($tipo_bomba->save()) {
                     Session::flash('success', __('messages.update_success', [
-                        'model' => __('tipo_bomba'),
+                        'model' => __('models.tipo_bomba'),
                         'name' => $tipo_bomba->tipo_bomba
                     ]));
 
@@ -156,7 +156,7 @@ class TipoBombaController extends Controller
             try {
                 if ($tipo_bomba->delete()) {
                     Session::flash('success', __('messages.delete_success', [
-                        'model' => __('tipo_bomba'),
+                        'model' => __('models.tipo_bomba'),
                         'name' => $tipo_bomba->tipo_bomba
                     ]));
                     

@@ -71,7 +71,7 @@ class UnidadeController extends Controller
                 $unidade = new Unidade($request->all());
 
                 if ($unidade->save()) {
-                    Session::flash('success', __('messages.create_success', [
+                    Session::flash('success', __('messages.create_success_f', [
                         'model' => 'unidade',
                         'name' => $unidade->unidade
                     ]));
@@ -80,7 +80,7 @@ class UnidadeController extends Controller
                 }
             } catch (\Exception $e) {
                 Session::flash('success', __('messages.delete_success', [
-                    'model' => __('abastecimento'),
+                    'model' => __('models.abastecimento'),
                     'name' => $abastecimento->id
                 ]));
                 return redirect()->back();
@@ -128,8 +128,8 @@ class UnidadeController extends Controller
                 $unidade->ativo = $request->ativo;
 
                 if ($unidade->save()) {
-                    Session::flash('success', __('messages.update_success', [
-                        'model' => __('unidade'),
+                    Session::flash('success', __('messages.update_success_f', [
+                        'model' => __('models.unidade'),
                         'name' => $unidade->unidade
                     ]));
 
@@ -137,7 +137,7 @@ class UnidadeController extends Controller
                 }
             } catch (\Exception $e) {
                 Session::flash('success', __('messages.delete_success', [
-                    'model' => __('abastecimento'),
+                    'model' => __('models.abastecimento'),
                     'name' => $abastecimento->id
                 ]));
                 return redirect()->back();
@@ -159,8 +159,8 @@ class UnidadeController extends Controller
         if (Auth::user()->canAlterarUnidade()) {
             try {
                 if ($unidade->delete()) {
-                    Session::flash('success', __('messages.delete_success', [
-                        'model' => __('unidade'),
+                    Session::flash('success', __('messages.delete_success_f', [
+                        'model' => __('models.unidade'),
                         'name' => $unidade->unidade
                     ]));
                     
