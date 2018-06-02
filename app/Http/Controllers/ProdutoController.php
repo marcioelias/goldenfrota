@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Estoque;
 use App\Produto;
 use App\Unidade;
+use App\Fornecedor;
+use App\Permission;
 use App\GrupoProduto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,8 +21,8 @@ class ProdutoController extends Controller
         'produto_desc_red' => 'Descrição Reduzida',
         'unidade' => 'Unidade',
         'grupo_produto' => 'Grupo',
-        'valor_unitario' => 'Valor',
-        'qtd_estoque' => 'Qtd. Estoque',
+        'valor_custo' => 'Preço de Custo',
+        'valor_venda' => 'Preço de Venda',
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -64,7 +67,9 @@ class ProdutoController extends Controller
         if (Auth::user()->canCadastrarProduto()) {
             return View('produto.create', [
                 'unidades' => Unidade::all(),
-                'grupoProdutos' => GrupoProduto::all()
+                'grupoProdutos' => GrupoProduto::all(),
+                'estoques' => Estoque::all(),
+                'fornecedores' => Fornecedor::all()
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -80,20 +85,24 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
         if (Auth::user()->canCadastrarProduto()) {
             $this->validate($request, [
                 'produto_descricao' => 'required|string|min:3|max:60|unique:produtos',
                 'produto_desc_red' => 'nullable|string|min:3|max:10',
                 'unidade_id' => 'required',
-                'valor_unitario' => 'required|numeric',
                 'grupo_produto_id' => 'required',
-                'qtd_estoque' => 'required|numeric'
             ]);
 
             try {
+                DB::beginTransaction();
                 $produto = new Produto($request->all());
 
                 if ($produto->save()) {
+                    $produto->fornecedores()->sync($request->fornecedores);
+                    $produto->estoques()->sync($request->estoques);
+
+                    DB::commit();
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
@@ -101,6 +110,7 @@ class ProdutoController extends Controller
                     return redirect()->action('ProdutoController@index');
                 }
             } catch (\Exception $e) {
+                DB::rollback();
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));
@@ -124,7 +134,9 @@ class ProdutoController extends Controller
             return View('produto.edit', [
                 'produto' => $produto,
                 'unidades' => Unidade::all(),
-                'grupoProdutos' => GrupoProduto::all()
+                'grupoProdutos' => GrupoProduto::all(),
+                'estoques' => Estoque::all(),
+                'fornecedores' => Fornecedor::all()
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -143,31 +155,29 @@ class ProdutoController extends Controller
     {
         if (Auth::user()->canAlterarProduto()) {
             $this->validate($request, [
-                'produto_descricao' => 'required|string|min:3|max:60|unique:produtos,id,'.$produto->id,
+                'produto_descricao' => 'required|string|min:3|max:60|unique:produtos,id,'.$request->id,
                 'produto_desc_red' => 'nullable|string|min:3|max:10',
                 'unidade_id' => 'required',
-                'valor_unitario' => 'required|numeric',
                 'grupo_produto_id' => 'required',
-                'qtd_estoque' => 'required|numeric'
             ]);
 
             try {
-                $produto->produto_descricao = $request->produto_descricao;
-                $produto->produto_desc_red = $request->produto_desc_red;
-                $produto->unidade_id = $request->unidade_id;
-                $produto->valor_unitario = $request->valor_unitario;
-                $produto->grupo_produto_id = $request->grupo_produto_id;
-                $produto->qtd_estoque = $request->qtd_estoque;
-                $produto->ativo = $request->ativo;
+                DB::beginTransaction();
+                $produto->fill($request->all());
 
                 if ($produto->save()) {
+                    $produto->fornecedores()->sync($request->fornecedores);
+                    $produto->estoques()->sync($request->estoques);
+
+                    DB::commit();
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.produto'),
-                        'name' => $produto->produto_descricao
+                        'name' => $produto->produto_descricao 
                     ]));
                     return redirect()->action('ProdutoController@index');
                 }
             } catch (\Exception $e) {
+                DB::rollback();
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));

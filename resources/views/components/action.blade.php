@@ -29,8 +29,8 @@
 @if($action == 'destroy')    
     <form id="deleteForm{{$row->id}}" action="{{route($model.'.'.$action, ['$model' => $row->$keyField])}}" method="POST" style="display: inline">
         <span data-toggle="tooltip" data-placement="top" title="{{$tooltip}}" data-original-title="{{$tooltip}}">
-             <button class="btn btn-xs btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="{{__('Remover ').ucFirst($model) }}" 
-                data-message="Remover {{ucFirst($model).': '.$row->$displayField}}?">
+             <button class="btn btn-xs btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="{{__('Remover ').__('models.'.$model)}}" 
+                data-message="Remover {{ __('models.'.$model).': '.$row->$displayField}}?">
                 <i class="glyphicon glyphicon-trash"></i>
             </button>
         </span>

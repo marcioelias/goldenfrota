@@ -12,7 +12,4 @@
 <link href="<?php echo e(asset('css/custom.css')); ?>" rel="stylesheet" media="all">
 <link href="<?php echo e(asset('css/other.css')); ?>" rel="stylesheet" media="all">
 
-<!-- Scripts -->
-<script src="<?php echo e(asset('js/manifest.js')); ?>"></script>
-<script src="<?php echo e(asset('js/vendor.js')); ?>"></script>
-<script src="<?php echo e(asset('js/app.js')); ?>"></script>
+

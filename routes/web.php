@@ -40,7 +40,11 @@ Route::middleware(['auth:web'])->group(function() {
     Route::resource('/abastecimento', 'AbastecimentoController')->except('show');
     Route::resource('/tanque_movimentacao', 'TanqueMovimentacaoController')->except('show');
     Route::resource('/departamento', 'DepartamentoController')->except('show');
+    Route::resource('/fornecedor', 'FornecedorController')->except('show');
+    Route::resource('/estoque', 'EstoqueController')->except('show');
     Route::resource('/parametro', 'ParametroController')->except('show');
+    Route::resource('/tipo_movimentacao_produto', 'TipoMovimentacaoProdutoController')->except('show');
+    Route::resource('/entrada_estoque', 'EntradaEstoqueController')->except('show');
 
     Route::resource('/role_user', 'RoleUsersController')->except('show');
     Route::resource('/role', 'RolesController')->except('show');

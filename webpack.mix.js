@@ -31,6 +31,7 @@ let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
     .extract([
+        'vue',
         'tether',
         'jquery',
         //'jquery-ui',
@@ -38,6 +39,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         //'jquery-browserify',
         'jquery-mask-plugin',
         //'bootstrap-switch',
+        'bootstrap-toggle',
         //'bootstrap-slider',
         'bootstrap-select',
         'eonasdan-bootstrap-datetimepicker'
@@ -53,6 +55,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         //'node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css',
         'node_modules/bootstrap-select/dist/css/bootstrap-select.min.css',
         //'node_modules/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.min.css',
+        'node_modules/bootstrap-toggle/css/bootstrap2-toggle.css',
         'node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
     ], 'public/css/other.css'); 
 
@@ -60,6 +63,8 @@ mix.js([
         //'node_modules/ajax-bootstrap-select/dist/js/ajax-bootstrap-select.min.js',
         'node_modules/bootstrap-select/dist/js/i18n/defaults-pt_BR.min.js'
     ], 'public/js/other.js');
+
+mix.js('resources/assets/js/entradaestoque.js', 'public/js');
 /* mix.styles([
         'node_modules/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.min.css'
     ], 'public/css/custom.css'); */

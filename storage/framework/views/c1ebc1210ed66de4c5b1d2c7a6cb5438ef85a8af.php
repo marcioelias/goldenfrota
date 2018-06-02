@@ -29,8 +29,8 @@
 <?php if($action == 'destroy'): ?>    
     <form id="deleteForm<?php echo e($row->id); ?>" action="<?php echo e(route($model.'.'.$action, ['$model' => $row->$keyField])); ?>" method="POST" style="display: inline">
         <span data-toggle="tooltip" data-placement="top" title="<?php echo e($tooltip); ?>" data-original-title="<?php echo e($tooltip); ?>">
-             <button class="btn btn-xs btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="<?php echo e(__('Remover ').ucFirst($model)); ?>" 
-                data-message="Remover <?php echo e(ucFirst($model).': '.$row->$displayField); ?>?">
+             <button class="btn btn-xs btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="<?php echo e(__('Remover ').__('models.'.$model)); ?>" 
+                data-message="Remover <?php echo e(__('models.'.$model).': '.$row->$displayField); ?>?">
                 <i class="glyphicon glyphicon-trash"></i>
             </button>
         </span>

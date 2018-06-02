@@ -127,6 +127,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        dd($request->all());
         if (Auth::user()->canAlterarUser()) {
             $this->validate($request, [
                 'name' => 'required|string|max:255',

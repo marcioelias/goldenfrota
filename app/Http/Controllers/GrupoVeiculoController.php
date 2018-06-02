@@ -152,7 +152,7 @@ class GrupoVeiculoController extends Controller
      */
     public function destroy(GrupoVeiculo $grupoVeiculo)
     {
-        if (Auth::user()->canAlterarGrupoVeiculo()) {
+        if (Auth::user()->canExcluirGrupoVeiculo()) {
             try {
                 if ($grupoVeiculo->delete()) {
                     Session::flash('success', __('messages.delete_success', [

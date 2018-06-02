@@ -15,6 +15,7 @@ return [
     'marca_veiculo' => 'Marca de Veículo',
     'modelo_bomba' => 'Modelo de Bomba',
     'modelo_veiculo' => 'Modelo de Veículo',
+    'entrada_estoque' => 'Entrada no Estoque',
     'parametro' => 'Parametro',
     'role' => 'Perfil de Usuário',
     'role_user' => 'Associação de Perfil Usuário',
@@ -27,4 +28,7 @@ return [
     'unidade' => 'Unidade',
     'user' => 'Usuário',
     'veiculo' => 'Veículo', 
+    'fornecedor' => 'Fornecedor',
+    'estoque' => 'Estoque',
+    'tipo_movimentacao_produto' => 'Tipo de Movimentacao de Produto'
 ];

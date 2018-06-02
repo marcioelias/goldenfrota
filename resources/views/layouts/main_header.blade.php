@@ -12,7 +12,7 @@
 <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="all">
 <link href="{{ asset('css/other.css') }}" rel="stylesheet" media="all">
 
-<!-- Scripts -->
+{{--  <!-- Scripts -->
 <script src="{{ asset('js/manifest.js') }}"></script>
 <script src="{{ asset('js/vendor.js') }}"></script>
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>  --}}

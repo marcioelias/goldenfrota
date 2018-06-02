@@ -1,6 +1,9 @@
 
 
 <?php $__env->startSection('content'); ?>
+<?php if(old('fornecedores')): ?> 
+    
+<?php endif; ?>
     <div class="panel panel-default">
         <?php $__env->startComponent('components.form', [
             'title' => 'Novo Produto', 
@@ -20,14 +23,12 @@
                             'label' => 'Descrição',
                             'required' => true,
                             'autofocus' => true,
-                            'inputValue' => isset($produto->produto_descricao) ? $produto->produto_descricao : '',
                             'inputSize' => 6
                         ],
                         [
                             'type' => 'text',
                             'field' => 'produto_desc_red',
                             'label' => 'Descrição Reduzida',
-                            'inputValue' => isset($produto->produto_desc_red) ? $produto->produto_desc_red : '',
                             'inputSize' => 2
                         ],
                         [
@@ -40,7 +41,6 @@
                             'displayField' => 'grupo_produto',
                             'keyField' => 'id',
                             'liveSearch' => true,
-                            'indexSelected' => isset($produto->grupo_produto_id) ? $produto->grupo_produto_id : ''
                         ]
                     ]
                 ]); ?>
@@ -57,25 +57,85 @@
                             'displayField' => 'unidade',
                             'keyField' => 'id',
                             'liveSearch' => true,
-                            'indexSelected' => isset($produto->unidade_id) ? $produto->unidade_id : ''
                         ],
                         [
                             'type' => 'text',
-                            'field' => 'valor_unitario',
-                            'label' => 'Valor Unitário',
-                            'inputValue' => isset($produto->valor_unitario) ? $produto->valor_unitario : '',
+                            'field' => 'valor_custo',
+                            'label' => 'Preço de Custo',
                             'inputSize' => 4
                         ],
                         [
                             'type' => 'text',
-                            'field' => 'qtd_estoque',
-                            'label' => 'Qtd. Estoque',
-                            'inputValue' => isset($produto->qtd_estoque) ? $produto->qtd_estoque : '',
+                            'field' => 'valor_venda',
+                            'label' => 'Preço de Venda',
                             'inputSize' => 4
                         ]
                     ]
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
+                <?php $__env->startComponent('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'select',
+                            'field' => 'controla_vencimento',
+                            'label' => 'Controla Vencimento',
+                            'inputSize' => 4,
+                            'items' => Array('Não', 'Sim'),
+                        ],  
+                        [
+                            'type' => 'text',
+                            'field' => 'vencimento_dias',
+                            'label' => 'Vencimento em Dias',
+                            'inputSize' => 4
+                        ],
+                        [
+                            'type' => 'text',
+                            'field' => 'vencimento_km',
+                            'label' => 'Vencimento em Km',
+                            'inputSize' => 4
+                        ]
+                    ]
+                ]); ?>
+                <?php echo $__env->renderComponent(); ?>
+                <?php $__env->startComponent('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'text',
+                            'field' => 'numero_serie',
+                            'label' => 'Número de Série',
+                            'inputSize' => 6
+                        ],
+                        [
+                            'type' => 'text',
+                            'field' => 'codigo_barras',
+                            'label' => 'Código de Barras',
+                            'inputSize' => 6
+                        ]
+                    ]
+                ]); ?>
+                <?php echo $__env->renderComponent(); ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php $__env->startComponent('components.input-checklist-group', [
+                            'items' => $estoques,
+                            'label' => 'estoque',
+                            'field' => 'estoques[]',
+                            'title' => 'Estoques',
+                            'value' => 'id'
+                        ]); ?>
+                        <?php echo $__env->renderComponent(); ?>                        
+                    </div>
+                    <div class="col-md-6">
+                        <?php $__env->startComponent('components.input-checklist-group', [
+                            'items' => $fornecedores,
+                            'label' => 'nome_razao',
+                            'field' => 'fornecedores[]',
+                            'title' => 'Fornecedores',
+                            'value' => 'id'
+                        ]); ?>
+                        <?php echo $__env->renderComponent(); ?>
+                    </div>
+                </div>
             <?php $__env->stopSection(); ?>
         <?php echo $__env->renderComponent(); ?>
     </div>

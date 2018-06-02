@@ -30,7 +30,7 @@ class ClienteController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->canListarClientes()) {
+        if (Auth::user()->canListarCliente()) {
             if ($request->searchField) {
                 $clientes = Cliente::where('nome_razao', 'like', '%'.$request->searchField.'%')
                                     ->orWhere('fantasia', 'like', '%'.$request->searchField.'%')
@@ -61,7 +61,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->canCadastrarClientes()) {
+        if (Auth::user()->canCadastrarCliente()) {
             return View('cliente.create', [
                 'tipoPessoas' => TipoPessoa::all(),
                 'ufs' => Uf::all()
@@ -80,7 +80,7 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->canCadastrarClientes()) {
+        if (Auth::user()->canCadastrarCliente()) {
             $this->validate($request, [
                 'nome_razao' => 'required|string|unique:clientes',
                 'fantasia' => 'nullable|string',
@@ -129,7 +129,7 @@ class ClienteController extends Controller
      */
     public function edit(Cliente $cliente)
     {
-        if (Auth::user()->canAlterarClientes()) {
+        if (Auth::user()->canAlterarCliente()) {
             return View('cliente.edit', [
                 'ufs' => Uf::all(),
                 'tipoPessoas' => TipoPessoa::all(),
@@ -150,7 +150,7 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        if (Auth::user()->canAlterarClientes()) {
+        if (Auth::user()->canAlterarCliente()) {
             $this->validate($request, [
                 'nome_razao' => 'required|string|unique:clientes,id,'.$cliente->id,
                 'fantasia' => 'nullable|string',
@@ -214,7 +214,7 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
-        if (Auth::user()->canExcluirClientes()) {
+        if (Auth::user()->canExcluirCliente()) {
             try {
                 if ($cliente->delete()) {
                     Session::flash('success', __('messages.delete_success', [

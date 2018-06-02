@@ -35,8 +35,18 @@
                         @permission('listar-grupo-produto')
                         <li><a href="{{route('grupo_produto.index')}}">Grupos de Produto</a></li>
                         @endpermission
+                        @permission('listar-tipo-movimentacao-produto')
+                        <li><a href="{{route('tipo_movimentacao_produto.index')}}">Tipo de Movimentação de Produto</a></li>
+                        @endpermission
+                        @permission('listar-estoque')
+                        <li><a href="{{route('estoque.index')}}">Estoques</a></li>
+                        @endpermission
                         @permission('listar-unidade')
                         <li><a href="{{route('unidade.index')}}">Unidades</a></li>
+                        @endpermission
+                        <li class="divider"></li>
+                        @permission('listar-entrada-estoque')
+                        <li><a href="{{route('entrada_estoque.index')}}">Entradas no Estoque</a></li>
                         @endpermission
                         <li class="divider"></li>
                         @permission('listar-tanque')
@@ -89,6 +99,9 @@
                         @endpermission
                         @permission('listar-cliente')
                         <li><a href="{{route('cliente.index')}}">Clientes</a></li>
+                        @endpermission
+                        @permission('listar-fornecedor')
+                        <li><a href="{{route('fornecedor.index')}}">Fornecedores</a></li>
                         @endpermission
                         <li class="divider"></li>
                         @permission('listar-departamento')

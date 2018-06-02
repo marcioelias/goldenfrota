@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TipoPessoasTableSeeder::class);
         $this->call(UfsTableSeeder::class);
         $this->call(LaratrustSeeder::class);
+        $this->call(TipoMovimentacaoProdutoSeeder::class);
     }
 }

@@ -35,8 +35,18 @@
                         <?php if (app('laratrust')->can('listar-grupo-produto')) : ?>
                         <li><a href="<?php echo e(route('grupo_produto.index')); ?>">Grupos de Produto</a></li>
                         <?php endif; // app('laratrust')->can ?>
+                        <?php if (app('laratrust')->can('listar-tipo-movimentacao-produto')) : ?>
+                        <li><a href="<?php echo e(route('tipo_movimentacao_produto.index')); ?>">Tipo de Movimentação de Produto</a></li>
+                        <?php endif; // app('laratrust')->can ?>
+                        <?php if (app('laratrust')->can('listar-estoque')) : ?>
+                        <li><a href="<?php echo e(route('estoque.index')); ?>">Estoques</a></li>
+                        <?php endif; // app('laratrust')->can ?>
                         <?php if (app('laratrust')->can('listar-unidade')) : ?>
                         <li><a href="<?php echo e(route('unidade.index')); ?>">Unidades</a></li>
+                        <?php endif; // app('laratrust')->can ?>
+                        <li class="divider"></li>
+                        <?php if (app('laratrust')->can('listar-entrada-estoque')) : ?>
+                        <li><a href="<?php echo e(route('entrada_estoque.index')); ?>">Entradas no Estoque</a></li>
                         <?php endif; // app('laratrust')->can ?>
                         <li class="divider"></li>
                         <?php if (app('laratrust')->can('listar-tanque')) : ?>
@@ -89,6 +99,9 @@
                         <?php endif; // app('laratrust')->can ?>
                         <?php if (app('laratrust')->can('listar-cliente')) : ?>
                         <li><a href="<?php echo e(route('cliente.index')); ?>">Clientes</a></li>
+                        <?php endif; // app('laratrust')->can ?>
+                        <?php if (app('laratrust')->can('listar-fornecedor')) : ?>
+                        <li><a href="<?php echo e(route('fornecedor.index')); ?>">Fornecedores</a></li>
                         <?php endif; // app('laratrust')->can ?>
                         <li class="divider"></li>
                         <?php if (app('laratrust')->can('listar-departamento')) : ?>
