@@ -30,5 +30,6 @@ return [
     'veiculo' => 'Veículo', 
     'fornecedor' => 'Fornecedor',
     'estoque' => 'Estoque',
-    'tipo_movimentacao_produto' => 'Tipo de Movimentacao de Produto'
+    'tipo_movimentacao_produto' => 'Tipo de Movimentacao de Produto',
+    'inventario' => 'Inventário',
 ];

@@ -244,7 +244,7 @@ class TanqueController extends Controller
     }
 
     public function listagemTanques() {
-        $tanques = Tanque::all();
+        $tanques = Tanque::all(); 
 
         return View('relatorios.tanques.listagem_tanques')->withTanques($tanques)->withTitulo('Listagem de Tanques')->withParametro(Parametro::first());
     }

@@ -124,6 +124,10 @@
                         @permission('listar-tanque-movimentacao')
                         <li><a href="{{route('tanque_movimentacao.index')}}">Entrada de Combustíveis</a></li>
                         @endpermission
+                        <li class="divider"></li>
+                        @permission('listar-inventario')
+                        <li><a href="{{route('inventario.index')}}">Inventários</a></li>
+                        @endpermission
                     </ul>
                 </li>
                 <li class="dropdown">

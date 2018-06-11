@@ -62,9 +62,11 @@ mix.js('resources/assets/js/app.js', 'public/js')
 mix.js([
         //'node_modules/ajax-bootstrap-select/dist/js/ajax-bootstrap-select.min.js',
         'node_modules/bootstrap-select/dist/js/i18n/defaults-pt_BR.min.js'
-    ], 'public/js/other.js');
+    ], 'public/js/other.js'); 
 
 mix.js('resources/assets/js/entradaestoque.js', 'public/js');
+mix.js('resources/assets/js/inventarioestoque.js', 'public/js');
+
 /* mix.styles([
         'node_modules/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.min.css'
     ], 'public/css/custom.css'); */

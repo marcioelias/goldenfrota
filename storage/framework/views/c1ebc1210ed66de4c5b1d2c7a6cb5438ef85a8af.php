@@ -19,6 +19,7 @@
             $permission = 'excluir-'.str_replace('_', '-', $model);
             break;
     }
+    $target = isset($target) ? 'target='.$target : '';
 ?>
 <?php
     $displayField = isset($displayField) ? $displayField : 'name';
@@ -39,7 +40,7 @@
     </form>
 <?php else: ?>
     <span data-toggle="tooltip" data-placement="top" title="<?php echo e($tooltip); ?>" data-original-title="<?php echo e($tooltip); ?>">
-        <a href="<?php echo e(route($model.'.'.$action, [$model => $row->$keyField])); ?>" class="btn btn-xs <?php echo e($btn_style); ?>"><span class="glyphicon glyphicon-<?php echo e($btn_icon); ?>" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="<?php echo e($tooltip); ?>" data-original-title="<?php echo e($tooltip); ?>"></span></a>
+        <a href="<?php echo e(route($model.'.'.$action, [$model => $row->$keyField])); ?>" <?php echo e($target); ?> class="btn btn-xs <?php echo e($btn_style); ?>"><span class="glyphicon glyphicon-<?php echo e($btn_icon); ?>" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="<?php echo e($tooltip); ?>" data-original-title="<?php echo e($tooltip); ?>"></span></a>
     </span>
 <?php endif; ?>
 <?php endif; // app('laratrust')->can ?>

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\MovimentacaoProduto;
 use Illuminate\Database\Eloquent\Model;
 
 class TipoMovimentacaoProduto extends Model
@@ -11,4 +12,8 @@ class TipoMovimentacaoProduto extends Model
         'eh_entrada',
         'ativo'
     ];
+
+    public function movimentacao_produto() {
+        return $this->belongsTo(MovimentacaoProduto::class);        
+    }
 }

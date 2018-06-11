@@ -89,7 +89,11 @@
                             <td scope="row"><?php echo e(__(($row->$field == '1') ? 'Sim' : 'Não')); ?></td>
                             <?php endif; ?>
                             <?php if($caption['type'] == 'datetime'): ?>
-                            <td scope="row"><?php echo e(date_format(date_create($row->$field), 'd/m/Y H:i:s')); ?></td>
+                                <?php if($row->$field): ?> 
+                                <td scope="row"><?php echo e(date_format(date_create($row->$field), 'd/m/Y H:i:s')); ?></td>
+                                <?php else: ?> 
+                                <td scope="row"></td>
+                                <?php endif; ?>
                             <?php endif; ?>
                             <?php if($caption['type'] == 'date'): ?>
                             <td scope="row"><?php echo e(date_format(date_create($row->$field), 'd/m/Y')); ?></td>
@@ -111,8 +115,13 @@
                         <?php if(is_array($actions)): ?>
                             <?php $__currentLoopData = $actions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $action): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <?php if(is_array($action)): ?>
-                                    <?php $__env->startComponent($action['custom_action'], ['data' => $row]); ?>
-                                    <?php echo $__env->renderComponent(); ?>
+                                    <?php if(isset($action['custom_action'])): ?>
+                                        <?php $__env->startComponent($action['custom_action'], ['data' => $row]); ?>
+                                        <?php echo $__env->renderComponent(); ?>
+                                    <?php else: ?> 
+                                        <?php $__env->startComponent('components.action', ['action' => $action['action'], 'model' => $model, 'row' => $row, 'displayField' => $displayField, 'keyField'=> $keyField, 'target' => $action['target']]); ?>
+                                        <?php echo $__env->renderComponent(); ?>
+                                    <?php endif; ?>
                                 <?php else: ?>
                                     <?php $__env->startComponent('components.action', ['action' => $action, 'model' => $model, 'row' => $row, 'displayField' => $displayField, 'keyField'=> $keyField]); ?>
                                     <?php echo $__env->renderComponent(); ?>

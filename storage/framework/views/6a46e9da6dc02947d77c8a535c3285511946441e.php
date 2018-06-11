@@ -25,7 +25,7 @@
 
         <div class="form-group">
             <div class="<?php echo e(($btnAlign == 'Right') ? 'pull-right' : ''); ?>">
-                <?php if(is_array($formButtons)): ?>
+                <?php if(is_array($formButtons)): ?> 
                     <?php $__currentLoopData = $formButtons; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $formButton): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <?php if(($formButton['type'] == 'submit') || ($formButton['type'] == 'reset')): ?>
                             <button type="<?php echo e($formButton['type']); ?>" class="btn btn-<?php echo e($btnColor[$formButton['type']]); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo e(__($formButton['label'])); ?>" data-original-title="<?php echo e(__($formButton['label'])); ?>">

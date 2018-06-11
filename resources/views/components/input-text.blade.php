@@ -5,6 +5,8 @@
     $autofocus = isset($autofocus) ? $autofocus : false;
     $required = isset($required) ? $required : false;
     $css = isset($css) ? $css : '';
+    $name = isset($name) ? $name : $field;
+    $id = isset($id) ? $id : $name;
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}

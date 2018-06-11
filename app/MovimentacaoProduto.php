@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\Produto;
+use App\Inventario;
 use App\EntradaEstoque;
+use App\TipoMovimentacaoProduto;
 use Illuminate\Database\Eloquent\Model;
 
 class MovimentacaoProduto extends Model
@@ -17,6 +20,18 @@ class MovimentacaoProduto extends Model
     ];
 
     public function entradaEstoque() {
-        $this->hasOne(EntradaEstoque::class);
+        return $this->hasOne(EntradaEstoque::class);
+    }
+
+    public function inventario() {
+        return $this->hasOne(Inventario::class);
+    }
+
+    public function tipo_movimentacao_produto() {
+        return $this->belongsTo(TipoMovimentacaoProduto::class);
+    }
+
+    public function produto() {
+        return $this->belongsTo(Produto::class);
     }
 }

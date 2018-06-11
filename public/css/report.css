@@ -51,3 +51,11 @@ table tbody tr td {
 .panel-body {
     padding: 5px !important;
 }
+
+table thead tr td {
+    font-size: 12px;
+}
+
+table tbody tr td {
+    font-size: 12px;
+}

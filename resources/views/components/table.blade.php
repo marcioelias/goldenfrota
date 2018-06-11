@@ -87,7 +87,11 @@
                             <td scope="row">{{ __(($row->$field == '1') ? 'Sim' : 'Não') }}</td>
                             @endif
                             @if($caption['type'] == 'datetime')
-                            <td scope="row">{{ date_format(date_create($row->$field), 'd/m/Y H:i:s') }}</td>
+                                @if($row->$field) 
+                                <td scope="row">{{ date_format(date_create($row->$field), 'd/m/Y H:i:s') }}</td>
+                                @else 
+                                <td scope="row"></td>
+                                @endif
                             @endif
                             @if($caption['type'] == 'date')
                             <td scope="row">{{ date_format(date_create($row->$field), 'd/m/Y') }}</td>
@@ -108,8 +112,13 @@
                         @if(is_array($actions))
                             @foreach($actions as $action)
                                 @if(is_array($action))
-                                    @component($action['custom_action'], ['data' => $row])
-                                    @endcomponent
+                                    @if(isset($action['custom_action']))
+                                        @component($action['custom_action'], ['data' => $row])
+                                        @endcomponent
+                                    @else 
+                                        @component('components.action', ['action' => $action['action'], 'model' => $model, 'row' => $row, 'displayField' => $displayField, 'keyField'=> $keyField, 'target' => $action['target']])
+                                        @endcomponent
+                                    @endif
                                 @else
                                     @component('components.action', ['action' => $action, 'model' => $model, 'row' => $row, 'displayField' => $displayField, 'keyField'=> $keyField])
                                     @endcomponent

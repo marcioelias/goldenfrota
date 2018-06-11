@@ -124,6 +124,10 @@
                         <?php if (app('laratrust')->can('listar-tanque-movimentacao')) : ?>
                         <li><a href="<?php echo e(route('tanque_movimentacao.index')); ?>">Entrada de Combustíveis</a></li>
                         <?php endif; // app('laratrust')->can ?>
+                        <li class="divider"></li>
+                        <?php if (app('laratrust')->can('listar-inventario')) : ?>
+                        <li><a href="<?php echo e(route('inventario.index')); ?>">Inventários</a></li>
+                        <?php endif; // app('laratrust')->can ?>
                     </ul>
                 </li>
                 <li class="dropdown">

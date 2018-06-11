@@ -19,6 +19,7 @@
             $permission = 'excluir-'.str_replace('_', '-', $model);
             break;
     }
+    $target = isset($target) ? 'target='.$target : '';
 ?>
 @php
     $displayField = isset($displayField) ? $displayField : 'name';
@@ -39,7 +40,7 @@
     </form>
 @else
     <span data-toggle="tooltip" data-placement="top" title="{{$tooltip}}" data-original-title="{{$tooltip}}">
-        <a href="{{route($model.'.'.$action, [$model => $row->$keyField])}}" class="btn btn-xs {{$btn_style}}"><span class="glyphicon glyphicon-{{$btn_icon}}" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="{{$tooltip}}" data-original-title="{{$tooltip}}"></span></a>
+        <a href="{{route($model.'.'.$action, [$model => $row->$keyField])}}" {{ $target }} class="btn btn-xs {{$btn_style}}"><span class="glyphicon glyphicon-{{$btn_icon}}" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="{{$tooltip}}" data-original-title="{{$tooltip}}"></span></a>
     </span>
 @endif
 @endpermission
