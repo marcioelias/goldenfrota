@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Estoque;
 use App\Produto;
 use App\Inventario;
 use App\EntradaEstoque;
@@ -33,5 +34,9 @@ class MovimentacaoProduto extends Model
 
     public function produto() {
         return $this->belongsTo(Produto::class);
+    }
+
+    public function estoque() {
+        return $this->belongsTo(Estoque::class);
     }
 }

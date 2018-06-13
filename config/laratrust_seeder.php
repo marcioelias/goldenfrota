@@ -30,6 +30,7 @@ return [
             'estoque' => 'c,r,u,d',
             'entrada_estoque' => 'c,r,u,d',
             'inventario' => 'c,r,u,d',
+            'tanque-movimentacao' => 'c,r,u,d',
             'tipo_movimentacao_produto' => 'c,r,u,d',
             'posicao_tanques_grafico' => 'a',
             'media_consumo_veiculos_grafico' => 'a',
@@ -39,6 +40,7 @@ return [
             'relatorio_abastecimentos' => 'a',
             'relatorio_abastecimentos_bico' => 'a',
             'relatorio_media_consumo_modelo' => 'a',
+            'relatorio_posicao_estoque' => 'a',
             'importar_abastecimentos' => 'a',
             'exportar_exportar_dados_cadastrais' => 'a'
         ],

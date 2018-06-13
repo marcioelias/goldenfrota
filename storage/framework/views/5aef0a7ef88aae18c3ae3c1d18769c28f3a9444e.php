@@ -160,6 +160,10 @@
                         <?php if (app('laratrust')->can('acesso-relatorio-media-consumo-modelo')) : ?>
                         <li><a href="<?php echo e(route('param_relatorio_media_modelo')); ?>">Relatório de Média de Consumo por Modelo</a></li>
                         <?php endif; // app('laratrust')->can ?>
+                        <li class="divider"></li>
+                        <?php if (app('laratrust')->can('acesso-relatorio-posicao-estoque')) : ?>
+                        <li><a href="<?php echo e(route('param_relatorio_posicao_estoque')); ?>">Relatório de Posição de Estoque</a></li>
+                        <?php endif; // app('laratrust')->can ?>
                         
                         
                     </ul>

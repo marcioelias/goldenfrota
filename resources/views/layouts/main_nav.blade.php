@@ -160,6 +160,10 @@
                         @permission('acesso-relatorio-media-consumo-modelo')
                         <li><a href="{{route('param_relatorio_media_modelo')}}">Relatório de Média de Consumo por Modelo</a></li>
                         @endpermission
+                        <li class="divider"></li>
+                        @permission('acesso-relatorio-posicao-estoque')
+                        <li><a href="{{route('param_relatorio_posicao_estoque')}}">Relatório de Posição de Estoque</a></li>
+                        @endpermission
                         {{--  <li><a href="{{route('relatorio_media_consumo')}}">Listagem de Entradas de Combustíveis</a></li>
                         <li><a href="{{route('relatorio_media_consumo')}}">Listagem de Entradas de Abastecimentos</a></li>  --}}
                         {{--  <li><a href="#">Vendas de Produtos</a></li>  --}}
