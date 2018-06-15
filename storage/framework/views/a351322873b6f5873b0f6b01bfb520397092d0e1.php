@@ -131,7 +131,7 @@
                             'inputSize' => 3
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'media_minima',
                             'label' => 'Média Mínima',
                             'inputSize' => 3

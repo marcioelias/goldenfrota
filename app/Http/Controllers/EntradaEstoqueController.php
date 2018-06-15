@@ -86,6 +86,7 @@ class EntradaEstoqueController extends Controller
             /* dd($request->all()); */
             $this->validate($request, [
                 'nr_docto' => 'required|numeric',
+                'serie' => 'required',
                 'data_doc' => 'required',
                 'data_entrada' => 'required',
                 'fornecedor_id' => 'required',

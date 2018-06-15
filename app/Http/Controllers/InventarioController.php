@@ -193,7 +193,7 @@ class InventarioController extends Controller
                     /* atualizar quantidade em estoque e contabilizar quantidade do ajuste */
                     foreach($request->items as $id => $item) {
                         $inventarioItem = InventarioItem::find($id);
-                        $inventarioItem->qtd_contada = ($item['qtd_contada']) ? $item['qtd_contada'] : 0;
+                        $inventarioItem->qtd_contada = ($item['qtd_contada']) ? $item['qtd_contada'] : 0;   
                         $inventarioItem->qtd_estoque = (Estoque::find($inventario->estoque_id))->saldo_produto($inventarioItem->produto);
                         $inventarioItem->qtd_ajuste = $inventarioItem->qtd_contada - $inventarioItem->qtd_estoque;
                         if (!$inventarioItem->save()) {

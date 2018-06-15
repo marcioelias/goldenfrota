@@ -16,7 +16,7 @@
     <select class="form-control selectpicker <?php echo e($css); ?>" <?php echo e($liveSearch ? 'data-live-search=true' : ''); ?> id="<?php echo e($id); ?>" name="<?php echo e($name); ?>" <?php echo e($required ? 'required' : ''); ?>  <?php echo e($autofocus ? 'autofocus' : ''); ?> <?php echo e($disabled ? 'disabled="disabled"' : ''); ?>>
         <?php if(isset($items)): ?>
             <?php if($defaultNone): ?>
-                <option  selected value="-1" > Nada Selecionado </option>
+                <option  selected value="" > Nada Selecionado </option>
             <?php endif; ?>
             <?php if(is_array($items)): ?>
                 <?php for($i = 0; $i < count($items); $i++): ?>

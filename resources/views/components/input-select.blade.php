@@ -16,7 +16,7 @@
     <select class="form-control selectpicker {{$css}}" {{ $liveSearch ? 'data-live-search=true' : '' }} id="{{$id}}" name="{{$name}}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
         @if(isset($items))
             @if($defaultNone)
-                <option {{--  disabled  --}} selected value="-1" {{--  style="display:none"  --}}> Nada Selecionado </option>
+                <option {{--  disabled  --}} selected value="" {{--  style="display:none"  --}}> Nada Selecionado </option>
             @endif
             @if(is_array($items))
                 @for ($i = 0; $i < count($items); $i++)

@@ -95,7 +95,7 @@ class VeiculoController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'grupo_veiculo_id' => 'required',
+            'grupo_veiculo_id' => 'required|integer|min:1',
             'cliente_id' => 'required',
             'placa' => 'required|formato_placa_de_veiculo',
             'marca_veiculo_id' => 'required',

@@ -136,6 +136,7 @@ class AbastecimentoController extends Controller
                 $abastecimento->abastecimento_local = false;
                 $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
                 
+                
                 if ($abastecimento->save()) {
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.abastecimento'),
@@ -164,7 +165,7 @@ class AbastecimentoController extends Controller
      */
     public function edit(Abastecimento $abastecimento)
     {
-        if (Auth::user()->canEditarAbastecimento()) {
+        if (Auth::user()->canAlterarAbastecimento()) {
             $abastecimento = Abastecimento::find($abastecimento->id);
 
             $cliente = Cliente::select('clientes.id')
@@ -350,22 +351,32 @@ class AbastecimentoController extends Controller
     }
 
     public function obterMediaVeiculo(Veiculo $veiculo, Abastecimento $abastecimentoAtual) {
-        $abastecimento = Abastecimento::where('veiculo_id', $veiculo->id)
-                            ->where('id', '<', $abastecimentoAtual->id)
-                            ->orderBy('id', 'asc')->first();
-        //dd($abastecimentoAtual);
-        if (!$abastecimento) {
-            //primeiro abastecimento deste veiculo;
-            return 0; 
-        } else {
-            //veiculo já abasteceu antes
-            if ($abastecimentoAtual->km_veiculo > 0) {
-                //km informada
-                return ($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo) / $abastecimentoAtual->volume_abastecimento;
+        try {
+            if ($abastecimentoAtual->id) {
+                $whereAbastAtual = 'id < '.$abastecimentoAtual->id;
             } else {
-                //km não informada
-                return 0;
+                $whereAbastAtual = '1 = 1';
             }
+            $abastecimento = Abastecimento::where('veiculo_id', $veiculo->id)
+                                ->whereRaw($whereAbastAtual)
+                                ->orderBy('id', 'asc')->first();
+
+            //dd($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo);
+            if (!$abastecimento) {
+                //primeiro abastecimento deste veiculo;
+                return 0; 
+            } else {
+                //veiculo já abasteceu antes
+                if ($abastecimentoAtual->km_veiculo > 0) {
+                    //km informada
+                    return ($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo) / $abastecimentoAtual->volume_abastecimento;
+                } else {
+                    //km não informada
+                    return 0;
+                }
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
     }
 

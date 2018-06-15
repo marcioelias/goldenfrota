@@ -27,7 +27,7 @@
                             'field' => 'serie',
                             'label' => 'Série',
                             'required' => true,
-                            'inputSize' => 3
+                            'inputSize' => 3,
                         ],
                         [
                             'type' => 'datetime',

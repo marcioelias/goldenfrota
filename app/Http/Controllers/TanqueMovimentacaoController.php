@@ -91,6 +91,7 @@ class TanqueMovimentacaoController extends Controller
             ]);
 
             try {
+                $movimentacao = new TanqueMovimentacao;
                 $movimentacao->data_movimentacao = \DateTime::createFromFormat('d/m/Y', $request->data_movimentacao)->format('Y-m-d');
                 $movimentacao->documento = $request->documento;
                 $movimentacao->tanque_id = $request->tanque_id;

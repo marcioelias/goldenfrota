@@ -112,7 +112,7 @@
                             'indexSelected' => $veiculo->modelo_veiculo_id
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'ano',
                             'label' => 'Ano',
                             'inputSize' => 2,
@@ -138,14 +138,14 @@
                             'inputValue' => $veiculo->chassi
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'hodometro',
                             'label' => 'Km',
                             'inputSize' => 3,
                             'inputValue' => $veiculo->hodometro
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'media_minima',
                             'label' => 'Média Mínima',
                             'inputSize' => 3,

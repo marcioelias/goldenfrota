@@ -13,7 +13,7 @@ class CombustivelController extends Controller
     public $fields = array(
         'id' => 'ID',
         'descricao' => 'Combustível',
-        'valor' => 'Valor',
+        'valor' => ['label' => 'Valor', 'type' => 'decimal', 'decimais' => 3],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
