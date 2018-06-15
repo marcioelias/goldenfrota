@@ -13,9 +13,11 @@ class AlterTableAbastecimentosFieldNsAutomacaoString extends Migration
      */
     public function up()
     {
-        Schema::table('abastecimentos', function (Blueprint $table) {
-            $table->string('ns_automacao')->change();
-        });
+        if (PHP_VERSION_ID > 70100) {
+            Schema::table('abastecimentos', function (Blueprint $table) {
+                $table->string('ns_automacao')->change();
+            });
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ class AlterTableAbastecimentosFieldNsAutomacaoString extends Migration
      */
     public function down()
     {
-        Schema::table('abastecimentos', function (Blueprint $table) {
-            $table->integer('ns_automacao')->change();
-        });
+        if (PHP_VERSION_ID > 70100) {
+            Schema::table('abastecimentos', function (Blueprint $table) {
+                $table->integer('ns_automacao')->change();
+            });
+        }
     }
 }

@@ -13,10 +13,12 @@ class AlterTableProdutosNumeroSerieNullable extends Migration
      */
     public function up()
     {
-        Schema::table('produtos', function (Blueprint $table) {
-            $table->string('numero_serie')->nullable()->change();
-            $table->string('codigo_barras')->nullable()->change();
-        });
+        if (PHP_VERSION_ID > 70100) {
+            Schema::table('produtos', function (Blueprint $table) {
+                $table->string('numero_serie')->nullable()->change();
+                $table->string('codigo_barras')->nullable()->change();
+            });
+        }
     }
 
     /**
@@ -26,9 +28,11 @@ class AlterTableProdutosNumeroSerieNullable extends Migration
      */
     public function down()
     {
-        Schema::table('produtos', function (Blueprint $table) {
-            $table->string('numero_serie')->nullable(false)->change();
-            $table->string('codigo_barras')->nullable(false)->change();
-        });
+        if (PHP_VERSION_ID > 70100) {
+            Schema::table('produtos', function (Blueprint $table) {
+                $table->string('numero_serie')->nullable(false)->change();
+                $table->string('codigo_barras')->nullable(false)->change();
+            });
+        }
     }
 }
