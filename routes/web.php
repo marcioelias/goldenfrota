@@ -44,8 +44,10 @@ Route::middleware(['auth:web'])->group(function() {
     Route::resource('/estoque', 'EstoqueController')->except('show');
     Route::resource('/parametro', 'ParametroController')->except('show');
     Route::resource('/tipo_movimentacao_produto', 'TipoMovimentacaoProdutoController')->except('show');
-    Route::resource('/entrada_estoque', 'EntradaEstoqueController')->except('show');
+    Route::resource('/entrada_estoque', 'EntradaEstoqueController');
+    Route::resource('/saida_estoque', 'SaidaEstoqueController')->except(['edit', 'update']);
     Route::resource('/inventario', 'InventarioController');
+    Route::resource('/posicao_pneu', 'PosicaoPneuController');
 
     Route::resource('/role_user', 'RoleUsersController')->except('show');
     Route::resource('/role', 'RolesController')->except('show');
@@ -64,6 +66,7 @@ Route::middleware(['auth:web'])->group(function() {
     Route::post('veiculo_departamento/json', 'VeiculoController@getVeiculosDepartamentoJson')->name('veiculos_departamento.json');
     Route::post('tanques/json', 'TanqueController@getTanquesJson')->name('tanques.json');
     Route::post('ultimo_abastecimento/json', 'VeiculoController@obterKmAbasteciemntoAnterior')->name('ultimo_abastecimento.json');
+    Route::get('produtos_estoque/{estoqueId}/json', 'ProdutoController@obterProdutosPeloEstoque')->name('produto_pelo_estoque');
 
     //relatorios
     Route::get('relatorios/posicao_tanques', 'TanqueController@relPosicaoTanque')->name('relatorio_posicao_tanques');

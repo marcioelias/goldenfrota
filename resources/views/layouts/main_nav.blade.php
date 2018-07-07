@@ -45,10 +45,6 @@
                         <li><a href="{{route('unidade.index')}}">Unidades</a></li>
                         @endpermission
                         <li class="divider"></li>
-                        @permission('listar-entrada-estoque')
-                        <li><a href="{{route('entrada_estoque.index')}}">Entradas no Estoque</a></li>
-                        @endpermission
-                        <li class="divider"></li>
                         @permission('listar-tanque')
                         <li><a href="{{route('tanque.index')}}">Tanques</a></li>
                         @endpermission
@@ -85,6 +81,9 @@
                         @endpermission
                         @permission('listar-modelo-veiculo')
                         <li><a href="{{route('modelo_veiculo.index')}}">Modelos de Veículo</a></li>
+                        @endpermission
+                        @permission('listar-posicao-pneu')
+                        <li><a href="{{route('posicao_pneu.index')}}">Posição de Pneu</a></li>
                         @endpermission
                     </ul>
                 </li>
@@ -123,6 +122,13 @@
                         {{--  <li><a href="#">Entrada de Produtos</a></li>  --}}
                         @permission('listar-tanque-movimentacao')
                         <li><a href="{{route('tanque_movimentacao.index')}}">Entrada de Combustíveis</a></li>
+                        @endpermission
+                        <li class="divider"></li>
+                        @permission('listar-entrada-estoque')
+                        <li><a href="{{route('entrada_estoque.index')}}">Entradas no Estoque</a></li>
+                        @endpermission
+                        @permission('listar-saida-estoque')
+                        <li><a href="{{route('saida_estoque.index')}}">Saídas do Estoque</a></li>
                         @endpermission
                         <li class="divider"></li>
                         @permission('listar-inventario')

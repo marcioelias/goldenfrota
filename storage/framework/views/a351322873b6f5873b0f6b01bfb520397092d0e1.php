@@ -102,7 +102,7 @@
                             'keyField' => 'id'
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'ano',
                             'label' => 'Ano',
                             'inputSize' => 2
@@ -125,7 +125,7 @@
                             'inputSize' => 3
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'hodometro',
                             'label' => 'Km',
                             'inputSize' => 3

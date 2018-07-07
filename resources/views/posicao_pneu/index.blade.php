@@ -3,10 +3,10 @@
 @section('content')
     @component('components.table', [
         'captions' => $fields, 
-        'rows' => $tipo_bombas, 
-        'model' => 'tipo_bomba',
-        'tableTitle' => 'Tipo de Bomba',
-        'displayField' => 'tipo_bomba',
+        'rows' => $posicoes, 
+        'model' => 'posicao_pneu',
+        'tableTitle' => 'Posição de Pneu',
+        'displayField' => 'posicao_pneu',
         'actions' => ['edit', 'destroy']
         ]);
     @endcomponent

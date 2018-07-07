@@ -31,6 +31,7 @@
         </span>
     <?php endif; ?>
 </div>
+<?php $__env->startPush('scripts'); ?>
 <script type="text/javascript">
     $(function () {
         $('#<?php echo e($id); ?>_picker').datetimepicker({
@@ -54,3 +55,4 @@
         <?php endif; ?>
     });
 </script>
+<?php $__env->stopPush(); ?>

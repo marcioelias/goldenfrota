@@ -24,6 +24,7 @@
                 $input['defaultValue'] = isset($input['defaultValue']) ? $input['defaultValue'] : false;
                 $input['picker_begin'] = isset($input['picker_begin']) ? $input['picker_begin'] : false;
                 $input['picker_end'] = isset($input['picker_end']) ? $input['picker_end'] : false;
+                $input['vModel'] = isset($input['vModel']) ? $input['vModel'] : false;
             ?>
             <?php if($input['type'] == 'text'): ?>
                 <?php $__env->startComponent('components.input-text', [
@@ -34,7 +35,8 @@
                     'disabled' => $input['disabled'],
                     'name' => $input['name'],
                     'id' => $input['id'],
-                    'css' => $input['css']
+                    'css' => $input['css'],
+                    'vModel' => $input['vModel']
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
             <?php endif; ?>
@@ -47,7 +49,8 @@
                     'disabled' => $input['disabled'],
                     'name' => $input['name'],
                     'id' => $input['id'],
-                    'css' => $input['css']
+                    'css' => $input['css'],
+                    'vModel' => $input['vModel']
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
             <?php endif; ?>
@@ -61,7 +64,8 @@
                     'name' => $input['name'],
                     'id' => $input['id'],
                     'css' => $input['css'],
-                    'rows' => $input['rows']
+                    'rows' => $input['rows'],
+                    'vModel' => $input['vModel']
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
             <?php endif; ?>
@@ -73,7 +77,8 @@
                     'disabled' => $input['disabled'],
                     'name' => $input['name'],
                     'id' => $input['id'],
-                    'css' => $input['css']
+                    'css' => $input['css'],
+                    'vModel' => $input['vModel']
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
             <?php endif; ?>
@@ -91,6 +96,7 @@
                     'dateTimeFormat' => $input['dateTimeFormat'],
                     'picker_begin' => $input['picker_begin'],
                     'picker_end' => $input['picker_end'],
+                    'vModel' => $input['vModel']
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
             <?php endif; ?>
@@ -109,7 +115,8 @@
                     'inputValue' => $input['inputValue'],
                     'indexSelected' => $input['indexSelected'],
                     'liveSearch' => $input['liveSearch'],
-                    'defaultNone' => $input['defaultNone']
+                    'defaultNone' => $input['defaultNone'],
+                    'vModel' => $input['vModel']
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
             <?php endif; ?>
@@ -125,7 +132,8 @@
                     'css' => $input['css'],
                     'numMin' => $input['numMin'],
                     'numMax' => $input['numMax'],
-                    'numStep' => $input['numStep']
+                    'numStep' => $input['numStep'],
+                    'vModel' => $input['vModel']
                 ]); ?>    
                 <?php echo $__env->renderComponent(); ?>
             <?php endif; ?>
@@ -140,7 +148,8 @@
                     'id' => $input['id'],
                     'css' => $input['css'],
                     'radioButtons' => $input['radioButtons'],
-                    'defaultValue' => $input['defaultValue']
+                    'defaultValue' => $input['defaultValue'],
+                    'vModel' => $input['vModel']
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
             <?php endif; ?>

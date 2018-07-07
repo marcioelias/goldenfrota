@@ -124,8 +124,7 @@ class EstoqueController extends Controller
             ]);
 
             try {
-                $estoque->estoque = $request->estoque;
-                $estoque->ativo = $request->ativo;
+                $estoque->fill($request->all());
 
                 if ($estoque->save()) {
                     Session::flash('success', __('messages.update_success', [

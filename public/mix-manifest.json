@@ -2,6 +2,7 @@
     "/js/vendor.js": "/js/vendor.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
+    "/js/saidaestoque.js": "/js/saidaestoque.js",
     "/js/entradaestoque.js": "/js/entradaestoque.js",
     "/js/inventarioestoque.js": "/js/inventarioestoque.js",
     "/js/other.js": "/js/other.js",

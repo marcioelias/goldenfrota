@@ -1,10 +1,10 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
 @section('content')
     <div class="panel panel-default">
         @component('components.form', [
-            'title' => 'Novo Estoque', 
-            'routeUrl' => route('estoque.store'), 
+            'title' => 'Nova Posição de Pneu', 
+            'routeUrl' => route('posicao_pneu.store'), 
             'method' => 'POST',
             'formButtons' => [
                 ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
@@ -16,18 +16,10 @@
                     'inputs' => [
                         [
                             'type' => 'text',
-                            'field' => 'estoque',
-                            'label' => 'Estoque',
+                            'field' => 'posicao_pneu',
+                            'label' => 'Posição de Pneu',
                             'required' => true,
-                            'autofocus' => true,
-                            'inputSize' => 8
-                        ],
-                        [
-                            'type' => 'select',
-                            'field' => 'permite_estoque_negativo',
-                            'label' => 'Permite Estoque Negativo',
-                            'inputSize' => 3,
-                            'items' => ['Não', 'Sim'],
+                            'autofocus' => true
                         ]
                     ]
                 ])

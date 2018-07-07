@@ -16,6 +16,7 @@ return [
     'modelo_bomba' => 'Modelo de Bomba',
     'modelo_veiculo' => 'Modelo de Veículo',
     'entrada_estoque' => 'Entrada no Estoque',
+    'saida_estoque' => 'Saída do Estoque',
     'parametro' => 'Parametro',
     'role' => 'Perfil de Usuário',
     'role_user' => 'Associação de Perfil Usuário',
@@ -32,4 +33,6 @@ return [
     'estoque' => 'Estoque',
     'tipo_movimentacao_produto' => 'Tipo de Movimentacao de Produto',
     'inventario' => 'Inventário',
+    'posicao_pneu' => 'Posição de Pneu',
+    'saida_estoque' => 'Saída de Estoque'
 ];

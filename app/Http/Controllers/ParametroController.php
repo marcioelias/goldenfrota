@@ -18,7 +18,7 @@ class ParametroController extends Controller
     public function index()
     {
         $parametro = Parametro::first();
-        if (count($parametro) == 0) {
+        if ($parametro == null) {
             return $this->create();
         } else {
             return $this->edit($parametro);

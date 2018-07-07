@@ -10,6 +10,7 @@ use App\Permission;
 use App\GrupoProduto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -224,5 +225,31 @@ class ProdutoController extends Controller
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
+    }
+
+    public function obterProdutosPeloEstoque($estoqueId) {
+        $estoque = Estoque::find($estoqueId);
+        $result = [];
+        if (!$estoque->permite_estoque_negativo) {
+            $produtos = $estoque->produtos()->get();
+            foreach ($produtos as $produto) {
+                $posicao = $estoque->saldo_produto($produto);
+                if ($posicao > 0) {
+                    $produto->posicao_estoque = $posicao;
+                    Log::debug($produto);
+                    $result[] = $produto;
+                }
+            }
+        } else {
+            //Log::info('não controla estoque negativo');
+            $produtos = $estoque->produtos()->get();
+
+            foreach ($produtos as $produto) {
+                $produto->posicao_estoque = null;
+                $result[] = $produto;
+            }
+        }
+
+        return $result;
     }
 }

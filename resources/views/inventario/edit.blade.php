@@ -72,7 +72,13 @@
                             <div class="col col-xs-1 col-sm-1 col-md-1" style="padding-top: 3px">{{ $item->produto->id }}</div>
                             <div class="col col-xs-7 col-sm-7 col-md-9" style="padding-top: 3px">{{ $item->produto->produto_descricao }}</div>
                             <div class="col col-xs-4 col-sm-4 col-md-2">
-                                <input type="text" class="form-control input-sm" name="items[{{$item->id}}][qtd_contada]" value="{{ (old('items[$item->id][qtd_contada]')) ? old('items[$item->id][qtd_contada]') : $item->qtd_contada }}" >
+                                @php
+                                    $contado = (old('items[$item->id][qtd_contada]')) ? old('items[$item->id][qtd_contada]') : $item->qtd_contada;
+                                    if ($contado < 0) {
+                                        $contado = '';
+                                    }
+                                @endphp
+                                <input type="text" class="form-control input-sm" name="items[{{$item->id}}][qtd_contada]" value="{{ $contado }}" >
                             </div>
                         </div>
                         @endforeach

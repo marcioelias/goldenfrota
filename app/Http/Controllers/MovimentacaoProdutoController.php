@@ -7,6 +7,7 @@ use App\Produto;
 use App\Parametro;
 use App\Inventario;
 use App\GrupoProduto;
+use App\SaidaEstoque;
 use App\EntradaEstoque;
 use App\MovimentacaoProduto;
 use Illuminate\Http\Request;
@@ -44,6 +45,36 @@ class MovimentacaoProdutoController extends Controller
         } 
     }
 
+    static public function saidaEstoque(SaidaEstoque $saidaEstoque) {
+        try {
+            foreach ($saidaEstoque->saida_estoque_items as $item) {
+                $saidaEstoque->movimentacao_produto()->create([
+                    'data_movimentacao' => $saidaEstoque->data_saida,
+                    'estoque_id' => $saidaEstoque->estoque_id,
+                    'produto_id' => $item->produto_id,
+                    'tipo_movimentacao_produto_id' => 2,
+                    'quantidade_movimentada' => $item->quantidade,
+                    //'saida_estoque_id' => $saidaEstoque->id
+                ]);
+            }
+
+            return true;
+                /* $saidas[] = [
+                    'data_movimentacao_produto' => $entradaEstoque->data_entrada,
+                    'estoque_id' => $entradaEstoque->estoque_id,
+                    'produto_id' => $item->produto_id,
+                    'tipo_movimentacao_produto_id' => 1,
+                    'quantidade_movimentada' => $item->quantidade,
+                    'entrada_estoque_id' => $entradaEstoque->id
+                ];
+            }
+            return $entradaEstoque->movimentacao_produto()->createMany($entradas); */
+
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        } 
+    }
+
 
     static public function consolidarInventario(Inventario $inventario) {
         try {
@@ -51,18 +82,23 @@ class MovimentacaoProdutoController extends Controller
                 /* 
                     3 = Entrada - Inventario
                     4 = Saída - Inventário
+                
+                se a quantidade contada for null, quer dizer que 
+                não deve ajustar o estoque deste produto 
                 */
-                $tipoMov = ($item->qtd_ajuste > 0) ? 3 : 4;
-                $qtd = ($item->qtd_ajuste < 0) ? $item->qtd_ajuste * -1 : $item->qtd_ajuste;
+                if ($item->qtd_contada >= 0) {
+                    $tipoMov = ($item->qtd_ajuste > 0) ? 3 : 4;
+                    $qtd = ($item->qtd_ajuste < 0) ? $item->qtd_ajuste * -1 : $item->qtd_ajuste;
 
-                $inventario->movimentacao_produto()->create([
-                    'data_movimentacao' => $inventario->data_fechamento,
-                    'estoque_id' => $inventario->estoque_id,
-                    'produto_id' => $item->produto_id,
-                    'tipo_movimentacao_produto_id' =>  $tipoMov,
-                    'quantidade_movimentada' => $qtd,
-                    'inventario_id' => $inventario->id
-                ]);
+                    $inventario->movimentacao_produto()->create([
+                        'data_movimentacao' => $inventario->data_fechamento,
+                        'estoque_id' => $inventario->estoque_id,
+                        'produto_id' => $item->produto_id,
+                        'tipo_movimentacao_produto_id' =>  $tipoMov,
+                        'quantidade_movimentada' => $qtd,
+                        'inventario_id' => $inventario->id
+                    ]);
+                }
             }
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());

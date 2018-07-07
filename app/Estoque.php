@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Estoque extends Model
 {
-    public $fillable = ['estoque', 'ativo'];
+    public $fillable = ['estoque', 'permite_estoque_negativo', 'ativo'];
 
     public function produtos() {
         return $this->belongsToMany(Produto::class);

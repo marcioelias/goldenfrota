@@ -72,7 +72,13 @@
                             <div class="col col-xs-1 col-sm-1 col-md-1" style="padding-top: 3px"><?php echo e($item->produto->id); ?></div>
                             <div class="col col-xs-7 col-sm-7 col-md-9" style="padding-top: 3px"><?php echo e($item->produto->produto_descricao); ?></div>
                             <div class="col col-xs-4 col-sm-4 col-md-2">
-                                <input type="text" class="form-control input-sm" name="items[<?php echo e($item->id); ?>][qtd_contada]" value="<?php echo e((old('items[$item->id][qtd_contada]')) ? old('items[$item->id][qtd_contada]') : $item->qtd_contada); ?>" >
+                                <?php
+                                    $contado = (old('items[$item->id][qtd_contada]')) ? old('items[$item->id][qtd_contada]') : $item->qtd_contada;
+                                    if ($contado < 0) {
+                                        $contado = '';
+                                    }
+                                ?>
+                                <input type="text" class="form-control input-sm" name="items[<?php echo e($item->id); ?>][qtd_contada]" value="<?php echo e($contado); ?>" >
                             </div>
                         </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -45,10 +45,6 @@
                         <li><a href="<?php echo e(route('unidade.index')); ?>">Unidades</a></li>
                         <?php endif; // app('laratrust')->can ?>
                         <li class="divider"></li>
-                        <?php if (app('laratrust')->can('listar-entrada-estoque')) : ?>
-                        <li><a href="<?php echo e(route('entrada_estoque.index')); ?>">Entradas no Estoque</a></li>
-                        <?php endif; // app('laratrust')->can ?>
-                        <li class="divider"></li>
                         <?php if (app('laratrust')->can('listar-tanque')) : ?>
                         <li><a href="<?php echo e(route('tanque.index')); ?>">Tanques</a></li>
                         <?php endif; // app('laratrust')->can ?>
@@ -85,6 +81,9 @@
                         <?php endif; // app('laratrust')->can ?>
                         <?php if (app('laratrust')->can('listar-modelo-veiculo')) : ?>
                         <li><a href="<?php echo e(route('modelo_veiculo.index')); ?>">Modelos de Veículo</a></li>
+                        <?php endif; // app('laratrust')->can ?>
+                        <?php if (app('laratrust')->can('listar-posicao-pneu')) : ?>
+                        <li><a href="<?php echo e(route('posicao_pneu.index')); ?>">Posição de Pneu</a></li>
                         <?php endif; // app('laratrust')->can ?>
                     </ul>
                 </li>
@@ -123,6 +122,13 @@
                         
                         <?php if (app('laratrust')->can('listar-tanque-movimentacao')) : ?>
                         <li><a href="<?php echo e(route('tanque_movimentacao.index')); ?>">Entrada de Combustíveis</a></li>
+                        <?php endif; // app('laratrust')->can ?>
+                        <li class="divider"></li>
+                        <?php if (app('laratrust')->can('listar-entrada-estoque')) : ?>
+                        <li><a href="<?php echo e(route('entrada_estoque.index')); ?>">Entradas no Estoque</a></li>
+                        <?php endif; // app('laratrust')->can ?>
+                        <?php if (app('laratrust')->can('listar-saida-estoque')) : ?>
+                        <li><a href="<?php echo e(route('saida_estoque.index')); ?>">Saídas do Estoque</a></li>
                         <?php endif; // app('laratrust')->can ?>
                         <li class="divider"></li>
                         <?php if (app('laratrust')->can('listar-inventario')) : ?>

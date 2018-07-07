@@ -29,7 +29,7 @@ class EntradaEstoque extends Model
     }
 
     public function movimentacao_produto() {
-        return $this->belongsTo(MovimentacaoProduto::class);
+        return $this->hasMany(MovimentacaoProduto::class);
     }
 
     public function estoque() {

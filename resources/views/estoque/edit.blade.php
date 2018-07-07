@@ -21,7 +21,15 @@
                             'required' => true,
                             'autofocus' => true,
                             'inputValue' => $estoque->estoque,
-                            'inputSize' => 10
+                            'inputSize' => 8
+                        ],
+                        [
+                            'type' => 'select',
+                            'field' => 'permite_estoque_negativo',
+                            'label' => 'Permite Estoque Negativo',
+                            'inputSize' => 3,
+                            'indexSelected' => $estoque->permite_estoque_negativo,
+                            'items' => ['Não', 'Sim'],
                         ],
                         [
                             'type' => 'select',

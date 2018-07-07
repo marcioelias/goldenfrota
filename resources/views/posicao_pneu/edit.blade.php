@@ -1,11 +1,11 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
 @section('content')
     <div class="panel panel-default">
         @component('components.form', [
-            'title' => 'Novo Estoque', 
-            'routeUrl' => route('estoque.store'), 
-            'method' => 'POST',
+            'title' => 'Alterar Tipo de Bomba', 
+            'routeUrl' => route('tipo_bomba.update', $tipo_bomba->id), 
+            'method' => 'PUT',
             'formButtons' => [
                 ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
                 ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
@@ -16,18 +16,20 @@
                     'inputs' => [
                         [
                             'type' => 'text',
-                            'field' => 'estoque',
-                            'label' => 'Estoque',
+                            'field' => 'tipo_bomba',
+                            'label' => 'Tipo de Bomba',
                             'required' => true,
                             'autofocus' => true,
-                            'inputSize' => 8
+                            'inputValue' => $tipo_bomba->tipo_bomba,
+                            'inputSize' => 7
                         ],
                         [
                             'type' => 'select',
-                            'field' => 'permite_estoque_negativo',
-                            'label' => 'Permite Estoque Negativo',
-                            'inputSize' => 3,
-                            'items' => ['Não', 'Sim'],
+                            'field' => 'ativo',
+                            'label' => 'Ativo',
+                            'inputSize' => 1,
+                            'indexSelected' => $tipo_bomba->ativo,
+                            'items' => Array('Não', 'Sim'),
                         ]
                     ]
                 ])

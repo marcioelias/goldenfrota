@@ -1,17 +1,17 @@
-webpackJsonp([3],{
+webpackJsonp([4],{
 
-/***/ 164:
+/***/ 169:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(165);
+module.exports = __webpack_require__(170);
 
 
 /***/ }),
 
-/***/ 165:
+/***/ 170:
 /***/ (function(module, exports, __webpack_require__) {
 
-var inventario_estoque = __webpack_require__(166);
+var inventario_estoque = __webpack_require__(171);
 
 var leads = new Vue({
     el: '#inventario_estoque_items',
@@ -22,15 +22,15 @@ var leads = new Vue({
 
 /***/ }),
 
-/***/ 166:
+/***/ 171:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(167)
+var __vue_script__ = __webpack_require__(172)
 /* template */
-var __vue_template__ = __webpack_require__(168)
+var __vue_template__ = __webpack_require__(173)
 /* styles */
 var __vue_styles__ = null
 /* scopeId */
@@ -69,7 +69,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 167:
+/***/ 172:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -122,7 +122,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 168:
+/***/ 173:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -311,4 +311,4 @@ module.exports = function normalizeComponent (
 
 /***/ })
 
-},[164]);
+},[169]);

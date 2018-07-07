@@ -31,6 +31,7 @@
         </span>
     @endif
 </div>
+@push('scripts')
 <script type="text/javascript">
     $(function () {
         $('#{{$id}}_picker').datetimepicker({
@@ -52,3 +53,4 @@
         @endif
     });
 </script>
+@endpush

@@ -65,6 +65,7 @@ mix.js([
     ], 'public/js/other.js'); 
 
 mix.js('resources/assets/js/entradaestoque.js', 'public/js');
+mix.js('resources/assets/js/saidaestoque.js', 'public/js');
 mix.js('resources/assets/js/inventarioestoque.js', 'public/js');
 
 /* mix.styles([

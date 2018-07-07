@@ -5,6 +5,7 @@ namespace App;
 use App\Estoque;
 use App\Produto;
 use App\Inventario;
+use App\SaidaEstoque;
 use App\EntradaEstoque;
 use App\TipoMovimentacaoProduto;
 use Illuminate\Database\Eloquent\Model;
@@ -38,5 +39,9 @@ class MovimentacaoProduto extends Model
 
     public function estoque() {
         return $this->belongsTo(Estoque::class);
+    }
+
+    public function saida_estoque() {
+        return $this->hasOne(SaidaEstoque::class);
     }
 }

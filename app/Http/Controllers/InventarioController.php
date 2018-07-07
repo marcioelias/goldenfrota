@@ -192,8 +192,14 @@ class InventarioController extends Controller
                 if ($inventario->fechado) {
                     /* atualizar quantidade em estoque e contabilizar quantidade do ajuste */
                     foreach($request->items as $id => $item) {
+                        /* 
+                        se a quantidade contada for null, quer dizer que 
+                        não deve ajustar o estoque deste produto.
+                        Produtos que não são contados são gravados com 
+                        o campo qtd_contada = -1.                        
+                        */
                         $inventarioItem = InventarioItem::find($id);
-                        $inventarioItem->qtd_contada = ($item['qtd_contada']) ? $item['qtd_contada'] : 0;   
+                        $inventarioItem->qtd_contada = ($item['qtd_contada'] != null) ? $item['qtd_contada'] : -1;   
                         $inventarioItem->qtd_estoque = (Estoque::find($inventario->estoque_id))->saldo_produto($inventarioItem->produto);
                         $inventarioItem->qtd_ajuste = $inventarioItem->qtd_contada - $inventarioItem->qtd_estoque;
                         if (!$inventarioItem->save()) {
@@ -205,8 +211,14 @@ class InventarioController extends Controller
                     MovimentacaoProdutoController::consolidarInventario($inventario);
                 } else {
                     foreach($request->items as $id => $item) {
+                        /* 
+                        se a quantidade contada for null, quer dizer que 
+                        não deve ajustar o estoque deste produto.
+                        Produtos que não são contados são gravados com 
+                        o campo qtd_contada = -1.                        
+                        */
                         $inventarioItem = InventarioItem::find($id);
-                        $inventarioItem->qtd_contada = ($item['qtd_contada']) ? $item['qtd_contada'] : 0;
+                        $inventarioItem->qtd_contada = ($item['qtd_contada'] != null) ? $item['qtd_contada'] : -1;
                         if (!$inventarioItem->save()) {
                             throw new \Exception('Não foi possível salvar o item: '.$key);
                         }

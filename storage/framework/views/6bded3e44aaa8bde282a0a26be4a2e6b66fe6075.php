@@ -7,5 +7,6 @@
 </head>
 <body>
     <?php echo $__env->yieldContent('body'); ?>
+    <?php echo $__env->yieldPushContent('bottom-scripts'); ?>
 </body>
 </html>

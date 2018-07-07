@@ -7,13 +7,14 @@
     $indexSelected = isset($indexSelected) ? $indexSelected : false;
     $liveSearch = isset($liveSearch) ? $liveSearch : false;
     $defaultNone = isset($defaultNone) ? $defaultNone : false;
+    $vModel = isset($vModel) ? $vModel : false;
 ?>
 <div class="col col-sm col-md<?php echo e($inputSize); ?> col-lg<?php echo e($inputSize); ?> <?php echo e($errors->has($field) ? ' has-error' : ''); ?>">
     <?php if(isset($label)): ?>
         <?php $__env->startComponent('components.label', ['label' => $label, 'field' => $field, 'required' => $required]); ?>
         <?php echo $__env->renderComponent(); ?>
     <?php endif; ?>  
-    <select class="form-control selectpicker <?php echo e($css); ?>" <?php echo e($liveSearch ? 'data-live-search=true' : ''); ?> id="<?php echo e($id); ?>" name="<?php echo e($name); ?>" <?php echo e($required ? 'required' : ''); ?>  <?php echo e($autofocus ? 'autofocus' : ''); ?> <?php echo e($disabled ? 'disabled="disabled"' : ''); ?>>
+    <select class="form-control selectpicker <?php echo e($css); ?>" <?php echo e(($vModel) ? 'v-model='.$vModel : ''); ?> <?php echo e($liveSearch ? 'data-live-search=true' : ''); ?> id="<?php echo e($id); ?>" name="<?php echo e($name); ?>" <?php echo e($required ? 'required' : ''); ?>  <?php echo e($autofocus ? 'autofocus' : ''); ?> <?php echo e($disabled ? 'disabled="disabled"' : ''); ?>>
         <?php if(isset($items)): ?>
             <?php if($defaultNone): ?>
                 <option  selected value="" > Nada Selecionado </option>
