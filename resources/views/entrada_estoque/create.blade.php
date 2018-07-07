@@ -34,7 +34,8 @@
                             'field' => 'data_doc',
                             'label' => 'Data Documento',
                             'required' => true,
-                            'inputSize' => 3
+                            'inputSize' => 3,
+                            'inputValue' => date('d/m/Y H:i:s')
                         ],
                         [
                             'type' => 'datetime',
