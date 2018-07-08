@@ -86,7 +86,6 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         if (Auth::user()->canCadastrarProduto()) {
             $this->validate($request, [
                 'produto_descricao' => 'required|string|min:3|max:60|unique:produtos',

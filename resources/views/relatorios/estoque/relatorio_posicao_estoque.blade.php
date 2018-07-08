@@ -11,6 +11,12 @@
                 Produto
             </td>
             <td>
+                Grupo Produto
+            </td>
+            <td>
+                Estoque
+            </td>
+            <td>
                 Qtd em Estoque
             </td>
         </tr>
@@ -23,6 +29,12 @@
             </td>
             <td>
                 {{$produto->produto_descricao}}
+            </td>
+            <td>
+                {{$produto->grupo_produto}}
+            </td>
+            <td>
+                {{$produto->estoque}}
             </td>
             <td>
                 {{$produto->posicao}}

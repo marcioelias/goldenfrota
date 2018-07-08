@@ -59,7 +59,7 @@
         {{-- </div>  --}} 
     </div>
     {{--  <div class="panel-body">  --}}
-        <table class="table table-bordered table-striped table-hover">
+        <table class="table table-bordered table-striped table-condensed table-hover">
             <thead>
                 <tr>
                     @foreach($captions as $field => $caption)
