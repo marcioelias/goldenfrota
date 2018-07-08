@@ -7,7 +7,12 @@
         'model' => 'produto',
         'tableTitle' => 'Produtos',
         'displayField' => 'produto_descricao',
-        'actions' => ['edit', 'destroy']
-        ]);
+        'actions' => [
+            [
+                'custom_action' => 'components.customActions.PosicaoEstoqueProduto'
+            ],
+            'edit',
+            'destroy'
+        ]]);
     @endcomponent
 @endsection
