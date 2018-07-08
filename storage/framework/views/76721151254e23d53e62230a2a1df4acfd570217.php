@@ -115,17 +115,7 @@
                 ]); ?>
                 <?php echo $__env->renderComponent(); ?>
                 <div class="row">
-                    <div class="col-md-6">
-                        <?php $__env->startComponent('components.input-checklist-group', [
-                            'items' => $estoques,
-                            'label' => 'estoque',
-                            'field' => 'estoques[]',
-                            'title' => 'Estoques',
-                            'value' => 'id'
-                        ]); ?>
-                        <?php echo $__env->renderComponent(); ?>                        
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <?php $__env->startComponent('components.input-checklist-group', [
                             'items' => $fornecedores,
                             'label' => 'nome_razao',
@@ -135,14 +125,21 @@
                         ]); ?>
                         <?php echo $__env->renderComponent(); ?>
                     </div>
+                    <div class="col-md-8" id="estoqueProdutoComponent">
+                          
+                        <estoque_produto :estoques-data="<?php echo e(json_encode($listaEstoques)); ?>" :old-data="<?php echo e(json_encode(old('estoques'))); ?>"></estoque_produto>                      
+                    </div>
                 </div>
             <?php $__env->stopSection(); ?>
         <?php echo $__env->renderComponent(); ?>
     </div>
+<?php $__env->startPush('bottom-scripts'); ?>
     <script>
         jQuery(function($){
             $("#valor").mask('0.00', {reverse: true});
         });
     </script>
+    <script src="<?php echo e(asset('js/estoqueproduto.js')); ?>"></script>
+<?php $__env->stopPush(); ?>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

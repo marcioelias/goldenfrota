@@ -67,6 +67,7 @@ mix.js([
 mix.js('resources/assets/js/entradaestoque.js', 'public/js');
 mix.js('resources/assets/js/saidaestoque.js', 'public/js');
 mix.js('resources/assets/js/inventarioestoque.js', 'public/js');
+mix.js('resources/assets/js/estoqueproduto.js', 'public/js');
 
 /* mix.styles([
         'node_modules/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.min.css'

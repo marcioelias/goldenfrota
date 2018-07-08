@@ -69,7 +69,7 @@ class ProdutoController extends Controller
             return View('produto.create', [
                 'unidades' => Unidade::all(),
                 'grupoProdutos' => GrupoProduto::all(),
-                'estoques' => Estoque::all(),
+                'listaEstoques' => Estoque::all(),
                 'fornecedores' => Fornecedor::all()
             ]);
         } else {
@@ -86,7 +86,7 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+        dd($request->all());
         if (Auth::user()->canCadastrarProduto()) {
             $this->validate($request, [
                 'produto_descricao' => 'required|string|min:3|max:60|unique:produtos',
@@ -132,11 +132,20 @@ class ProdutoController extends Controller
     public function edit(Produto $produto)
     {
         if (Auth::user()->canAlterarProduto()) {
+            $estoqueProdutos = array();
+            foreach($produto->estoques()->get() as $estoqueProduto) {
+                $pivot = $estoqueProduto->pivot;
+                $estoqueProdutos[] = [
+                    'estoque_id' => $pivot->estoque_id,
+                    'estoque_minimo' => $pivot->estoque_minimo
+                ];
+            }
             return View('produto.edit', [
                 'produto' => $produto,
                 'unidades' => Unidade::all(),
                 'grupoProdutos' => GrupoProduto::all(),
-                'estoques' => Estoque::all(),
+                'listaEstoques' => Estoque::all(),
+                'estoques' => $estoqueProdutos,
                 'fornecedores' => Fornecedor::all()
             ]);
         } else {

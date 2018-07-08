@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    {{--  {{ dd($estoques) }}  --}}
     <div class="panel panel-default">
         @component('components.form', [
             'title' => 'Alterar Produto', 
@@ -123,18 +124,7 @@
                 ])
                 @endcomponent
                 <div class="row">
-                    <div class="col-md-6">
-                        @component('components.input-checklist-group', [
-                            'items' => $estoques,
-                            'label' => 'estoque',
-                            'field' => 'estoques[]',
-                            'title' => 'Estoques',
-                            'value' => 'id',
-                            'indexSelected' => $produto->estoques()->pluck('estoque_id')
-                        ])
-                        @endcomponent                        
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         @component('components.input-checklist-group', [
                             'items' => $fornecedores,
                             'label' => 'nome_razao',
@@ -145,13 +135,19 @@
                         ])
                         @endcomponent
                     </div>
+                    <div class="col-md-8" id="estoqueProdutoComponent">
+                        <estoque_produto :estoques-data="{{ json_encode($listaEstoques) }}" :old-data="{{ json_encode((old('estoques')) ? old('estoques') : $estoques) }}"></estoque_produto>                      
+                    </div>
                 </div>
             @endsection
         @endcomponent
     </div>
+@push('bottom-scripts')
     <script>
         jQuery(function($){
             $("#valor").mask('0.00', {reverse: true});
         });
     </script>
+    <script src="{{ asset('js/estoqueproduto.js') }}"></script>
+@endpush
 @endsection

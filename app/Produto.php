@@ -29,7 +29,7 @@ class Produto extends Model
     }
 
     public function estoques() {
-        return $this->belongsToMany(Estoque::class);
+        return $this->belongsToMany(Estoque::class)->withPivot('estoque_minimo');
     }
 
     public function inventario_item() {
