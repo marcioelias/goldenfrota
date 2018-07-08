@@ -43,6 +43,7 @@ return [
             'relatorio_abastecimentos_bico' => 'a',
             'relatorio_media_consumo_modelo' => 'a',
             'relatorio_posicao_estoque' => 'a',
+            'relatorio_estoque_minimo' => 'a',
             'importar_abastecimentos' => 'a',
             'exportar_exportar_dados_cadastrais' => 'a'
         ],

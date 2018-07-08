@@ -170,6 +170,9 @@
                         <?php if (app('laratrust')->can('acesso-relatorio-posicao-estoque')) : ?>
                         <li><a href="<?php echo e(route('param_relatorio_posicao_estoque')); ?>">Relatório de Posição de Estoque</a></li>
                         <?php endif; // app('laratrust')->can ?>
+                        <?php if (app('laratrust')->can('acesso-relatorio-estoque-minimo')) : ?>
+                        <li><a href="<?php echo e(route('param_relatorio_estoque_minimo')); ?>">Relatório de Produtos Abaixo do Estoque Mínimo</a></li>
+                        <?php endif; // app('laratrust')->can ?>
                         
                         
                     </ul>

@@ -170,4 +170,74 @@ class MovimentacaoProdutoController extends Controller
                     ->withParametros($parametros)
                     ->withParametro(Parametro::first());
     }
+
+    public function paramRelatorioEstoqueMinimo() {
+        return View('relatorios.estoque.param_relatorio_estoque_minimo', [
+            'estoques' => Estoque::all(),
+            'grupo_produtos' => GrupoProduto::all()
+        ]);
+    }
+
+    public function relatorioEstoqueMinimo(Request $request) {
+        $parametros = array();
+
+        if ($request->estoque_id > 0) {
+            $whereEstoque = 'movimentacao_produtos.estoque_id = '.$request->estoque_id;
+            array_push($parametros, 'Estoque: '.(Estoque::find($request->estoque_id)->estoque)); 
+        } else {
+            $whereEstoque = '1 = 1';
+            array_push($parametros, 'Estoque: Todos');  
+        }
+        if ($request->grupo_produto_id > 0) {
+            $whereGrupoProduto = 'produtos.grupo_produto_id = '.$request->grupo_produto_id;
+            array_push($parametros, 'Grupo de Produto: '.(GrupoProduto::find($request->grupo_produto_id)->grupo_produto)); 
+        } else {
+            $whereGrupoProduto = '1 = 1';
+            array_push($parametros, 'Grupo de Produto: Todos'); 
+        }
+
+        $produtos = DB::table('movimentacao_produtos')
+                    ->select(
+                        'produtos.id',
+                        'produtos.produto_descricao',
+                        DB::raw(
+                            'SUM(
+                                CASE tipo_movimentacao_produtos.eh_entrada
+                                    WHEN 1 THEN
+                                        movimentacao_produtos.quantidade_movimentada
+                                    WHEN 0 THEN
+                                        movimentacao_produtos.quantidade_movimentada * -1
+                                END
+                            ) as posicao'
+                        ),
+                        'estoques.estoque',
+                        'estoque_produto.estoque_minimo',
+                        'grupo_produtos.grupo_produto'
+                    )
+                    ->leftJoin('produtos', 'produtos.id', 'movimentacao_produtos.produto_id', 'grupo_produtos.grupo_produto')
+                    ->leftJoin('tipo_movimentacao_produtos', 'tipo_movimentacao_produtos.id', 'movimentacao_produtos.tipo_movimentacao_produto_id')
+                    ->leftJoin('estoques', 'estoques.id', 'movimentacao_produtos.estoque_id')
+                    ->leftJoin('grupo_produtos', 'grupo_produtos.id', 'produtos.grupo_produto_id')
+                    ->leftJoin('estoque_produto', function($join) {
+                        $join->on('estoque_produto.produto_id', 'movimentacao_produtos.produto_id');
+                        $join->on('estoque_produto.estoque_id', 'movimentacao_produtos.estoque_id');
+                    })
+                    ->whereRaw($whereEstoque)
+                    ->whereRaw($whereGrupoProduto)
+                    ->groupBy('produtos.id')
+                    ->groupBy('produtos.produto_descricao')
+                    ->groupBy('estoques.id')
+                    ->groupBy('estoque_produto.estoque_minimo')
+                    ->groupBy('grupo_produtos.grupo_produto')
+                    ->havingRaw('posicao < estoque_minimo')
+                    ->orderBy('estoques.estoque', 'asc')
+                    ->orderBy('produtos.produto_descricao', 'asc')
+                    ->get();
+
+        return View('relatorios.estoque.relatorio_estoque_minimo')
+                    ->withProdutos($produtos)
+                    ->withTitulo('Produtos Abaixo do Estoque Mínimo')
+                    ->withParametros($parametros)
+                    ->withParametro(Parametro::first());
+    }
 }

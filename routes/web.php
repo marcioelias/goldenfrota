@@ -83,6 +83,8 @@ Route::middleware(['auth:web'])->group(function() {
     Route::post('relatorios/media_modelo', 'VeiculoController@relatorioMediaModelo')->name('relatorio_media_modelo');
     Route::get('relatorios/posicao_estoque', 'MovimentacaoProdutoController@paramRelatorioPosicaoEstoque')->name('param_relatorio_posicao_estoque');
     Route::post('relatorios/posicao_estoque', 'MovimentacaoProdutoController@relatorioPosicaoEstoque')->name('relatorio_posicao_estoque');
+    Route::get('relatorios/estoque_minimo', 'MovimentacaoProdutoController@paramRelatorioEstoqueMinimo')->name('param_relatorio_estoque_minimo');
+    Route::post('relatorios/estoque_minimo', 'MovimentacaoProdutoController@relatorioEstoqueMinimo')->name('relatorio_estoque_minimo');
 });
 
 /* Route::get('relatorios/abastecimentos/imprimir', 'AbastecimentoController@gerarPdfRelatorioAbastecimentos')->name('imprimir_relatorio_abastecimentos'); */

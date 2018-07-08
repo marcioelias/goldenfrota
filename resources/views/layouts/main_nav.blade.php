@@ -170,6 +170,9 @@
                         @permission('acesso-relatorio-posicao-estoque')
                         <li><a href="{{route('param_relatorio_posicao_estoque')}}">Relatório de Posição de Estoque</a></li>
                         @endpermission
+                        @permission('acesso-relatorio-estoque-minimo')
+                        <li><a href="{{route('param_relatorio_estoque_minimo')}}">Relatório de Produtos Abaixo do Estoque Mínimo</a></li>
+                        @endpermission
                         {{--  <li><a href="{{route('relatorio_media_consumo')}}">Listagem de Entradas de Combustíveis</a></li>
                         <li><a href="{{route('relatorio_media_consumo')}}">Listagem de Entradas de Abastecimentos</a></li>  --}}
                         {{--  <li><a href="#">Vendas de Produtos</a></li>  --}}
