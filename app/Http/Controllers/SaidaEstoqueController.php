@@ -100,7 +100,7 @@ class SaidaEstoqueController extends Controller
             ]);
 
             try {                
-                $dataSaida = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_saida);
+                $dataSaida = \DateTime::createFromFormat('d/m/Y H:i', $request->data_saida);
 
                 DB::beginTransaction();
     
