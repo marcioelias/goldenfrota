@@ -170,7 +170,6 @@ class MovimentacaoProdutoController extends Controller
                     ->groupBy('produtos.id')
                     ->groupBy('produtos.produto_descricao')
                     ->groupBy('estoques.id')
-                    ->groupBy('estoque_produto.estoque_minimo')
                     ->groupBy('grupo_produtos.grupo_produto')
                     ->whereRaw($whereData)
                     ->get();
@@ -284,7 +283,6 @@ class MovimentacaoProdutoController extends Controller
                     ->groupBy('produtos.id')
                     ->groupBy('produtos.produto_descricao')
                     ->groupBy('estoques.id')
-                    ->groupBy('estoque_produto.estoque_minimo')
                     ->groupBy('grupo_produtos.grupo_produto')
                     ->where('produtos.id', $produtoId)
                     ->get();
