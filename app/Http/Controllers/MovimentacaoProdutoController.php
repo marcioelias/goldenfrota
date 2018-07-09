@@ -236,7 +236,7 @@ class MovimentacaoProdutoController extends Controller
                     ->whereRaw($whereGrupoProduto)
                     ->groupBy('produtos.id')
                     ->groupBy('produtos.produto_descricao')
-                    ->groupBy('estoques.id')
+                    ->groupBy('estoques.estoque')
                     ->groupBy('estoque_produto.estoque_minimo')
                     ->groupBy('grupo_produtos.grupo_produto')
                     ->havingRaw('posicao < estoque_minimo')
