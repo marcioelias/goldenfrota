@@ -264,6 +264,8 @@ class MovimentacaoProdutoController extends Controller
                     )
                     ->groupBy('produtos.id')
                     ->groupBy('produtos.produto_descricao')
+                    ->groupBy('estoques.id')
+                    ->groupBy('grupo_produtos.grupo_produto')
                     ->leftJoin('produtos', 'produtos.id', 'movimentacao_produtos.produto_id')
                     ->leftJoin('tipo_movimentacao_produtos', 'tipo_movimentacao_produtos.id', 'movimentacao_produtos.tipo_movimentacao_produto_id')
                     ->where('produtos.id', $produtoId)

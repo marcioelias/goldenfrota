@@ -21,8 +21,8 @@ class AlterProdutosTableNewFields extends Migration
             $table->integer('vencimento_dias')->nullable()->after('valor_venda');
             $table->integer('vencimento_km')->nullable()->after('vencimento_dias');
             $table->boolean('controla_vencimento')->defaul(false)->after('vencimento_km');
-            $table->string('numero_serie')->defaulr('')->after('controla_vencimento');
-            $table->string('codigo_barras')->default('')->after('numero_serie');
+            $table->string('numero_serie')->nullable()->after('controla_vencimento');
+            $table->string('codigo_barras')->nullable()->after('numero_serie');
         });
     }
 

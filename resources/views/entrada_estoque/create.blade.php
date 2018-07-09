@@ -42,7 +42,8 @@
                             'field' => 'data_entrada',
                             'label' => 'Data Entrada',
                             'required' => true,
-                            'inputSize' => 3
+                            'inputSize' => 3,
+                            'inputValue' => date('d/m/Y H:i:s')
                         ],
                     ]
                 ])
