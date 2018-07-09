@@ -155,12 +155,23 @@ class MovimentacaoProdutoController extends Controller
                                         movimentacao_produtos.quantidade_movimentada * -1
                                 END
                             ) as posicao'
-                        )
+                        ),
+                        'estoques.estoque',
+                        'grupo_produtos.grupo_produto'
                     )
+                    ->leftJoin('produtos', 'produtos.id', 'movimentacao_produtos.produto_id', 'grupo_produtos.grupo_produto')
+                    ->leftJoin('tipo_movimentacao_produtos', 'tipo_movimentacao_produtos.id', 'movimentacao_produtos.tipo_movimentacao_produto_id')
+                    ->leftJoin('estoques', 'estoques.id', 'movimentacao_produtos.estoque_id')
+                    ->leftJoin('grupo_produtos', 'grupo_produtos.id', 'produtos.grupo_produto_id')
+                    ->leftJoin('estoque_produto', function($join) {
+                        $join->on('estoque_produto.produto_id', 'movimentacao_produtos.produto_id');
+                        $join->on('estoque_produto.estoque_id', 'movimentacao_produtos.estoque_id');
+                    })
                     ->groupBy('produtos.id')
                     ->groupBy('produtos.produto_descricao')
-                    ->leftJoin('produtos', 'produtos.id', 'movimentacao_produtos.produto_id')
-                    ->leftJoin('tipo_movimentacao_produtos', 'tipo_movimentacao_produtos.id', 'movimentacao_produtos.tipo_movimentacao_produto_id')
+                    ->groupBy('estoques.id')
+                    ->groupBy('estoque_produto.estoque_minimo')
+                    ->groupBy('grupo_produtos.grupo_produto')
                     ->whereRaw($whereData)
                     ->get();
 
@@ -262,12 +273,19 @@ class MovimentacaoProdutoController extends Controller
                         'estoques.estoque',
                         'grupo_produtos.grupo_produto'
                     )
+                    ->leftJoin('produtos', 'produtos.id', 'movimentacao_produtos.produto_id', 'grupo_produtos.grupo_produto')
+                    ->leftJoin('tipo_movimentacao_produtos', 'tipo_movimentacao_produtos.id', 'movimentacao_produtos.tipo_movimentacao_produto_id')
+                    ->leftJoin('estoques', 'estoques.id', 'movimentacao_produtos.estoque_id')
+                    ->leftJoin('grupo_produtos', 'grupo_produtos.id', 'produtos.grupo_produto_id')
+                    ->leftJoin('estoque_produto', function($join) {
+                        $join->on('estoque_produto.produto_id', 'movimentacao_produtos.produto_id');
+                        $join->on('estoque_produto.estoque_id', 'movimentacao_produtos.estoque_id');
+                    })
                     ->groupBy('produtos.id')
                     ->groupBy('produtos.produto_descricao')
                     ->groupBy('estoques.id')
+                    ->groupBy('estoque_produto.estoque_minimo')
                     ->groupBy('grupo_produtos.grupo_produto')
-                    ->leftJoin('produtos', 'produtos.id', 'movimentacao_produtos.produto_id')
-                    ->leftJoin('tipo_movimentacao_produtos', 'tipo_movimentacao_produtos.id', 'movimentacao_produtos.tipo_movimentacao_produto_id')
                     ->where('produtos.id', $produtoId)
                     ->get();
 
