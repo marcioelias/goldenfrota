@@ -239,6 +239,7 @@ class MovimentacaoProdutoController extends Controller
                     ->groupBy('estoques.estoque')
                     ->groupBy('estoque_produto.estoque_minimo')
                     ->groupBy('grupo_produtos.grupo_produto')
+                    ->groupBy('posicao')
                     ->havingRaw('posicao < estoque_minimo')
                     ->orderBy('estoques.estoque', 'asc')
                     ->orderBy('produtos.produto_descricao', 'asc')
