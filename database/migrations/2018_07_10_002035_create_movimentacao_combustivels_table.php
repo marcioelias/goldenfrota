@@ -17,6 +17,7 @@ class CreateMovimentacaoCombustivelsTable extends Migration
             $table->increments('id');
             $table->integer('tanque_id')->unsigned();
             $table->integer('tipo_movimentacao_combustivel_id')->unsigned();
+            $table->double('quantidade', 10, 3);
             $table->integer('abastecimento_id')->unsigned()->nullable();
             $table->foreign('tanque_id')->references('id')->on('tanques');
             $table->foreign('tipo_movimentacao_combustivel_id', 'tp_mov_comb_id')->references('id')->on('tipo_movimentacao_combustiveis');

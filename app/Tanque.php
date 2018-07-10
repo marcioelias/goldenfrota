@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Combustivel;
+use App\MovimentacaoCombustivel;
 use Illuminate\Database\Eloquent\Model;
 
 class Tanque extends Model
@@ -10,6 +12,10 @@ class Tanque extends Model
 
 
     public function combustivel() {
-        return $this->belongsTo('App\Combustivel');
+        return $this->belongsTo(Combustivel::class);
+    }
+
+    public function movimentacao_combustieveis() {
+        return $this->hasMany(MovimentacaoCombustivel::class);
     }
 }
