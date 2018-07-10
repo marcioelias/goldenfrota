@@ -239,10 +239,17 @@ class MovimentacaoProdutoController extends Controller
                     ->groupBy('estoques.estoque')
                     ->groupBy('estoque_produto.estoque_minimo')
                     ->groupBy('grupo_produtos.grupo_produto')
-                    ->havingRaw('posicao < estoque_minimo')
                     ->orderBy('estoques.estoque', 'asc')
                     ->orderBy('produtos.produto_descricao', 'asc')
                     ->get();
+
+        $results = array();
+        foreach ($produtos as $produto) {
+            if ($produto->posicao < $produtos->estoque_minimo) {
+                $results[] = $produto;
+            }
+        }
+
 
         return View('relatorios.estoque.relatorio_estoque_minimo')
                     ->withProdutos($produtos)

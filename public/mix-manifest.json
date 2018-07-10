@@ -3,10 +3,10 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/saidaestoque.js": "/js/saidaestoque.js",
+    "/js/estoqueproduto.js": "/js/estoqueproduto.js",
     "/js/entradaestoque.js": "/js/entradaestoque.js",
     "/js/inventarioestoque.js": "/js/inventarioestoque.js",
     "/js/other.js": "/js/other.js",
-    "/js/estoqueproduto.js": "/js/estoqueproduto.js",
     "/js/manifest.js": "/js/manifest.js",
     "/css/other.css": "/css/other.css"
 }
