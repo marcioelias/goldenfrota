@@ -21,7 +21,8 @@
                             'required' => true,
                             'inputSize' => 4,
                             'dateTimeFormat' => 'DD/MM/YYYY HH:mm:ss',
-                            'sideBySide' => true
+                            'sideBySide' => true,
+                            'inputValue' => date('d/m/Y H:i:s')
                         ],
                         [
                             'type' => 'select',
@@ -85,6 +86,60 @@
                     ]
                 ])
                 @endcomponent
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>AUTOMAÇÃO</strong>
+                    </div>
+                    <div class="panel-body">
+                        @component('components.form-group', [
+                            'inputs' => [
+                                [
+                                    'type' => 'select',
+                                    'field' => 'bico_id',
+                                    'label' => 'Número do Bico',
+                                    'required' => true,
+                                    'items' => $bicos,
+                                    'inputSize' => 4,
+                                    'displayField' => 'num_bico',
+                                    'keyField' => 'id',
+                                    'defaultNone' => true,
+                                ],
+                                [
+                                    'type' => 'number',
+                                    'field' => 'encerrante_inicial',
+                                    'label' => 'Encerrante Inicial',
+                                    'required' => true,
+                                    'inputSize' => 4,                           
+                                ],
+                                [
+                                    'type' => 'number',
+                                    'field' => 'encerrante_final',
+                                    'label' => 'Encerrante Final',
+                                    'required' => true,
+                                    'inputSize' => 4,             
+                                ]
+                            ]
+                        ])
+                        @endcomponent
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>OBSERVAÇÕES</strong>
+                    </div>
+                    <div class="panel-body">
+                        @component('components.form-group', [
+                            'inputs' => [
+                                [
+                                    'type' => 'textarea',
+                                    'field' => 'obs_abastecimento',
+                                    'label' => false,
+                                ]
+                            ]
+                        ])
+                        @endcomponent
+                    </div>
+                </div>
             @endsection
         @endcomponent
     </div>

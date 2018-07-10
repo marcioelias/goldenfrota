@@ -12,6 +12,7 @@ use App\EntradaEstoque;
 use App\MovimentacaoProduto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class MovimentacaoProdutoController extends Controller
 {
@@ -250,12 +251,11 @@ class MovimentacaoProdutoController extends Controller
             }
         }
 
-
         return View('relatorios.estoque.relatorio_estoque_minimo')
-                    ->withProdutos($results)
-                    ->withTitulo('Produtos Abaixo do Estoque Mínimo')
-                    ->withParametros($parametros)
-                    ->withParametro(Parametro::first());
+                ->withProdutos($results)
+                ->withTitulo('Produtos Abaixo do Estoque Mínimo')
+                ->withParametros($parametros)
+                ->withParametro(Parametro::first());
     }
 
     public function posicaoEstoqueProduto($produtoId) {

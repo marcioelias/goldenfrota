@@ -100,7 +100,8 @@ class AbastecimentoController extends Controller
     {
         if (Auth::user()->canCadastrarAbastecimento()) {
             $clientes = Cliente::where('ativo', true)->get();
-            return View('abastecimento.create')->withClientes($clientes); 
+            $bicos = Bico::where('ativo', true)->get();
+            return View('abastecimento.create')->withClientes($clientes)->withBicos($bicos); 
         } else {
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();

@@ -35,9 +35,9 @@
                         @permission('listar-grupo-produto')
                         <li><a href="{{route('grupo_produto.index')}}">Grupos de Produto</a></li>
                         @endpermission
-                        @permission('listar-tipo-movimentacao-produto')
+                        {{--  @permission('listar-tipo-movimentacao-produto')
                         <li><a href="{{route('tipo_movimentacao_produto.index')}}">Tipo de Movimentação de Produto</a></li>
-                        @endpermission
+                        @endpermission  --}}
                         @permission('listar-estoque')
                         <li><a href="{{route('estoque.index')}}">Estoques</a></li>
                         @endpermission

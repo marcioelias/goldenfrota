@@ -10,6 +10,7 @@ return [
     'create_error' => 'Novo :Model ":Name" não pode ser salvo.',
     'update_error' => ':Model ":Name" não pode ser alterado.',
     'delete_error' => ':Model ":Name" não pode ser removido.',
+    
     /* CRUD Messages for female words */
     'create_success_f' => 'Nova :Model ":Name" cadastrada com sucesso.',
     'update_success_f' => ':Model ":Name" alterada com sucesso.',
@@ -24,5 +25,8 @@ return [
 
     /* Permissions */
     'access_denied' => 'Você não tem permissão para acessar esta funcionalidade.',
-    'password_change_success' => 'Senha do usuário :User alterada com sucesso.'
+    'password_change_success' => 'Senha do usuário :User alterada com sucesso.',
+
+    /* Reports */
+    'no_data' => 'Nenhum dado encontrado para os parâmetros informados.'
 ];
