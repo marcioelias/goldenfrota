@@ -252,7 +252,7 @@ class MovimentacaoProdutoController extends Controller
 
 
         return View('relatorios.estoque.relatorio_estoque_minimo')
-                    ->withProdutos($produtos)
+                    ->withProdutos($results)
                     ->withTitulo('Produtos Abaixo do Estoque Mínimo')
                     ->withParametros($parametros)
                     ->withParametro(Parametro::first());
