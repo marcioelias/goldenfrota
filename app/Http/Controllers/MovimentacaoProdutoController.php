@@ -245,7 +245,7 @@ class MovimentacaoProdutoController extends Controller
 
         $results = array();
         foreach ($produtos as $produto) {
-            if ($produto->posicao < $produtos->estoque_minimo) {
+            if ($produto->posicao < $produto->estoque_minimo) {
                 $results[] = $produto;
             }
         }
