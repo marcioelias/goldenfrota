@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\BicoController;
 use Illuminate\Support\Facades\Redirect;
 
 class AbastecimentoController extends Controller
@@ -100,7 +101,7 @@ class AbastecimentoController extends Controller
     {
         if (Auth::user()->canCadastrarAbastecimento()) {
             $clientes = Cliente::where('ativo', true)->get();
-            $bicos = Bico::where('ativo', true)->get();
+            $bicos = Bico::where('permite_insercao', true)->where('ativo', true)->get();
             return View('abastecimento.create')->withClientes($clientes)->withBicos($bicos); 
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -136,9 +137,20 @@ class AbastecimentoController extends Controller
                 $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
                 $abastecimento->abastecimento_local = false;
                 $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
-                
+                $abastecimento->bico_id = $request->bico_id;
+                $abastecimento->encerrante_inicial = $request->encerrante_inicial;
+                $abastecimento->encerrante_final = $request->encerrante_final;
                 
                 if ($abastecimento->save()) {
+                
+                    if ($request->bico_id) {
+                        if (!BicoController::atualizarEncerranteBico($request->bico_id, $request->encerrante_final)) {
+                            throw new Exception(__('messages.exception', [
+                                'exception' => 'Não foi possível atualizar o encerrante do bico'
+                            ]));
+                        }
+                    }
+                
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.abastecimento'),
                         'name' => $abastecimento->id

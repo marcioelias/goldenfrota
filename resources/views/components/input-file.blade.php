@@ -5,6 +5,7 @@
     $autofocus = isset($autofocus) ? $autofocus : false;
     $required = isset($required) ? $required : false;
     $css = isset($css) ? $css : '';
+    $readOnly = ($readOnly) ? 'readonly' : '';
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}

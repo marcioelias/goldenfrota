@@ -143,11 +143,12 @@ class BicoController extends Controller
             ]);
 
             try {
-                $bico->num_bico = $request->num_bico;
+                $bico->fill($request->all());
+                /* $bico->num_bico = $request->num_bico;
                 $bico->tanque_id = $request->tanque_id;
                 $bico->bomba_id = $request->bomba_id;
                 $bico->encerrante = $request->encerrante;
-                $bico->ativo = $request->ativo;
+                $bico->ativo = $request->ativo; */
 
                 if ($bico->save()) {
                     Session::flash('success', __('messages.update_success', [
@@ -203,6 +204,23 @@ class BicoController extends Controller
         } else {
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back()->withInput();
+        }
+    }
+
+    public function getBicoJson(Request $request) {
+        return response()->json(Bico::find(1)->with('tanque.combustivel')->first());
+    }
+
+    static public function atualizarEncerranteBico($bicoId, $encerrante) {
+        try {
+            $bico = Bico::find($bicoId);
+            $bico->encerrante = $encerrante;
+            return $bico->save();
+
+        } catch (\Exception $e) {
+            throw new Exception(__('messages.exception',[
+                'exception' => $e->getMessage()
+            ]));
         }
     }
 }

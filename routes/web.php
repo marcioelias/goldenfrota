@@ -63,6 +63,7 @@ Route::middleware(['auth:web'])->group(function() {
     Route::post('modelo_veiculo/json', 'ModeloVeiculoController@getModelosJson')->name('modelo_veiculos.json');
     Route::post('departamento/json', 'DepartamentoController@getDepartamentosJson')->name('departamentos.json');
     Route::post('veiculo/json', 'VeiculoController@getVeiculosJson')->name('veiculos.json');
+    Route::post('bico/json', 'BicoController@getBicoJson')->name('bico.json');
     Route::post('veiculo_departamento/json', 'VeiculoController@getVeiculosDepartamentoJson')->name('veiculos_departamento.json');
     Route::post('tanques/json', 'TanqueController@getTanquesJson')->name('tanques.json');
     Route::post('ultimo_abastecimento/json', 'VeiculoController@obterKmAbasteciemntoAnterior')->name('ultimo_abastecimento.json');

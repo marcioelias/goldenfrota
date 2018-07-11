@@ -49,40 +49,18 @@
                             'required' => true,
                             'items' => null,
                             'disabled' => true,
-                            'inputSize' => 4,
+                            'inputSize' => 8,
                             'displayField' => 'placa',
                             'liveSearch' => true,
                             'keyField' => 'id'
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'km_veiculo',
                             'label' => 'KM do Veículo',
                             'required' => true,
-                            'inputSize' => 2                            
+                            'inputSize' => 4                            
                         ],
-                        [
-                            'type' => 'number',
-                            'field' => 'volume_abastecimento',
-                            'label' => 'Quantidade',
-                            'required' => true,
-                            'inputSize' => 2                            
-                        ],
-                        [
-                            'type' => 'number',
-                            'field' => 'valor_litro',
-                            'label' => 'Valor Unitário',
-                            'required' => true,
-                            'inputSize' => 2                            
-                        ],
-                        [
-                            'type' => 'number',
-                            'field' => 'valor_abastecimento',
-                            'label' => 'Valor Total',
-                            'required' => true,
-                            'inputSize' => 2,
-                            'readOnly' => true                            
-                        ]
                     ]
                 ])
                 @endcomponent
@@ -109,20 +87,56 @@
                                     'field' => 'encerrante_inicial',
                                     'label' => 'Encerrante Inicial',
                                     'required' => true,
-                                    'inputSize' => 4,                           
+                                    'inputSize' => 4,   
+                                    'readOnly' => true                       
                                 ],
                                 [
                                     'type' => 'number',
                                     'field' => 'encerrante_final',
                                     'label' => 'Encerrante Final',
                                     'required' => true,
-                                    'inputSize' => 4,             
+                                    'inputSize' => 4, 
+                                    'readOnly' => true            
                                 ]
                             ]
                         ])
                         @endcomponent
                     </div>
                 </div>
+                @component('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'text',
+                            'field' => 'combustivel_descricao',
+                            'label' => 'Combustível',
+                            'inputSize' => 6,
+                            'readOnly' => true
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'volume_abastecimento',
+                            'label' => 'Quantidade',
+                            'required' => true,
+                            'inputSize' => 2                            
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'valor_litro',
+                            'label' => 'Valor Unitário',
+                            'required' => true,
+                            'inputSize' => 2                            
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'valor_abastecimento',
+                            'label' => 'Valor Total',
+                            'required' => true,
+                            'inputSize' => 2,
+                            'readOnly' => true,
+                        ]
+                    ]
+                ])
+                @endcomponent
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <strong>OBSERVAÇÕES</strong>
@@ -161,9 +175,50 @@
                 }
             }
 
-            $('#volume_abastecimento').keyup(CalcValorAbastecimento);
+            function CalcularEncerranteFinal() {
+                var encIni, encFin, qtdAbast;
+                encIni = parseFloat($('#encerrante_inicial').val().replace(',', '.'));
+                qtdAbast = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
+
+                if (qtdAbast > 0) {
+                    console.log('qtdAbast: '+qtdAbast);
+                    console.log('encIni: '+encIni);
+                    $('#encerrante_final').val(encIni + qtdAbast);
+                }
+
+            }
+
+            $('#volume_abastecimento').keyup(CalcValorAbastecimento, CalcularEncerranteFinal);
 
             $('#valor_litro').keyup(CalcValorAbastecimento);
+
+            var buscarDadosBico = function() {
+                var bico = {};
+
+                bico.id = $('#bico_id').val();
+                bico._token = $('input[name="_token"]').val();
+
+                $.ajax({
+                    url: '{{ route("bico.json") }}',
+                    type: 'POST',
+                    data: bico,
+                    dataType: 'JSON',
+                    cache: false,
+                    success: function (data) {
+                        console.log(data);
+                        $("#encerrante_inicial").val(data.encerrante);
+                        $("#combustivel_descricao").val(data.tanque.combustivel.descricao);
+                        $("#valor_litro").val(data.tanque.combustivel.valor);
+                        $("#volume_abastecimento").focus();
+
+
+                        $('.selectpicker').selectpicker('refresh');
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
 
             var buscarVeiculos = function() {
                 var cliente = {};
@@ -179,7 +234,7 @@
                     dataType: 'JSON',
                     cache: false,
                     success: function (data) {
-                        //console.log(data);
+                        console.log(data);
                         $("#veiculo_id")
                             .removeAttr('disabled')
                             .find('option')
@@ -206,6 +261,7 @@
             }
 
             $('#cliente_id').on('changed.bs.select', buscarVeiculos);
+            $('#bico_id').on('changed.bs.select', buscarDadosBico);
 
             if ($('#cliente_id').val()) {
                 buscarVeiculos();

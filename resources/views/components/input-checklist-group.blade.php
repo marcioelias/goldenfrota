@@ -14,6 +14,7 @@
     $dataOnStyle = isset($dataOnStyle) ? $dataOnStyle : 'success';
     $dataOffStyle = isset($dataOffStyle) ? $dataOffStyle : 'default';
     $checked = isset($checked) ? $checked : false;
+    $readOnly = ($readOnly) ? 'readonly' : '';
     $indexSelected = isset($indexSelected) ? $indexSelected : old(str_replace('[]', '', $field));
 @endphp
 <div class="panel panel-default">

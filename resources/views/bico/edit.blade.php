@@ -21,7 +21,7 @@
                             'required' => true,
                             'autofocus' => true,
                             'inputValue' => $bico->num_bico,
-                            'inputSize' => 2
+                            'inputSize' => 1
                         ],
                         [
                             'type' => 'select',
@@ -54,6 +54,15 @@
                             'required' => true,
                             'inputValue' => $bico->encerrante,
                             'inputSize' => 3
+                        ],
+                        [
+                            'type' => 'select',
+                            'field' => 'permite_insercao',
+                            'label' => 'Ins. Abast.',
+                            'required' => true,
+                            'indexSelected' => $bico->permite_insercao,
+                            'items' => Array('Não', 'Sim'),
+                            'inputSize' => 1
                         ],
                         [
                             'type' => 'select',

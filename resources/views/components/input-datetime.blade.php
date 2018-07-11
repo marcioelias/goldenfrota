@@ -9,6 +9,7 @@
     $dateTimeFormat = isset($dateTimeFormat) ? $dateTimeFormat : false;
     $picker_begin = isset($picker_begin) ? $picker_begin : '';
     $picker_end = isset($picker_end) ? $picker_end : '';
+    $readOnly = isset($readOnly) ? isset($readOnly) : false;
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}
@@ -19,7 +20,7 @@
     @endif  
     
     <div class="input-group date" id="{{$id}}_picker">
-        <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
+        <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }} {{ $readOnly ? 'readonly' : '' }}>
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>

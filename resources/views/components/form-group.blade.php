@@ -25,6 +25,7 @@
                 $input['picker_begin'] = isset($input['picker_begin']) ? $input['picker_begin'] : false;
                 $input['picker_end'] = isset($input['picker_end']) ? $input['picker_end'] : false;
                 $input['vModel'] = isset($input['vModel']) ? $input['vModel'] : false;
+                $input['readOnly'] = isset($input['readOnly']) ? $input['readOnly'] : false;
             @endphp
             @if($input['type'] == 'text')
                 @component('components.input-text', [
@@ -36,7 +37,8 @@
                     'name' => $input['name'],
                     'id' => $input['id'],
                     'css' => $input['css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])
                 @endcomponent
             @endif
@@ -50,7 +52,8 @@
                     'name' => $input['name'],
                     'id' => $input['id'],
                     'css' => $input['css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])
                 @endcomponent
             @endif
@@ -65,7 +68,8 @@
                     'id' => $input['id'],
                     'css' => $input['css'],
                     'rows' => $input['rows'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])
                 @endcomponent
             @endif
@@ -78,7 +82,8 @@
                     'name' => $input['name'],
                     'id' => $input['id'],
                     'css' => $input['css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])
                 @endcomponent
             @endif
@@ -96,7 +101,8 @@
                     'dateTimeFormat' => $input['dateTimeFormat'],
                     'picker_begin' => $input['picker_begin'],
                     'picker_end' => $input['picker_end'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])
                 @endcomponent
             @endif
@@ -116,7 +122,8 @@
                     'indexSelected' => $input['indexSelected'],
                     'liveSearch' => $input['liveSearch'],
                     'defaultNone' => $input['defaultNone'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])
                 @endcomponent
             @endif
@@ -133,7 +140,8 @@
                     'numMin' => $input['numMin'],
                     'numMax' => $input['numMax'],
                     'numStep' => $input['numStep'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])    
                 @endcomponent
             @endif
@@ -149,7 +157,8 @@
                     'css' => $input['css'],
                     'radioButtons' => $input['radioButtons'],
                     'defaultValue' => $input['defaultValue'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])
                 @endcomponent
             @endif

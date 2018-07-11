@@ -8,6 +8,7 @@
     $liveSearch = isset($liveSearch) ? $liveSearch : false;
     $defaultNone = isset($defaultNone) ? $defaultNone : false;
     $vModel = isset($vModel) ? $vModel : false;
+    $readOnly = ($readOnly) ? 'readonly' : '';
 @endphp
 <div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }}">
     @if(isset($label))

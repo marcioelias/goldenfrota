@@ -21,7 +21,7 @@
                             'required' => true,
                             'autofocus' => true,
                             'inputValue' => isset($bico->num_bico) ? $bico->num_bico : '',
-                            'inputSize' => 2
+                            'inputSize' => 1
                         ],
                         [
                             'type' => 'select',
@@ -54,6 +54,14 @@
                             'required' => true,
                             'inputValue' => isset($bico->encerrante) ? $bico->encerrante : '',
                             'inputSize' => 3
+                        ],
+                        [
+                            'type' => 'select',
+                            'field' => 'permite_insercao',
+                            'label' => 'Ins. Abast.',
+                            'required' => true,
+                            'items' => Array('Não', 'Sim'),
+                            'inputSize' => 1
                         ]
                     ]
                 ])

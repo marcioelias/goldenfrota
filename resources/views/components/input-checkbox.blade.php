@@ -14,6 +14,7 @@
     $dataOnStyle = isset($dataOnStyle) ? $dataOnStyle : 'success';
     $dataOffStyle = isset($dataOffStyle) ? $dataOffStyle : 'default';
     $checked = isset($inputValue) ? ($value == $inputValue) : false;
+    $readOnly = ($readOnly) ? 'readonly' : '';
 @endphp
 
 <input type="checkbox" 
