@@ -297,10 +297,10 @@
             },
             limparFormulario() {
                 this.produtoSelecionado = false;
-                this.quantidade = '';
-                this.valorUnitario = '';
-                this.desconto = '';
-                this.acrescimo = '';
+                this.quantidade = 1;
+                this.valorUnitario = 0;
+                this.desconto = 0;
+                this.acrescimo = 0;
                 this.$refs.inputProdutos.focus();
             },
             totalQuantidade() {
