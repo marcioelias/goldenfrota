@@ -32,7 +32,7 @@
         <div class="col col-sm-3 col-md-3 col-lg-3">
             <div class="panel panel-default nf-panel">
                 <label for="#departamento" class="nf-label">Departamento:</label>
-                <div id="departamento">{{ $saidaEstoque->departamento->departamento }}</div>
+                <div id="departamento">{{ isset($saidaEstoque->departamento) ? $saidaEstoque->departamento->departamento : '&nbsp;' }}</div>
             </div>
         </div>
     </div>
