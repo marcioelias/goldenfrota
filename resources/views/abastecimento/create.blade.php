@@ -189,8 +189,10 @@
             }
 
             $('#volume_abastecimento').keyup(CalcValorAbastecimento, CalcularEncerranteFinal);
+            $('#volume_abastecimento').blur(CalcValorAbastecimento, CalcularEncerranteFinal);
 
             $('#valor_litro').keyup(CalcValorAbastecimento);
+            $('#valor_litro').blur(CalcValorAbastecimento);
 
             var buscarDadosBico = function() {
                 var bico = {};
