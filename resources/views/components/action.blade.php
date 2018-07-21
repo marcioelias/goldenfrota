@@ -3,7 +3,7 @@
         case 'show':
             $btn_style = 'btn-success';
             $btn_icon = 'eye-open';
-            $tooltip = 'Mostrar';
+            $tooltip = 'Visualizar';
             $permission = 'listar-'.str_replace('_', '-', $model);
             break;
         case 'edit':
