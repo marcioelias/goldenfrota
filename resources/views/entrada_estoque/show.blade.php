@@ -6,33 +6,27 @@
         <div class="col col-sm-12 col-md-12 col-lg-12">
             <div class="panel panel-default nf-panel clearfix">
                 <div class="pull-left">
-                    <label for="#numero" class="nf-label">Número:</label>
-                    <div id="numero">{{ $saidaEstoque->id }}</div>
+                    <label for="#numero" class="nf-label">Número/Série:</label>
+                    <div id="numero">{{ $entradaEstoque->nr_docto }}/{{ $entradaEstoque->serie }}</div>
                 </div>
                 <div class="pull-right">
-                    <label for="#data_saida" class="nf-label">Data Saída:</label>
-                    <div id="data_saida">{{ date_format(date_create($saidaEstoque->data_saida), 'd/m/Y - H:i:s') }}</div>
+                    <label for="#data_saida" class="nf-label">Data Entrada:</label>
+                    <div id="data_saida">{{ date_format(date_create($entradaEstoque->data_entrada), 'd/m/Y - H:i:s') }}</div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col col-sm-3 col-md-3 col-lg-3">
+        <div class="col col-sm-4 col-md-4 col-lg-4">
             <div class="panel panel-default nf-panel">
                 <label for="#estoque" class="nf-label">Estoque:</label>
-                <div id="estoque">{{ $saidaEstoque->estoque->estoque }}</div>
+                <div id="estoque">{{ $entradaEstoque->estoque->estoque }}</div>
             </div>
         </div>
-        <div class="col col-sm-6 col-md-6 col-lg-6">
+        <div class="col col-sm-8 col-md-8 col-lg-8">
             <div class="panel panel-default nf-panel">
-                <label for="#cliente_nome" class="nf-label">Cliente:</label>
-                <div id="cliente_nome">{{ $saidaEstoque->cliente->nome_razao }}</div>
-            </div>
-        </div>
-        <div class="col col-sm-3 col-md-3 col-lg-3">
-            <div class="panel panel-default nf-panel">
-                <label for="#departamento" class="nf-label">Departamento:</label>
-                <div id="departamento">{{ isset($saidaEstoque->departamento) ? $saidaEstoque->departamento->departamento : '&nbsp;' }}</div>
+                <label for="#cliente_nome" class="nf-label">Fornecedor:</label>
+                <div id="cliente_nome">{{ $entradaEstoque->fornecedor->nome_razao }}</div>
             </div>
         </div>
     </div>
@@ -40,25 +34,25 @@
         <div class="col col-sm-3 col-md-3 col-lg-3">
             <div class="panel panel-default nf-panel">
                 <label for="#cpf_cnpj" class="nf-label">CPF/CNPJ:</label>
-                <div id="cpf_cnpj">{{ $saidaEstoque->cliente->cpf_cnpj }}</div>
+                <div id="cpf_cnpj">{{ $entradaEstoque->fornecedor->cpf_cnpj }}</div>
             </div>
         </div>
         <div class="col col-sm-2 col-md-2 col-lg-2">
             <div class="panel panel-default nf-panel">
                 <label for="#rg_ie" class="nf-label">RG/IE:</label>
-                <div id="rg_ie">{{ $saidaEstoque->cliente->rg_ie }}</div>
+                <div id="rg_ie">{{ $entradaEstoque->fornecedor->rg_ie }}</div>
             </div>
         </div>
         <div class="col col-sm-2 col-md-2 col-lg-2">
             <div class="panel panel-default nf-panel">
                 <label for="#telefone" class="nf-label">Fone:</label>
-                <div id="telefone">{{ $saidaEstoque->cliente->fone1 }}</div>
+                <div id="telefone">{{ $entradaEstoque->fornecedor->fone }}</div>
             </div>
         </div>
         <div class="col col-sm-5 col-md-5 col-lg-5">
             <div class="panel panel-default nf-panel">
                 <label for="#email" class="nf-label">E-mail:</label>
-                <div id="email">{{ $saidaEstoque->cliente->email1 }}</div>
+                <div id="email">{{ $entradaEstoque->fornecedor->email }}</div>
             </div>
         </div>
     </div>
@@ -66,13 +60,13 @@
         <div class="col col-sm-10 col-md-10 col-lg-10">
             <div class="panel panel-default nf-panel">
                 <label for="#endereco" class="nf-label">Endereço:</label>
-                <div id="endereco">{{ $saidaEstoque->cliente->endereco }}</div>
+                <div id="endereco">{{ $entradaEstoque->fornecedor->endereco }}</div>
             </div>
         </div>
         <div class="col col-sm-2 col-md-2 col-lg-2">
             <div class="panel panel-default nf-panel">
                 <label for="#numero" class="nf-label">Número:</label>
-                <div id="numero">{{ $saidaEstoque->cliente->numero }}</div>
+                <div id="numero">{{ $entradaEstoque->fornecedor->numero }}</div>
             </div>
         </div>
     </div>
@@ -80,25 +74,25 @@
         <div class="col col-sm-5 col-md-5 col-lg-5">
             <div class="panel panel-default nf-panel">
                 <label for="#bairro" class="nf-label">Bairro:</label>
-                <div id="bairro">{{ $saidaEstoque->cliente->bairro }}</div>
+                <div id="bairro">{{ $entradaEstoque->fornecedor->bairro }}</div>
             </div>
         </div>
         <div class="col col-sm-4 col-md-4 col-lg-4">
             <div class="panel panel-default nf-panel">
                 <label for="#cidade" class="nf-label">Cidade:</label>
-                <div id="cidade">{{ $saidaEstoque->cliente->cidade }}</div>
+                <div id="cidade">{{ $entradaEstoque->fornecedor->cidade }}</div>
             </div>
         </div>
         <div class="col col-sm-1 col-md-1 col-lg-1">
             <div class="panel panel-default nf-panel">
                 <label for="#uf" class="nf-label">UF:</label>
-                <div id="uf">{{ $saidaEstoque->cliente->uf->uf }}</div>
+                <div id="uf">{{ $entradaEstoque->fornecedor->uf->uf }}</div>
             </div>
         </div>
         <div class="col col-sm-2 col-md-2 col-lg-2">
             <div class="panel panel-default nf-panel">
                 <label for="#cep" class="nf-label">Cep:</label>
-                <div id="cep">{{ $saidaEstoque->cliente->cep }}</div>
+                <div id="cep">{{ $entradaEstoque->fornecedor->cep }}</div>
             </div>
         </div>
     </div>
@@ -138,7 +132,7 @@
             </div>
         </div>
     </div>
-    @foreach($saidaEstoque->saida_estoque_items as $item)
+    @foreach($entradaEstoque->entrada_estoque_items as $item)
     <div class="row">
         <div class="col col-sm-1 col-md-1 col-lg-1">
             <div class="panel panel-default nf-panel">
@@ -175,39 +169,8 @@
         </div>
         <div class="col col-sm-2 col-md-2 col-lg-2">
             <div class="panel panel-default nf-panel">
-                <div align="right">{{ number_format($saidaEstoque->valor_total, 3, ',', '.') }}</div>
+                <div align="right">{{ number_format($entradaEstoque->valor_total, 3, ',', '.') }}</div>
             </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid m-b-10">
-    <div class="row">
-        <div class="col col-sm-12 col-md-12 col-lg-12">
-            <div class="panel panel-default nf-panel">
-                <label for="#obs" class="nf-label">Observações:</label>
-                <div id="obs">{{ $saidaEstoque->obs }}</div>
-            </div>
-        </div>
-    </div>
-</div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<div class="container-fluid m-b-10">
-    <div class="row" align="center">
-        <div class="col col-sm-3 col-md-3 col-lg-3">
-        </div>
-        <div class="col col-sm-6 col-md-6 col-lg-6">
-            <div style="border-bottom: 1px solid"> </div>
-        </div>
-        <div class="col col-sm-3 col-md-3 col-lg-3">
-        </div>
-        <div class="col col-sm-12 col-md-12 col-lg-12" align="center">
-            <strong>ASSINATURA RESPONSÁVEL</strong> 
         </div>
     </div>
 </div>

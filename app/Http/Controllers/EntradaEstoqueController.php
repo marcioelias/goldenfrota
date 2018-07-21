@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Estoque;
 use App\Produto;
+use App\Parametro;
 use App\Fornecedor;
 use App\EntradaEstoque;
 use App\EntradaEstoqueItem;
@@ -136,26 +137,20 @@ class EntradaEstoqueController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
      * @param  \App\EntradaEstoque  $entradaEstoque
      * @return \Illuminate\Http\Response
      */
-    public function edit(EntradaEstoque $entradaEstoque)
+    public function show(EntradaEstoque $entradaEstoque)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\EntradaEstoque  $entradaEstoque
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, EntradaEstoque $entradaEstoque)
-    {
-        //
+        if (Auth::user()->canListarEntradaEstoque()) {
+            return View('entrada_estoque.show')
+                    ->withEntradaEstoque($entradaEstoque)
+                    ->withTitulo('Entrada no Estoque')
+                    //->withParametros($parametros)
+                    ->withParametro(Parametro::first());
+        }
     }
 
     /**
