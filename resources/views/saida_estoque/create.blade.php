@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@php
-    if(count($errors) > 0) {
-        //dd($errors);
-    }
-@endphp
 <div id="saida_estoque_produtos">
     <div class="panel panel-default">
         @component('components.form', [
@@ -53,25 +48,7 @@
                         ],
                     ]
                 ])
-                @endcomponent
-                {{--  @component('components.form-group', [
-                    'inputs' => [
-                        [
-                            'type' => 'select',
-                            'field' => 'estoque_id',
-                            'label' => 'Estoques',
-                            'required' => true,
-                            'items' => $estoques,
-                            'displayField' => 'estoque',
-                            'keyField' => 'id',
-                            'liveSearch' => true,
-                            'inputSize' => 6,
-                            'defaultNone' => true,
-                            'vModel' => 'estoqueId'
-                        ],
-                    ]
-                ])
-                @endcomponent  --}}
+                @endcomponent         
                 <div class="{{ $errors->has('items') ? ' has-error' : '' }}">
                     <saida_estoque v-bind:estoques="{{ json_encode($estoques) }}" :estoque-error="{{ $errors->has('estoque_id') ? json_encode(['msg' => $errors->first('estoque_id')]) : 'null' }}" :old-estoque-id="{{ json_encode(['estoque_id' => old('estoque_id')]) }}" {{--  :produtos-data="{{ json_encode($produtos) }}"  --}} :old-data="{{ json_encode(old('items')) }}"></saida_estoque>
                     @if ($errors->has('items'))
@@ -90,8 +67,6 @@
                     ]
                 ])
                 @endcomponent
-
-               {{--   {{ dd($errors) }}  --}}
             @endsection
         @endcomponent
     </div>
@@ -138,14 +113,11 @@
                 });
             }
 
-            
- 
             $('#cliente_id').on('changed.bs.select', buscarDepartamentos);
             
             if ($('#cliente_id').val()) {
                 buscarDepartamentos();
             }
-
         });
     </script>
 @endpush
