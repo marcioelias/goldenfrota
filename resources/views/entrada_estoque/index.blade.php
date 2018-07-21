@@ -7,7 +7,7 @@
         'model' => 'entrada_estoque',
         'tableTitle' => 'Entradas no Estoque',
         'displayField' => 'nr_docto',
-        'actions' => ['destroy']
+        'actions' => [['action' => 'show', 'target' => '_blank'], 'destroy']
         ]);
     @endcomponent
 @endsection
