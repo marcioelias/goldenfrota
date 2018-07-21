@@ -41,8 +41,7 @@ class IntegracaoAutomacaoController extends Controller
 
         $conteudo = $this->cryptAPI($conteudo);
 
-        dd($conteudo);
-        //Storage::disk('ftp')->put('funcionarios.hir', $conteudo);
+        Storage::disk('ftp')->put('funcionarios.hir', $conteudo);
     }
 
     /* 
@@ -111,34 +110,6 @@ class IntegracaoAutomacaoController extends Controller
         return redirect()->action('HomeController@index');
     }
 
-    public function teste() {
-        $data = $this->cryptAPI("VZ[QJJJJJJJJSZ+YR,]+QJJJJJJ'\x1F\x0E\x05QT");
-        dd($data);
-        $result = array();
-
-        $abastecidas = explode('>', $data);
-        foreach ($abastecidas as $abastecida) {
-            $abastecida = str_replace('<', '', $abastecida);
-            $abastecida = explode(';', $abastecida);
-            if (count($abastecida) > 1) {
-                $result[] = ($abastecida);
-            }
-        }
-
-        $b = null;
-        foreach (str_split($result[1][4].$result[0][5], 2) as $a) {
-            $b .= $b ? '-' : '';
-            $b .= trim($a);
-        }
-
-        $data_hora = \DateTime::createFromFormat('j-n-y-H-i-s', $b);
-
-        //dd($result);
-        dd($data_hora->format('Y-m-d H:i:s'));
-
-        return $result;
-    }
-
     protected function formataDataHoraAbastecimento(String $dataHora) {
         $b = null;
         $dataHora = str_replace(' ', '0', $dataHora);
@@ -192,6 +163,7 @@ class IntegracaoAutomacaoController extends Controller
             try {
                 $arquivo = Storage::disk('ftp')->get('abastecimentos.hir');
                 $arquivo = $this->cryptAPI($arquivo);
+                
 
                 $registros = array();
                 
@@ -203,13 +175,12 @@ class IntegracaoAutomacaoController extends Controller
                         $registros[] = $linha;
                     }
                 }
-                //$dataInicio = \DateTime::createFromFormat('Y-m-d H:i:s', '2018-03-28 09:00:01');
+                
                 $dataInicio = \DateTime::createFromFormat('Y-m-d H:i:s', 
                                     Abastecimento::whereNotNull('id_automacao')
                                             ->orderBy('data_hora_abastecimento', 'desc')
                                             ->pluck('data_hora_abastecimento')
                                             ->first());
-                //dd($dataInicio);
                 foreach ($registros as $registro)  {
                     if (count($registro) == 17) {
                         try {
@@ -237,12 +208,6 @@ class IntegracaoAutomacaoController extends Controller
                             $abastecimento->id_automacao = trim($registro[1]);
                             $abastecimento->ns_automacao = trim($registro[2]);           
                             $abastecimento->data_hora_abastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5])->format('Y-m-d H:i:s');
-                            
-                            /*if ($abastecimento->data_hora_abasteciemento > '2018-03-18 23:59:59') {
-                                dd('é maior '.$abastecimento->data_hora_abastecimento);
-                            } else {
-                                continue;
-                            }*/
                             
                             $abastecimento->valor_abastecimento = $this->formataValorDecimal(trim($registro[6]));
                             $abastecimento->volume_abastecimento = $this->formataValorDecimal(trim($registro[7]), 3);
@@ -274,21 +239,14 @@ class IntegracaoAutomacaoController extends Controller
                                 $abastecimento->inconsistencias_importacao = true;
                             } 
                             
-                            $dataAbastecimento =$this->formataDataHoraAbastecimento($registro[4].$registro[5]);
+                            $dataAbastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5]);
 
-                            if ( $dataAbastecimento < $dataInicio) {
-                                //Log::info('id_automacao: '.$registro[1].' Já existe na base de dados');
+                            if ( $dataAbastecimento <= $dataInicio) {
                                 continue;
                             } 
-                           /*  if (Abastecimento::where('id_automacao', '=', trim($registro[1]))->where('data_hora_abastecimento', '=', $abastecimento->data_hora_abastecimento)->count() > 0) {
-                                //Log::info('id_automacao: '.$registro[1].' Já existe na base de dados');
-                                continue;
-                            } */
                         } catch (\Exception $e) {
                             Log::info($e);
                         }
-                        
-                        //dd($abastecimento);
 
                         DB::transaction(function($dados) use ($abastecimento, $bico) {
                             $movimentacao = new TanqueMovimentacao;
@@ -309,7 +267,7 @@ class IntegracaoAutomacaoController extends Controller
                     }
                 }
             } finally {
-                //$this->limparArquivoAbastecimentosServidor();
+                $this->limparArquivoAbastecimentosServidor();
             }
             
             Session::flash('success', 'Abastecimentos Importados com sucesso!');
