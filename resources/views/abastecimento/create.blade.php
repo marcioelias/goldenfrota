@@ -194,7 +194,7 @@
             $('#valor_litro').keyup(CalcValorAbastecimento);
             $('#valor_litro').blur(CalcValorAbastecimento);
 
-            var buscarDadosBico = function() { 
+            var buscarDadosBico = function() {  
                 var bico = {};
 
                 bico.id = $('#bico_id').val();
