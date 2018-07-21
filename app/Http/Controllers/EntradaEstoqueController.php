@@ -103,8 +103,6 @@ class EntradaEstoqueController extends Controller
                 $entradaEstoque->data_doc = $dataDoc->format('Y-m-d H:i:s');
                 $entradaEstoque->data_entrada = $dataEntrada->format('Y-m-d H:i:s');
 
-                $entradaEstoque->valor_total = 10; //arrumar depois
-
                 if ($entradaEstoque->save()) {
                     $entradaEstoque->entrada_estoque_items()->createMany($request->items);
 

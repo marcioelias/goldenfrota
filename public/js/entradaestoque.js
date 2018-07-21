@@ -192,14 +192,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -252,6 +244,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             return this.produtosDisponiveis.sort(compare);
+        },
+        valor_total: {
+            get: function get() {
+                var total = 0;
+                for (var i = 0; i < this.items.length; i++) {
+                    total += this.items[i].quantidade * this.items[i].valor_unitario;
+                }
+                return total;
+            }
         }
     },
     mounted: function mounted() {
@@ -671,6 +672,27 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "panel-footer" }, [
         _c("div", { staticClass: "row" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.valor_total,
+                expression: "valor_total"
+              }
+            ],
+            attrs: { type: "hidden", name: "valor_total" },
+            domProps: { value: _vm.valor_total },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.valor_total = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
           _c(
             "div",
             {

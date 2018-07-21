@@ -63,18 +63,10 @@
                     </tr>
                 </tfoot>
             </table>
-            <!-- <div class="success">
-                <div class="col-md-1">num_itens</div>
-                <div class="col-md-4"></div>
-                <div class="col-md-2">qtd_total</div>
-                <div class="col-md-2">valor_total</div>
-                <div class="col-md-1">desconto</div>
-                <div class="col-md-1">acrescimo</div>
-                <div class="col-md-2"></div>
-            </div> -->
         </div>
         <div class="panel-footer">
             <div class="row">
+                <input type="hidden" name="valor_total" v-model="valor_total">
                 <div v-bind:class="{'col-md-7': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
                     <select ref="inputProdutos" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
                         <option selected value="false"> Nada Selecionado </option>
@@ -178,7 +170,16 @@
                 }
 
                 return this.produtosDisponiveis.sort(compare);
-            }
+            },
+            valor_total: {
+                get() {
+                    let total = 0;
+                    for (var i = 0; i < this.items.length; i++) {
+                        total += this.items[i].quantidade * this.items[i].valor_unitario;
+                    }
+                    return total;
+                }
+            },
         },
         mounted() {
             this.produtosDisponiveis = this.produtosData;
