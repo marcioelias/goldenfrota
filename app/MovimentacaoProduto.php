@@ -21,12 +21,12 @@ class MovimentacaoProduto extends Model
         'entrada_estoque_id'
     ];
 
-    public function entradaEstoque() {
-        return $this->hasOne(EntradaEstoque::class);
+    public function entrada_estoque() {
+        return $this->belongsTo(EntradaEstoque::class);
     }
 
     public function inventario() {
-        return $this->hasOne(Inventario::class);
+        return $this->belongsTo(Inventario::class);
     }
 
     public function tipo_movimentacao_produto() {
@@ -42,6 +42,6 @@ class MovimentacaoProduto extends Model
     }
 
     public function saida_estoque() {
-        return $this->hasOne(SaidaEstoque::class);
+        return $this->belongsTo(SaidaEstoque::class);
     }
 }

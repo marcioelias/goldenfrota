@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Produto;
+use App\MovimentacaoProduto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,10 @@ class Estoque extends Model
 
     public function produtos() {
         return $this->belongsToMany(Produto::class);
+    }
+
+    public function movimentacao_produtos() {
+        return $this->hasMany(MovimentacaoProduto::class);
     }
 
     public function saldo_produto(Produto $produto) { 

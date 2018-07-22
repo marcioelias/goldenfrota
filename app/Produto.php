@@ -4,6 +4,7 @@ namespace App;
 
 use App\Estoque;
 use App\Fornecedor;
+use App\GrupoProduto;
 use App\InventarioItem;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,5 +39,9 @@ class Produto extends Model
 
     public function movimentacao_produto() {
         return $this->belongsTo(MovimentacaoProduto::class);
+    }
+
+    public function grupo_produto() {
+        return $this->belongsTo(GrupoProduto::class);
     }
 }

@@ -44,6 +44,7 @@ return [
             'relatorio_media_consumo_modelo' => 'a',
             'relatorio_posicao_estoque' => 'a',
             'relatorio_estoque_minimo' => 'a',
+            'relatorio-movimentacao-estoque' => 'a',
             'importar_abastecimentos' => 'a',
             'exportar_exportar_dados_cadastrais' => 'a'
         ],

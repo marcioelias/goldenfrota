@@ -300,4 +300,81 @@ class MovimentacaoProdutoController extends Controller
                     ->withParametros($parametros)
                     ->withParametro(Parametro::first());
     }
+
+    public function paramRelatorioMovimetacaoEstoque() {
+        return View('relatorios.movimentacao.produto_param', [
+            'estoques' => Estoque::all(),
+            'grupo_produtos' => GrupoProduto::all()
+        ]);
+    }
+
+    public function relatorioMovimentacaoEstoque(Request $request) {
+        $data_inicial = $request->data_inicial;
+        $data_final = $request->data_final;
+        $parametros = array();
+        $estoquesId = array();
+
+        if ($request->estoque_id == null) {
+            $estoques = Estoque::where('ativo', true)
+                            ->whereHas('movimentacao_produtos')
+                            ->orderBy('estoque', 'asc')
+                            ->get();
+            foreach ($estoques as $estoque) {
+                $estoquesId[] = $estoque->id;
+            }
+
+            $parametros[] = 'Estoque: Todos';
+        } else {
+            $estoques = Estoque::where('id', $request->estoque_id)
+                            ->whereHas('movimentacao_produtos')
+                            ->orderBy('estoque', 'asc')
+                            ->get();
+            
+            $parametros[] = 'Estoque: '.Estoque::find($request->estoque_id)->estoque;
+            if ($estoques) {
+                $estoquesId[] = $request->estoque_id;
+            } else {
+                $estoques = array();
+            }
+        }
+
+        if ($request->grupo_produto_id == null) {
+            $whereGrupoProduto = '1 = 1';
+            $parametros[] = 'Grupo de Produtos: Todos';
+        } else {
+            $whereGrupoProduto = 'grupo_produtos.id = '.$request->grupo_produto_id;
+            $parametros[] = 'Grupo de Produtos: '.GrupoProduto::find($request->grupo_produto_id)->grupo_produto;
+        }
+
+        if($data_inicial && $data_final) {
+            $whereData = 'data_movimentacao between \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_inicial.'00:00:00'), 'Y-m-d H:i:s').'\' and \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_final.'23:59:59'), 'Y-m-d H:i:s').'\'';
+            array_push($parametros, 'Período de '.$data_inicial.' até '.$data_final);
+        } elseif ($data_inicial) {
+            $whereData = 'data_movimentacao >= \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_inicial.'00:00:00'), 'Y-m-d H:i:s').'\'';
+            array_push($parametros, 'A partir de '.$data_inicial);
+        } elseif ($data_final) {
+            $whereData = 'data_movimentacao <= \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_final.'23:59:59'), 'Y-m-d H:i:s').'\'';
+            array_push($parametros, 'Até '.$data_final);
+        } else {
+            $whereData = '1 = 1'; //busca qualquer coisa
+        }
+
+        $movimentacoes = MovimentacaoProduto::whereIn('estoque_id', $estoquesId)
+                                                ->whereHas('produto.grupo_produto', function($query) use ($whereGrupoProduto) {
+                                                        $query->whereRaw($whereGrupoProduto);
+                                                     }
+                                                )
+                                                ->whereRaw($whereData)
+                                                ->with('tipo_movimentacao_produto')
+                                                ->with('estoque')
+                                                ->orderBy('data_movimentacao', 'asc')
+                                                ->get();
+
+        return View('relatorios.movimentacao.produto')
+                ->withEstoques($estoques)
+                ->withMovimentacoes($movimentacoes)
+                ->withTitulo('Movimentação de Estoque - Produtos')
+                ->withParametros($parametros)
+                ->withParametro(Parametro::first());
+    }
 }

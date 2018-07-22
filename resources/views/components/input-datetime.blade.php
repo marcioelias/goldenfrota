@@ -9,10 +9,8 @@
     $dateTimeFormat = isset($dateTimeFormat) ? $dateTimeFormat : false;
     $picker_begin = isset($picker_begin) ? $picker_begin : '';
     $picker_end = isset($picker_end) ? $picker_end : '';
-    $readOnly = isset($readOnly) ? isset($readOnly) : false;
+    $readOnly = isset($readOnly) ? $readOnly : false;
 @endphp
-
-{{--  {{dd($inputValue)}}  --}}
 <div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }}">
     @if(isset($label))
         @component('components.label', ['label' => $label, 'field' => $field, 'required' => $required])
