@@ -19,7 +19,7 @@ class CreateServicosTable extends Migration
             $table->text('descricao');
             $table->integer('grupo_servico_id')->unsigned();
             $table->boolean('ativo')->default(true);
-            $table->foreign('grupo_servico_id')->references('id')->on('grupo_servico');
+            $table->foreign('grupo_servico_id')->references('id')->on('grupo_servicos');
             $table->timestamps();
         });
     }

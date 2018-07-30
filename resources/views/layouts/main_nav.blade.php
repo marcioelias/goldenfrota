@@ -61,6 +61,10 @@
                         @permission('listar-modelo-bomba')
                         <li><a href="{{route('modelo_bomba.index')}}">Modelos de Bomba</a></li>
                         @endpermission
+                        <li class="divider"></li>
+                        @permission('listar-grupo-servico')
+                        <li><a href="{{route('grupo_servico.index')}}">Grupos de Serviço</a></li>
+                        @endpermission
                     </ul>
                 </li>
                 <li class="dropdown">

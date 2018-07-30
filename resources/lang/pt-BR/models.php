@@ -34,5 +34,7 @@ return [
     'tipo_movimentacao_produto' => 'Tipo de Movimentacao de Produto',
     'inventario' => 'Inventário',
     'posicao_pneu' => 'Posição de Pneu',
-    'saida_estoque' => 'Saída de Estoque'
+    'saida_estoque' => 'Saída de Estoque',
+    'grupo_servico' => 'Grupo de Serviço',
+    'servico' => 'Servicos',
 ];

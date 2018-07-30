@@ -28,6 +28,7 @@ Route::middleware(['auth:web'])->group(function() {
     Route::resource('/bomba', 'BombaController')->except('show');
     Route::resource('/user', 'UserController')->except('show');
     Route::resource('/grupo_produto', 'GrupoProdutoController');
+    Route::resource('/grupo_servico', 'GrupoServicoController');
     Route::resource('/unidade', 'UnidadeController')->except('show');
     Route::resource('/produto', 'ProdutoController')->except('show');
     Route::resource('/bico', 'BicoController')->except('show');
