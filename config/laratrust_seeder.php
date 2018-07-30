@@ -19,6 +19,8 @@ return [
             'marca_veiculo' => 'c,r,u,d',
             'modelo_bomba' => 'c,r,u,d',
             'modelo_veiculo' => 'c,r,u,d',
+            'servico' => 'c,r,u,d',
+            'grupo_servico' => 'c,r,u,d',
             'veiculo' => 'c,r,u,d',
             'produto' => 'c,r,u,d',
             'tanque' => 'c,r,u,d',
