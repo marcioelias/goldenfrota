@@ -18,6 +18,7 @@ class CreateServicosTable extends Migration
             $table->string('servico');
             $table->text('descricao');
             $table->integer('grupo_servico_id')->unsigned();
+            $table->decimal('valor_servico', 10, 3);
             $table->boolean('ativo')->default(true);
             $table->foreign('grupo_servico_id')->references('id')->on('grupo_servicos');
             $table->timestamps();
