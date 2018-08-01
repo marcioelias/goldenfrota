@@ -48,7 +48,8 @@ Route::middleware(['auth:web'])->group(function() {
     Route::resource('/entrada_estoque', 'EntradaEstoqueController');
     Route::resource('/saida_estoque', 'SaidaEstoqueController')->except(['edit', 'update']);
     Route::resource('/inventario', 'InventarioController');
-    Route::resource('/posicao_pneu', 'PosicaoPneuController');
+    Route::resource('/posicao_pneu', 'PosicaoPneuController')->except(['show']);
+    Route::resource('/servico', 'ServicoController')->except(['show']);
 
     Route::resource('/role_user', 'RoleUsersController')->except('show');
     Route::resource('/role', 'RolesController')->except('show');

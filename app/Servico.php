@@ -11,6 +11,7 @@ class Servico extends Model
         'servico', 
         'descricao', 
         'grupo_servico_id', 
+        'valor_servico',
         'ativo'
     ];
 

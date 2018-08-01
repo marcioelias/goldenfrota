@@ -129,7 +129,6 @@ class SaidaEstoqueController extends Controller
                 }
             } catch (\Exception $e) {
                 DB::rollback();
-                Log::debug($e);
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));
