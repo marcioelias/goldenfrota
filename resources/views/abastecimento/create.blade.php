@@ -165,6 +165,7 @@
             $('#km_veiculo').mask('#');
 
             function CalcValorAbastecimento() {
+                //console.log('calculou abastecimento');
                 var volume, valor_unitario = 0;
                 volume = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
                 valor_unitario = parseFloat($('#valor_litro').val().replace(',', '.'));
@@ -181,8 +182,8 @@
                 qtdAbast = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
 
                 if (qtdAbast > 0) {
-                    console.log('qtdAbast: '+qtdAbast);
-                    console.log('encIni: '+encIni);
+                    //console.log('qtdAbast: '+qtdAbast);
+                    //console.log('encIni: '+encIni);
                     $('#encerrante_final').val(encIni + qtdAbast);
                 }
 
@@ -207,7 +208,7 @@
                     dataType: 'JSON',
                     cache: false,
                     success: function (data) {
-                        console.log(data);
+                        //console.log(data);
                         $("#encerrante_inicial").val(data.encerrante);
                         $("#combustivel_descricao").val(data.tanque.combustivel.descricao);
                         $("#valor_litro").val(data.tanque.combustivel.valor);
@@ -217,7 +218,7 @@
                         $('.selectpicker').selectpicker('refresh');
                     },
                     error: function (data) {
-                        console.log(data);
+                        //console.log(data);
                     }
                 });
             }
@@ -236,7 +237,7 @@
                     dataType: 'JSON',
                     cache: false,
                     success: function (data) {
-                        console.log(data);
+                        //console.log(data);
                         $("#veiculo_id")
                             .removeAttr('disabled')
                             .find('option')
@@ -257,7 +258,7 @@
                         $('.selectpicker').selectpicker('refresh');
                     },
                     error: function (data) {
-                        console.log(data);
+                        //console.log(data);
                     }
                 });
             }

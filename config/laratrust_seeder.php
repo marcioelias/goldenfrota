@@ -36,6 +36,7 @@ return [
             'tanque-movimentacao' => 'c,r,u,d',
             'tipo_movimentacao_produto' => 'c,r,u,d',
             'posicao_pneu' => 'c,r,u,d',
+            'ordem_servico' => 'c,r,u,d',
             'posicao_tanques_grafico' => 'a',
             'media_consumo_veiculos_grafico' => 'a',
             'listagem_clientes' => 'a',

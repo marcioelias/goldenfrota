@@ -429,7 +429,7 @@ class VeiculoController extends Controller
             $whereModelo = '1 = 1';
         }
 
-        dd($request);
+        //dd($request);
 
         $modeloVeiculos = Abastecimento::select('marca_veiculos.marca_veiculo', 'modelo_veiculos.id', 'modelo_veiculos.modelo_veiculo')
                             ->join('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')

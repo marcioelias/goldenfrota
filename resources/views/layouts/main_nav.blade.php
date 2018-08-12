@@ -141,6 +141,10 @@
                         @permission('listar-inventario')
                         <li><a href="{{route('inventario.index')}}">Inventários</a></li>
                         @endpermission
+                         <li class="divider"></li>
+                        @permission('listar-ordem-servico')
+                        <li><a href="{{route('ordem_servico.index')}}">Ordens de Serviço</a></li>
+                        @endpermission
                     </ul>
                 </li>
                 <li class="dropdown">

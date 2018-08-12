@@ -85,6 +85,7 @@ class TanqueMovimentacaoController extends Controller
     {
         if (Auth::user()->canCadastrarTanqueMovimentacao()) {
             $this->validate($request, [
+                'documento' => 'required',
                 'data_movimentacao' => 'required',
                 'tanque_id' => 'required',
                 'quantidade_combustivel' => 'required'
@@ -157,6 +158,7 @@ class TanqueMovimentacaoController extends Controller
     {
         if (Auth::user()->canAlterarTanqueMovimentacao()) {
             $this->validate($request, [
+                'documento' => 'required',
                 'data_movimentacao' => 'required',
                 'tanque_id' => 'required',
                 'quantidade_combustivel' => 'required'

@@ -160,7 +160,6 @@
                     dataType: 'JSON',
                     cache: false,
                     success: function (data) {
-                        console.log(data);
                         $("#departamento_id")
                             .removeAttr('disabled')
                             .find('option')

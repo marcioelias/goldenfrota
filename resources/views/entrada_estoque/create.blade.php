@@ -82,7 +82,7 @@
                             <strong>{{ $errors->first('items') }}</strong>
                         </span>
                     @endif
-                </div>
+                </div> 
 
                {{--   {{ dd($errors) }}  --}}
             @endsection

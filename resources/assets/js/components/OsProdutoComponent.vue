@@ -32,29 +32,29 @@
                         </tr>
                     </thead>
                     <tbody name="fade" is="transition-group">
-                        <tr v-for="(item, index) in items" :key="index">
+                        <tr v-for="(item, index) in produtos" :key="index">
                             <td class="col-md-1 pool-right">
                                 {{ item.id }}
-                                <input type="hidden" :name="'items['+index+'][produto_id]'" :value="item.id">
+                                <input type="hidden" :name="'produtos['+index+'][produto_id]'" :value="item.id">
                             </td>
                             <td class="col-md-6">
                                 {{ item.produto_descricao }}
                             </td>
                             <td class="col-md-1 text-right">
                                 {{ item.quantidade }}
-                                <input type="hidden" :name="'items['+index+'][quantidade]'" :value="item.quantidade">    
+                                <input type="hidden" :name="'produtos['+index+'][quantidade]'" :value="item.quantidade">    
                             </td>
                             <td class="col-md-1 text-right">
                                 {{ item.valor_unitario }}
-                                <input type="hidden" :name="'items['+index+'][valor_unitario]'" :value="item.valor_unitario">    
+                                <input type="hidden" :name="'produtos['+index+'][valor_unitario]'" :value="item.valor_unitario">    
                             </td>
                             <td class="col-md-1 text-right">
                                 {{ item.valor_desconto }}
-                                <input type="hidden" :name="'items['+index+'][valor_desconto]'" :value="item.valor_desconto">    
+                                <input type="hidden" :name="'produtos['+index+'][valor_desconto]'" :value="item.valor_desconto">    
                             </td>
                             <td class="col-md-1 text-right">
                                 {{ item.valor_acrescimo }}
-                                <input type="hidden" :name="'items['+index+'][valor_acrescimo]'" :value="item.valor_acrescimo">    
+                                <input type="hidden" :name="'produtos['+index+'][valor_acrescimo]'" :value="item.valor_acrescimo">    
                             </td>
                             <td class="col-md-1">
                                 <button type="button" class="btn-xs btn-warning" @click="editItem(index)" v-show="!editing">
@@ -66,9 +66,9 @@
                             </td>
                         </tr>
                     </tbody>
-                    <tfoot v-if="this.items.length > 0">
+                    <tfoot v-if="this.produtos.length > 0">
                         <tr class="success">
-                            <td class="col-md-1"><strong>{{ this.items.length }}</strong></td>
+                            <td class="col-md-1"><strong>{{ this.produtos.length }}</strong></td>
                             <td class="col-md-6"></td>
                             <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() }}</strong></td>
                             <td class="col-md-1 text-right"><strong>{{ this.totalValor() }}</strong></td>
@@ -133,7 +133,7 @@
     import modal from './modal.vue';
 
     export default {
-        name: 'saida_estoque',
+        name: 'ordem-servico-produto',
         components: {
             modal
         },
@@ -147,7 +147,7 @@
             return {
                 editing: false,
                 editingIndex: false,
-                items: [],
+                produtos: [],
                 quantidade: 1,
                 desconto: 0,
                 acrescimo: 0,
@@ -207,8 +207,8 @@
             valor_total: {
                 get() {
                     let total = 0;
-                    for (var i = 0; i < this.items.length; i++) {
-                        total += this.items[i].quantidade * this.items[i].valor_unitario;
+                    for (var i = 0; i < this.produtos.length; i++) {
+                        total += this.produtos[i].quantidade * this.produtos[i].valor_unitario;
                     }
                     return total;
                 }
@@ -231,7 +231,7 @@
             }
         },
         mounted() {
-            if (this.oldEstoqueId !== null) {
+            /* if (this.oldEstoqueId !== null) {
                 this.estoqueId = this.oldEstoqueId.estoque_id;
                 this.getProdutos();
             }
@@ -241,7 +241,7 @@
             } else {
                 this.errors.estoqueId = false;
                 this.errors.estoqueIdMsg = '';
-            }
+            } */
         },
         updated() {
             $(this.$refs.inputProdutos).selectpicker('refresh');
@@ -263,7 +263,7 @@
                 if ((this.oldData !== null) && (this.loadOldDataFlag == true)) {
                     this.loadOldDataFlag = false;
                     for (var i=0; i<this.oldData.length; i++) {  
-                        this.items.push({
+                        this.produtos.push({
                             'id': this.oldData[i].produto_id,
                             'produto_descricao': this.getProdutoById(this.oldData[i].produto_id).produto_descricao,
                             'quantidade': Number(this.oldData[i].quantidade),
@@ -324,7 +324,7 @@
             },
             addProduto() {
                 if (this.validarItem()) {
-                    this.items.push({
+                    this.produtos.push({
                         'id': this.produto_id,
                         'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
                         'quantidade': this.quantidade,
@@ -337,7 +337,7 @@
                 }
             },
             editItem(index) {
-                let item = this.items[index];
+                let item = this.produtos[index];
                 this.quantidade = item.quantidade;
                 this.valorUnitario = item.valor_unitario;
                 this.desconto = item.valor_desconto;
@@ -347,7 +347,7 @@
                 this.editingIndex = index;
             },
             updateProduto() {
-                this.items[this.editingIndex] = {
+                this.produtos[this.editingIndex] = {
                     'id': this.produto_id,
                     'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
                     'quantidade': this.quantidade,
@@ -361,8 +361,8 @@
                 this.limparFormulario();
             },
             deleteItem() {
-                this.removerProduto(this.items[this.deleteIndex].id);
-                this.$delete(this.items, this.deleteIndex);
+                this.removerProduto(this.produtos[this.deleteIndex].id);
+                this.$delete(this.produtos, this.deleteIndex);
             },
             limparFormulario() {
                 this.produto_id = null;
@@ -375,29 +375,29 @@
             },
             totalQuantidade() {
                 let result = 0;
-                for (var i=0; i<this.items.length; i++) {  
-                    result += this.items[i].quantidade;
+                for (var i=0; i<this.produtos.length; i++) {  
+                    result += this.produtos[i].quantidade;
                 }
                 return result;
             },
             totalValor() {
                 let result = 0;
-                for (var i=0; i<this.items.length; i++) {  
-                    result += this.items[i].valor_unitario;
+                for (var i=0; i<this.produtos.length; i++) {  
+                    result += this.produtos[i].valor_unitario;
                 }
                 return result;
             },
             totalDesconto() {
                 let result = 0;
-                for (var i=0; i<this.items.length; i++) {  
-                    result += this.items[i].valor_desconto;
+                for (var i=0; i<this.produtos.length; i++) {  
+                    result += this.produtos[i].valor_desconto;
                 }
                 return result;
             },
             totalAcrescimo() {
                 let result = 0;
-                for (var i=0; i<this.items.length; i++) {  
-                    result += this.items[i].valor_acrescimo;
+                for (var i=0; i<this.produtos.length; i++) {  
+                    result += this.produtos[i].valor_acrescimo;
                 }
                 return result;
             },
@@ -454,11 +454,13 @@
             incluirProduto(id) {
                 this.produtosSelecionados.push(this.getProdutoById(id));
                 this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(id));
+                this.$emit('updateTotalProd', this.valor_total);
             },
             removerProduto(id) {
                 this.produtosDisponiveis.push(this.getProdutoSelecionadoById(id));
                 this.$delete(this.produtosSelecionados, this.getProdutoSelecionadoIndexById(id));
-            }
+                this.$emit('updateTotalProd', this.valor_total);
+            },
         }
     }
 </script>

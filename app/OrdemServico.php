@@ -15,7 +15,8 @@ class OrdemServico extends Model
         'veiculo_id',
         'km_veiculo',
         'obs', 
-        'user_id'
+        'user_id',
+        'valor_total'
     ];
 
     public function veiculo() {

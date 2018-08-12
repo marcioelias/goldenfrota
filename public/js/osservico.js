@@ -1,4 +1,4 @@
-webpackJsonp([4],{
+webpackJsonp([3],{
 
 /***/ 1:
 /***/ (function(module, exports) {
@@ -110,48 +110,967 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
-/***/ 180:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ 10:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-module.exports = __webpack_require__(181);
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__modal_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
-/***/ }),
 
-/***/ 181:
-/***/ (function(module, exports, __webpack_require__) {
-
-var saida_estoque = __webpack_require__(182);
-
-var leads = new Vue({
-    el: '#saida_estoque_produtos',
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ordem-servico-servico',
     components: {
-        saida_estoque: saida_estoque
+        modal: __WEBPACK_IMPORTED_MODULE_0__modal_vue___default.a
     },
     data: function data() {
         return {
-            _estoqueId: null,
-            get estoqueId() {
-                return this._estoqueId;
-            },
-            set estoqueId(value) {
-                this._estoqueId = value;
+            editing: false,
+            editingIndex: false,
+            servico_id: false,
+            valor_servico: 0,
+            valor_acrescimo: 0,
+            valor_desconto: 0,
+            valor_cobrado: 0,
+            servicos: [],
+            isModalVisible: false,
+            deleteIndex: false,
+            servicosDisponiveis: [],
+            servicosSelecionados: [],
+            errors: {
+                inputServicos: false,
+                inputServicosMsg: '',
+                inputValorServico: false,
+                inputValorServicoMsg: '',
+                inputValorAcrescimo: false,
+                inputValorAcrescimoMsg: '',
+                inputValorDesconto: false,
+                inputValorDescontoMsg: '',
+                inputValorCobrado: false,
+                inputValorCobradoMsg: ''
             }
         };
+    },
+
+    props: ['servicosData', 'oldData'],
+    updated: function updated() {
+        $(this.$refs.inputServicos).selectpicker('refresh');
+    },
+
+    watch: {
+        oldData: function oldData() {
+            this.$refs.confirmDelete;
+        },
+        servico_id: function servico_id() {
+            var servicoSelecionado = this.getServicoById(this.servico_id);
+            if (servicoSelecionado == 0) {
+                this.valor_servico = 0;
+            } else {
+                this.valor_servico = servicoSelecionado.valor_servico;
+            }
+        },
+        valor_servico: function valor_servico() {
+            this.calTotalServicoItem();
+        },
+        valor_acrescimo: function valor_acrescimo() {
+            this.calTotalServicoItem();
+        },
+        valor_desconto: function valor_desconto() {
+            this.calTotalServicoItem();
+        }
+    },
+    computed: {
+        servicosDisponiveisOrdenados: function servicosDisponiveisOrdenados() {
+            function compare(a, b) {
+                if (a.servico < b.servico) return -1;
+                if (a.servico > b.servico) return 1;
+                return 0;
+            }
+
+            return this.servicosDisponiveis.sort(compare);
+        },
+        valor_total_servicos: {
+            get: function get() {
+                var total = 0;
+                for (var i = 0; i < this.servicosSelecionados.length; i++) {
+                    total += this.servicosSelecionados[i].valor_cobrado;
+                }
+                return total;
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.createFields();
+        this.servicosDisponiveis = this.servicosData;
+        if (this.oldData !== null) {
+            for (var i = 0; i < this.oldData.length; i++) {
+                this.servicos.push({
+                    'id': this.oldData[i].servico_id,
+                    'servico': this.getServicoById(this.oldData[i].servico_id).servico,
+                    'valor_servico': Number(this.oldData[i].valor_servico),
+                    'valor_acrescimo': Number(this.oldData[i].valor_acrescimo),
+                    'valor_desconto': Number(this.oldData[i].valor_desconto),
+                    'valor_cobrado': Number(this.oldData[i].valor_scobrado)
+                });
+                this.incluirServico(this.oldData[i].servico_id);
+            }
+        }
+    },
+
+    methods: {
+        editItem: function editItem(index) {
+            var item = this.servicosSelecionados[index];
+            this.valor_servico = item.valor_servico;
+            this.valor_acrescimo = item.valor_acrescimo;
+            this.valor_desconto = item.valor_desconto;
+            this.valor_cobrado = item.valor_cobrado;
+            this.servico_id = item.id;
+            this.editing = true;
+            this.editingIndex = index;
+            this.servicosDisponiveis.push(item);
+        },
+        confirmDelete: function confirmDelete(index) {
+            this.deleteIndex = index;
+        },
+        cancelDelete: function cancelDelete(index) {
+            this.deleteIndex = false;
+        },
+        deleteItem: function deleteItem() {
+            this.removerServico(this.servicosSelecionados[this.deleteIndex].id);
+            this.$delete(this.servicosSelecionados, this.deleteIndex);
+        },
+        removerServico: function removerServico(id) {
+            this.servicosDisponiveis.push(this.getServicoSelecionadoById(id));
+            this.$delete(this.servicosSelecionados, this.getServicoSelecionadoIndexById(id));
+            this.$emit('updateTotalServ', this.valor_total_servicos);
+        },
+        addServico: function addServico() {
+            if (this.validarItem()) {
+                /* this.servicosSelecionados.push({
+                    'id': this.servico_id,
+                    'servico': this.getServicoById(this.servico_id).servico,
+                    'valor_servico': this.valor_servico,
+                    'valor_acrescimo': this.valor_acrescimo,
+                    'valor_desconto': this.valor_desconto,
+                    'valor_cobrado': this.valor_cobrado
+                }); */
+                this.incluirServico(this.servico_id);
+                this.limparFormulario();
+            }
+        },
+        limparFormulario: function limparFormulario() {
+            this.servico_id = false;
+            this.valor_servico = 0;
+            this.valor_acrescimo = 0;
+            this.valor_desconto = 0;
+            this.valor_cobrado = 0;
+            this.$refs.inputServicos.focus();
+        },
+        getServicoById: function getServicoById(id) {
+            var result = 0;
+            for (var i = 0; i < this.servicosDisponiveis.length; i++) {
+                if (this.servicosDisponiveis[i].id == id) {
+                    result = this.servicosDisponiveis[i];
+                    break;
+                }
+            }
+            return result;
+        },
+        getServicoIndexById: function getServicoIndexById(id) {
+            var result = 0;
+            for (var i = 0; i < this.servicosDisponiveis.length; i++) {
+                if (this.servicosDisponiveis[i].id == id) {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
+        },
+        getServicoSelecionadoById: function getServicoSelecionadoById(id) {
+            var result = 0;
+            for (var i = 0; i < this.servicosSelecionados.length; i++) {
+                if (this.servicosSelecionados[i].id == id) {
+                    result = this.servicosSelecionados[i];
+                    break;
+                }
+            }
+            return result;
+        },
+        getServicoSelecionadoIndexById: function getServicoSelecionadoIndexById(id) {
+            var result = 0;
+            for (var i = 0; i < this.servicosSelecionados.length; i++) {
+                if (this.servicosSelecionados[i].id == id) {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
+        },
+        incluirServico: function incluirServico(id) {
+            var servicoInserido = this.getServicoById(id);
+
+            servicoInserido.valor_acrescimo = this.valor_acrescimo;
+            servicoInserido.valor_desconto = this.valor_desconto;
+            servicoInserido.valor_cobrado = this.valor_cobrado;
+
+            this.servicosSelecionados.push(servicoInserido);
+            this.$delete(this.servicosDisponiveis, this.getServicoIndexById(id));
+            this.$emit('updateTotalServ', this.valor_total_servicos);
+        },
+        updateServico: function updateServico() {
+            this.servicosSelecionados[this.editingIndex] = {
+                'id': this.servico_id,
+                'servico': this.getServicoById(this.servico_id).servico,
+                'valor_servico': this.valor_servico,
+                'valor_acrescimo': this.valor_acrescimo,
+                'valor_desconto': this.valor_desconto,
+                'valor_cobrado': this.valor_cobrado
+            };
+
+            this.editing = false;
+            this.editingIndex = false;
+            this.limparFormulario();
+            this.$delete(this.servicosDisponiveis, this.getServicoIndexById(this.servico_id));
+            this.$emit('updateTotalServ', this.valor_total_servicos);
+        },
+        calTotalServicoItem: function calTotalServicoItem() {
+            this.valor_cobrado = parseFloat(isNaN(this.valor_servico) || this.valor_servico == '' ? 0 : this.valor_servico) + parseFloat(isNaN(this.valor_acrescimo) || this.valor_acrescimo == '' ? 0 : this.valor_acrescimo) - parseFloat(isNaN(this.valor_desconto) || this.valor_desconto == '' ? 0 : this.valor_desconto);
+        },
+        validarItem: function validarItem() {
+            return true;
+        },
+        createFields: function createFields() {
+            for (var i = 0; i < this.servicosData.length; i++) {
+                this.servicosData[i]['valor_acrescimo'] = 0;
+                this.servicosData[i]['valor_desconto'] = 0;
+                this.servicosData[i]['valor_cobrado'] = 0;
+            }
+        }
     }
 });
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 182:
+/***/ 11:
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "panel panel-default" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "panel-body", staticStyle: { padding: "0 !important" } },
+        [
+          _c(
+            "table",
+            {
+              staticClass:
+                "table table-condensed table-striped table-bordered table-hover",
+              staticStyle: { "margin-bottom": "0 !important" }
+            },
+            [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "transition-group",
+                { tag: "tbody", attrs: { name: "fade" } },
+                _vm._l(_vm.servicosSelecionados, function(item, index) {
+                  return _c("tr", { key: index }, [
+                    _c("td", { staticClass: "col-md-1 pool-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.id) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "servicos[" + index + "][servico_id]"
+                        },
+                        domProps: { value: item.id }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-4" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.servico) +
+                          "\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 pool-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.valor_servico) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "servicos[" + index + "][valor_servico]"
+                        },
+                        domProps: { value: item.valor_servico }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 pool-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.valor_acrescimo) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "servicos[" + index + "][valor_acrescimo]"
+                        },
+                        domProps: { value: item.valor_acrescimo }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 pool-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.valor_desconto) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "servicos[" + index + "][valor_desconto]"
+                        },
+                        domProps: { value: item.valor_desconto }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 pool-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.valor_cobrado) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "servicos[" + index + "][valor_cobrado]"
+                        },
+                        domProps: { value: item.valor_cobrado }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1" }, [
+                      _c(
+                        "button",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.editing,
+                              expression: "!editing"
+                            }
+                          ],
+                          staticClass: "btn-xs btn-warning",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              _vm.editItem(index)
+                            }
+                          }
+                        },
+                        [
+                          _c("span", {
+                            staticClass: "glyphicon glyphicon-edit"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.editing,
+                              expression: "!editing"
+                            }
+                          ],
+                          staticClass: "btn-xs btn-danger",
+                          attrs: {
+                            type: "button",
+                            "data-toggle": "modal",
+                            "data-target": "#confirmDelete"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.confirmDelete(index)
+                            }
+                          }
+                        },
+                        [
+                          _c("span", {
+                            staticClass: "glyphicon glyphicon-trash"
+                          })
+                        ]
+                      )
+                    ])
+                  ])
+                })
+              )
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-footer" }, [
+        _c("div", { staticClass: "row" }, [
+          _c(
+            "div",
+            {
+              class: {
+                "col-md-7": true,
+                " has-error": this.errors.inputServicos
+              },
+              staticStyle: {
+                "padding-right": "0 !important",
+                "padding-left": "0 !important"
+              }
+            },
+            [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.servico_id,
+                      expression: "servico_id"
+                    }
+                  ],
+                  ref: "inputServicos",
+                  staticClass: "form-control selectpicker",
+                  attrs: {
+                    "data-live-search": "true",
+                    name: "inputServicos",
+                    id: "inputServicos"
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.servico_id = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { selected: "", value: "false" } }, [
+                    _vm._v(" Nada Selecionado ")
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.servicosDisponiveisOrdenados, function(
+                    servico,
+                    index
+                  ) {
+                    return _c(
+                      "option",
+                      { key: index, domProps: { value: servico.id } },
+                      [_vm._v(_vm._s(servico.servico))]
+                    )
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "help-block",
+                  attrs: { "v-if": this.errors.inputServicos }
+                },
+                [_c("strong", [_vm._v(_vm._s(this.errors.inputServicosMsg))])]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class: {
+                "col-md-1": true,
+                " has-error": this.errors.inputValorServico
+              },
+              staticStyle: {
+                "padding-right": "0 !important",
+                "padding-left": "0 !important"
+              }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.number",
+                    value: _vm.valor_servico,
+                    expression: "valor_servico",
+                    modifiers: { number: true }
+                  }
+                ],
+                ref: "inputValorServico",
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  min: "0,000",
+                  max: "9999999999,999",
+                  step: "any",
+                  name: "inputValorServico",
+                  id: "inputValorServico",
+                  readonly: ""
+                },
+                domProps: { value: _vm.valor_servico },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.valor_servico = _vm._n($event.target.value)
+                  },
+                  blur: function($event) {
+                    _vm.$forceUpdate()
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "help-block",
+                  attrs: { "v-if": this.errors.inputValorServico }
+                },
+                [
+                  _c("strong", [
+                    _vm._v(_vm._s(this.errors.inputValorServicoMsg))
+                  ])
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class: {
+                "col-md-1": true,
+                " has-error": this.errors.inputValorAcrescimo
+              },
+              staticStyle: {
+                "padding-right": "0 !important",
+                "padding-left": "0 !important"
+              }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.number",
+                    value: _vm.valor_acrescimo,
+                    expression: "valor_acrescimo",
+                    modifiers: { number: true }
+                  }
+                ],
+                ref: "inputValorAcrescimo",
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  min: "0,000",
+                  max: "9999999999,999",
+                  step: "any",
+                  name: "inputValorAcrescimo",
+                  id: "inputValorAcrescimo"
+                },
+                domProps: { value: _vm.valor_acrescimo },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.valor_acrescimo = _vm._n($event.target.value)
+                  },
+                  blur: function($event) {
+                    _vm.$forceUpdate()
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "help-block",
+                  attrs: { "v-if": this.errors.inputValorAcrescimo }
+                },
+                [
+                  _c("strong", [
+                    _vm._v(_vm._s(this.errors.inputValorAcrescimoMsg))
+                  ])
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class: {
+                "col-md-1": true,
+                " has-error": this.errors.inputValorDesconto
+              },
+              staticStyle: {
+                "padding-right": "0 !important",
+                "padding-left": "0 !important"
+              }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.number",
+                    value: _vm.valor_desconto,
+                    expression: "valor_desconto",
+                    modifiers: { number: true }
+                  }
+                ],
+                ref: "inputValorDesconto",
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  min: "0,000",
+                  max: "9999999999,999",
+                  step: "any",
+                  name: "inputValorDesconto",
+                  id: "inputValorDesconto"
+                },
+                domProps: { value: _vm.valor_desconto },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.valor_desconto = _vm._n($event.target.value)
+                  },
+                  blur: function($event) {
+                    _vm.$forceUpdate()
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "help-block",
+                  attrs: { "v-if": this.errors.inputValorDesconto }
+                },
+                [
+                  _c("strong", [
+                    _vm._v(_vm._s(this.errors.inputValorDescontoMsg))
+                  ])
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class: {
+                "col-md-1": true,
+                " has-error": this.errors.inputValorValorCobrado
+              },
+              staticStyle: {
+                "padding-right": "0 !important",
+                "padding-left": "0 !important"
+              }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.number",
+                    value: _vm.valor_cobrado,
+                    expression: "valor_cobrado",
+                    modifiers: { number: true }
+                  }
+                ],
+                ref: "inputValorValorCobrado",
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  min: "0,000",
+                  max: "9999999999,999",
+                  step: "any",
+                  name: "inputValorValorCobrado",
+                  id: "inputValorValorCobrado",
+                  readonly: ""
+                },
+                domProps: { value: _vm.valor_cobrado },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.valor_cobrado = _vm._n($event.target.value)
+                  },
+                  blur: function($event) {
+                    _vm.$forceUpdate()
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "help-block",
+                  attrs: { "v-if": this.errors.inputValorValorCobrado }
+                },
+                [
+                  _c("strong", [
+                    _vm._v(_vm._s(this.errors.inputValorValorCobradoMsg))
+                  ])
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-1" }, [
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.editing,
+                    expression: "!editing"
+                  }
+                ],
+                staticClass: "btn btn-success",
+                attrs: { type: "button" },
+                on: { click: _vm.addServico }
+              },
+              [_c("span", { staticClass: "glyphicon glyphicon-plus" })]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.editing,
+                    expression: "editing"
+                  }
+                ],
+                staticClass: "btn btn-success",
+                attrs: { type: "button" },
+                on: { click: _vm.updateServico }
+              },
+              [_c("span", { staticClass: "glyphicon glyphicon-ok" })]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("modal", {
+        attrs: {
+          "modal-title": "Corfirmação",
+          "modal-text": "Confirma a remoção deste Item?"
+        },
+        on: { cancel: _vm.cancelDelete, confirm: _vm.deleteItem }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "panel-heading" }, [
+      _c("strong", [_vm._v("Servicos")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", { staticClass: "primary" }, [
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-6" }, [_vm._v("Serviço")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("R$ Serv.")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("R$ Acrés.")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("R$ Desc.")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("R$ Final")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("Ações")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6b37570e", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ 12:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(183)
+var __vue_script__ = __webpack_require__(13)
 /* template */
-var __vue_template__ = __webpack_require__(184)
+var __vue_template__ = __webpack_require__(14)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -168,7 +1087,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/SaidaEstoqueItemsComponent.vue"
+Component.options.__file = "resources/assets/js/components/OsProdutoComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -177,9 +1096,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-24aa93f4", Component.options)
+    hotAPI.createRecord("data-v-15e6fa7f", Component.options)
   } else {
-    hotAPI.reload("data-v-24aa93f4", Component.options)
+    hotAPI.reload("data-v-15e6fa7f", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -191,7 +1110,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 183:
+/***/ 13:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -333,7 +1252,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'saida_estoque',
+    name: 'ordem-servico-produto',
     components: {
         modal: __WEBPACK_IMPORTED_MODULE_0__modal_vue___default.a
     },
@@ -342,7 +1261,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             editing: false,
             editingIndex: false,
-            items: [],
+            produtos: [],
             quantidade: 1,
             desconto: 0,
             acrescimo: 0,
@@ -403,8 +1322,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         valor_total: {
             get: function get() {
                 var total = 0;
-                for (var i = 0; i < this.items.length; i++) {
-                    total += this.items[i].quantidade * this.items[i].valor_unitario;
+                for (var i = 0; i < this.produtos.length; i++) {
+                    total += this.produtos[i].quantidade * this.produtos[i].valor_unitario;
                 }
                 return total;
             }
@@ -425,7 +1344,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        if (this.oldEstoqueId !== null) {
+        /* if (this.oldEstoqueId !== null) {
             this.estoqueId = this.oldEstoqueId.estoque_id;
             this.getProdutos();
         }
@@ -435,7 +1354,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         } else {
             this.errors.estoqueId = false;
             this.errors.estoqueIdMsg = '';
-        }
+        } */
     },
     updated: function updated() {
         $(this.$refs.inputProdutos).selectpicker('refresh');
@@ -457,7 +1376,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.oldData !== null && this.loadOldDataFlag == true) {
                 this.loadOldDataFlag = false;
                 for (var i = 0; i < this.oldData.length; i++) {
-                    this.items.push({
+                    this.produtos.push({
                         'id': this.oldData[i].produto_id,
                         'produto_descricao': this.getProdutoById(this.oldData[i].produto_id).produto_descricao,
                         'quantidade': Number(this.oldData[i].quantidade),
@@ -518,7 +1437,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         addProduto: function addProduto() {
             if (this.validarItem()) {
-                this.items.push({
+                this.produtos.push({
                     'id': this.produto_id,
                     'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
                     'quantidade': this.quantidade,
@@ -531,7 +1450,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         editItem: function editItem(index) {
-            var item = this.items[index];
+            var item = this.produtos[index];
             this.quantidade = item.quantidade;
             this.valorUnitario = item.valor_unitario;
             this.desconto = item.valor_desconto;
@@ -541,7 +1460,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.editingIndex = index;
         },
         updateProduto: function updateProduto() {
-            this.items[this.editingIndex] = {
+            this.produtos[this.editingIndex] = {
                 'id': this.produto_id,
                 'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
                 'quantidade': this.quantidade,
@@ -555,8 +1474,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.limparFormulario();
         },
         deleteItem: function deleteItem() {
-            this.removerProduto(this.items[this.deleteIndex].id);
-            this.$delete(this.items, this.deleteIndex);
+            this.removerProduto(this.produtos[this.deleteIndex].id);
+            this.$delete(this.produtos, this.deleteIndex);
         },
         limparFormulario: function limparFormulario() {
             this.produto_id = null;
@@ -569,29 +1488,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         totalQuantidade: function totalQuantidade() {
             var result = 0;
-            for (var i = 0; i < this.items.length; i++) {
-                result += this.items[i].quantidade;
+            for (var i = 0; i < this.produtos.length; i++) {
+                result += this.produtos[i].quantidade;
             }
             return result;
         },
         totalValor: function totalValor() {
             var result = 0;
-            for (var i = 0; i < this.items.length; i++) {
-                result += this.items[i].valor_unitario;
+            for (var i = 0; i < this.produtos.length; i++) {
+                result += this.produtos[i].valor_unitario;
             }
             return result;
         },
         totalDesconto: function totalDesconto() {
             var result = 0;
-            for (var i = 0; i < this.items.length; i++) {
-                result += this.items[i].valor_desconto;
+            for (var i = 0; i < this.produtos.length; i++) {
+                result += this.produtos[i].valor_desconto;
             }
             return result;
         },
         totalAcrescimo: function totalAcrescimo() {
             var result = 0;
-            for (var i = 0; i < this.items.length; i++) {
-                result += this.items[i].valor_acrescimo;
+            for (var i = 0; i < this.produtos.length; i++) {
+                result += this.produtos[i].valor_acrescimo;
             }
             return result;
         },
@@ -648,10 +1567,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         incluirProduto: function incluirProduto(id) {
             this.produtosSelecionados.push(this.getProdutoById(id));
             this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(id));
+            this.$emit('updateTotalProd', this.valor_total);
         },
         removerProduto: function removerProduto(id) {
             this.produtosDisponiveis.push(this.getProdutoSelecionadoById(id));
             this.$delete(this.produtosSelecionados, this.getProdutoSelecionadoIndexById(id));
+            this.$emit('updateTotalProd', this.valor_total);
         }
     }
 });
@@ -659,7 +1580,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 184:
+/***/ 14:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -809,7 +1730,7 @@ var render = function() {
                 _c(
                   "transition-group",
                   { tag: "tbody", attrs: { name: "fade" } },
-                  _vm._l(_vm.items, function(item, index) {
+                  _vm._l(_vm.produtos, function(item, index) {
                     return _c("tr", { key: index }, [
                       _c("td", { staticClass: "col-md-1 pool-right" }, [
                         _vm._v(
@@ -820,7 +1741,7 @@ var render = function() {
                         _c("input", {
                           attrs: {
                             type: "hidden",
-                            name: "items[" + index + "][produto_id]"
+                            name: "produtos[" + index + "][produto_id]"
                           },
                           domProps: { value: item.id }
                         })
@@ -843,7 +1764,7 @@ var render = function() {
                         _c("input", {
                           attrs: {
                             type: "hidden",
-                            name: "items[" + index + "][quantidade]"
+                            name: "produtos[" + index + "][quantidade]"
                           },
                           domProps: { value: item.quantidade }
                         })
@@ -858,7 +1779,7 @@ var render = function() {
                         _c("input", {
                           attrs: {
                             type: "hidden",
-                            name: "items[" + index + "][valor_unitario]"
+                            name: "produtos[" + index + "][valor_unitario]"
                           },
                           domProps: { value: item.valor_unitario }
                         })
@@ -873,7 +1794,7 @@ var render = function() {
                         _c("input", {
                           attrs: {
                             type: "hidden",
-                            name: "items[" + index + "][valor_desconto]"
+                            name: "produtos[" + index + "][valor_desconto]"
                           },
                           domProps: { value: item.valor_desconto }
                         })
@@ -888,7 +1809,7 @@ var render = function() {
                         _c("input", {
                           attrs: {
                             type: "hidden",
-                            name: "items[" + index + "][valor_acrescimo]"
+                            name: "produtos[" + index + "][valor_acrescimo]"
                           },
                           domProps: { value: item.valor_acrescimo }
                         })
@@ -955,11 +1876,11 @@ var render = function() {
                   })
                 ),
                 _vm._v(" "),
-                this.items.length > 0
+                this.produtos.length > 0
                   ? _c("tfoot", [
                       _c("tr", { staticClass: "success" }, [
                         _c("td", { staticClass: "col-md-1" }, [
-                          _c("strong", [_vm._v(_vm._s(this.items.length))])
+                          _c("strong", [_vm._v(_vm._s(this.produtos.length))])
                         ]),
                         _vm._v(" "),
                         _c("td", { staticClass: "col-md-6" }),
@@ -1413,9 +2334,39 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-24aa93f4", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-15e6fa7f", module.exports)
   }
 }
+
+/***/ }),
+
+/***/ 195:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(196);
+
+
+/***/ }),
+
+/***/ 196:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OsServicoComponent_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OsServicoComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_OsServicoComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_OsProdutoComponent_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_OsProdutoComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_OsProdutoComponent_vue__);
+
+
+
+var os = new Vue({
+    el: '#os_servicos',
+    components: {
+        ordem_servico_servico: __WEBPACK_IMPORTED_MODULE_0__components_OsServicoComponent_vue___default.a,
+        ordem_servico_produto: __WEBPACK_IMPORTED_MODULE_1__components_OsProdutoComponent_vue___default.a
+    }
+});
 
 /***/ }),
 
@@ -1616,6 +2567,54 @@ if (false) {
   }
 }
 
+/***/ }),
+
+/***/ 9:
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(10)
+/* template */
+var __vue_template__ = __webpack_require__(11)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/OsServicoComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6b37570e", Component.options)
+  } else {
+    hotAPI.reload("data-v-6b37570e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
 /***/ })
 
-},[180]);
+},[195]);
