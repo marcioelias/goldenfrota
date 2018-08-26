@@ -1248,6 +1248,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1265,6 +1277,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             quantidade: 1,
             desconto: 0,
             acrescimo: 0,
+            valor_cobrado: 0,
             isModalVisible: false,
             deleteIndex: false,
             produtosDisponiveis: [],
@@ -1308,6 +1321,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         estoqueId: function estoqueId() {
             this.getProdutos();
+        },
+        valor_produto: function valor_produto() {
+            this.calcTotalProdutoItem();
+        },
+        valor_desconto: function valor_desconto() {
+            this.calcTotalProdutoItem();
+        },
+        valor_acrescimo: function valor_acrescimo() {
+            this.calcTotalProdutoItem();
+        },
+        quantidade: function quantidade() {
+            this.calcTotalProdutoItem();
+        },
+        produto_id: function produto_id() {
+            this.calcTotalProdutoItem();
         }
     },
     computed: {
@@ -1323,7 +1351,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             get: function get() {
                 var total = 0;
                 for (var i = 0; i < this.produtos.length; i++) {
-                    total += this.produtos[i].quantidade * this.produtos[i].valor_unitario;
+                    total += this.produtos[i].quantidade * this.produtos[i].valor_produto;
                 }
                 return total;
             }
@@ -1380,9 +1408,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         'id': this.oldData[i].produto_id,
                         'produto_descricao': this.getProdutoById(this.oldData[i].produto_id).produto_descricao,
                         'quantidade': Number(this.oldData[i].quantidade),
-                        'valor_unitario': Number(this.oldData[i].valor_unitario),
+                        'valor_produto': Number(this.oldData[i].valor_produto),
                         'valor_desconto': Number(this.oldData[i].valor_desconto),
-                        'valor_acrescimo': Number(this.oldData[i].valor_acrescimo)
+                        'valor_acrescimo': Number(this.oldData[i].valor_acrescimo),
+                        'valor_cobrado': Number(this.oldData[i].valor_cobrado)
                     });
                     this.incluirProduto(this.oldData[i].produto_id);
                 }
@@ -1441,9 +1470,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     'id': this.produto_id,
                     'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
                     'quantidade': this.quantidade,
-                    'valor_unitario': this.valorUnitario,
+                    'valor_produto': this.valorUnitario,
                     'valor_desconto': this.desconto,
-                    'valor_acrescimo': this.acrescimo
+                    'valor_acrescimo': this.acrescimo,
+                    'valor_cobrado': this.valor_cobrado
                 });
                 this.incluirProduto(this.produto_id);
                 this.limparFormulario();
@@ -1452,7 +1482,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         editItem: function editItem(index) {
             var item = this.produtos[index];
             this.quantidade = item.quantidade;
-            this.valorUnitario = item.valor_unitario;
+            this.valorUnitario = item.valor_produto;
             this.desconto = item.valor_desconto;
             this.acrescimo = item.valor_acrescimo;
             this.produto_id = item.id;
@@ -1464,9 +1494,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'id': this.produto_id,
                 'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
                 'quantidade': this.quantidade,
-                'valor_unitario': this.valorUnitario,
+                'valor_produto': this.valorUnitario,
                 'valor_desconto': this.desconto,
-                'valor_acrescimo': this.acrescimo
+                'valor_acrescimo': this.acrescimo,
+                'valor_cobrado': this.valor_cobrado
             };
 
             this.editing = false;
@@ -1480,10 +1511,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         limparFormulario: function limparFormulario() {
             this.produto_id = null;
             this.produtoSelecionado = false;
-            this.quantidade = '';
+            this.quantidade = 1;
             //this.valorUnitario = '';
-            this.desconto = '';
-            this.acrescimo = '';
+            this.desconto = 0.00;
+            this.acrescimo = 0.00;
+            this.valor_cobrado = 0.00;
             this.$refs.inputProdutos.focus();
         },
         totalQuantidade: function totalQuantidade() {
@@ -1496,7 +1528,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         totalValor: function totalValor() {
             var result = 0;
             for (var i = 0; i < this.produtos.length; i++) {
-                result += this.produtos[i].valor_unitario;
+                result += this.produtos[i].valor_produto;
             }
             return result;
         },
@@ -1511,6 +1543,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var result = 0;
             for (var i = 0; i < this.produtos.length; i++) {
                 result += this.produtos[i].valor_acrescimo;
+            }
+            return result;
+        },
+        totalCobrado: function totalCobrado() {
+            var result = 0;
+            for (var i = 0; i < this.produtos.length; i++) {
+                result += this.produtos[i].valor_cobrado;
             }
             return result;
         },
@@ -1573,6 +1612,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.produtosDisponiveis.push(this.getProdutoSelecionadoById(id));
             this.$delete(this.produtosSelecionados, this.getProdutoSelecionadoIndexById(id));
             this.$emit('updateTotalProd', this.valor_total);
+        },
+        calcTotalProdutoItem: function calcTotalProdutoItem() {
+            this.valor_cobrado = (parseFloat(isNaN(this.valorUnitario) || this.valorUnitario == '' ? 0 : this.valorUnitario) + parseFloat(isNaN(this.valor_acrescimo) || this.valor_acrescimo == '' ? 0 : this.valor_acrescimo) - parseFloat(isNaN(this.valor_desconto) || this.valor_desconto == '' ? 0 : this.valor_desconto)) * parseFloat(isNaN(this.quantidade) || this.quantidade == '' ? 1 : this.quantidade);
         }
     }
 });
@@ -1747,7 +1789,7 @@ var render = function() {
                         })
                       ]),
                       _vm._v(" "),
-                      _c("td", { staticClass: "col-md-6" }, [
+                      _c("td", { staticClass: "col-md-5" }, [
                         _vm._v(
                           "\n                            " +
                             _vm._s(item.produto_descricao) +
@@ -1773,15 +1815,15 @@ var render = function() {
                       _c("td", { staticClass: "col-md-1 text-right" }, [
                         _vm._v(
                           "\n                            " +
-                            _vm._s(item.valor_unitario) +
+                            _vm._s(item.valor_produto) +
                             "\n                            "
                         ),
                         _c("input", {
                           attrs: {
                             type: "hidden",
-                            name: "produtos[" + index + "][valor_unitario]"
+                            name: "produtos[" + index + "][valor_produto]"
                           },
-                          domProps: { value: item.valor_unitario }
+                          domProps: { value: item.valor_produto }
                         })
                       ]),
                       _vm._v(" "),
@@ -1812,6 +1854,21 @@ var render = function() {
                             name: "produtos[" + index + "][valor_acrescimo]"
                           },
                           domProps: { value: item.valor_acrescimo }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(item.valor_cobrado) +
+                            "\n                            "
+                        ),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "produtos[" + index + "][valor_cobrado]"
+                          },
+                          domProps: { value: item.valor_cobrado }
                         })
                       ]),
                       _vm._v(" "),
@@ -1883,7 +1940,7 @@ var render = function() {
                           _c("strong", [_vm._v(_vm._s(this.produtos.length))])
                         ]),
                         _vm._v(" "),
-                        _c("td", { staticClass: "col-md-6" }),
+                        _c("td", { staticClass: "col-md-5" }),
                         _vm._v(" "),
                         _c("td", { staticClass: "col-md-1 text-right" }, [
                           _c("strong", [_vm._v(_vm._s(this.totalQuantidade()))])
@@ -1901,6 +1958,10 @@ var render = function() {
                           _c("strong", [_vm._v(_vm._s(this.totalAcrescimo()))])
                         ]),
                         _vm._v(" "),
+                        _c("td", { staticClass: "col-md-1 text-right" }, [
+                          _c("strong", [_vm._v(_vm._s(this.totalCobrado()))])
+                        ]),
+                        _vm._v(" "),
                         _c("td", { staticClass: "col-md-2" })
                       ])
                     ])
@@ -1916,7 +1977,7 @@ var render = function() {
               "div",
               {
                 class: {
-                  "col-md-7": true,
+                  "col-md-6": true,
                   " has-error": this.errors.inputProdutos
                 },
                 staticStyle: {
@@ -2086,7 +2147,8 @@ var render = function() {
                     max: "9999999999,999",
                     step: "any",
                     name: "inputValorUnitario",
-                    id: "inputValorUnitario"
+                    id: "inputValorUnitario",
+                    readonly: ""
                   },
                   domProps: { value: _vm.valorUnitario },
                   on: {
@@ -2239,6 +2301,70 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
+            _c(
+              "div",
+              {
+                class: {
+                  "col-md-1": true,
+                  " has-error": this.errors.inputValorCobrado
+                },
+                staticStyle: {
+                  "padding-right": "0 !important",
+                  "padding-left": "0 !important"
+                }
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model.number",
+                      value: _vm.valor_cobrado,
+                      expression: "valor_cobrado",
+                      modifiers: { number: true }
+                    }
+                  ],
+                  ref: "inputValorCobrado",
+                  staticClass: "form-control",
+                  attrs: {
+                    disabled: _vm.estoqueId == "false" || _vm.estoqueId == null,
+                    type: "number",
+                    min: "0,000",
+                    max: "9999999999,999",
+                    step: "any",
+                    name: "inputValorCobrado",
+                    id: "inputValorCobrado",
+                    readonly: ""
+                  },
+                  domProps: { value: _vm.valor_cobrado },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.valor_cobrado = _vm._n($event.target.value)
+                    },
+                    blur: function($event) {
+                      _vm.$forceUpdate()
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    staticClass: "help-block",
+                    attrs: { "v-if": this.errors.inputValorCobrado }
+                  },
+                  [
+                    _c("strong", [
+                      _vm._v(_vm._s(this.errors.inputValorCobradoMsg))
+                    ])
+                  ]
+                )
+              ]
+            ),
+            _vm._v(" "),
             _c("div", { staticClass: "col-md-1" }, [
               _c(
                 "button",
@@ -2314,15 +2440,17 @@ var staticRenderFns = [
       _c("tr", { staticClass: "primary" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-6" }, [_vm._v("Produto")]),
+        _c("th", { staticClass: "col-md-5" }, [_vm._v("Produto")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Qtd")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Vlr. Un.")]),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("R$ Un.")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Vlr. Desc.")]),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("R$ Acrés.")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Vlr. Acres.")]),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("R$ Desc.")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("R$ Final")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Ações")])
       ])

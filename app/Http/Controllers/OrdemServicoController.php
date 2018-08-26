@@ -7,6 +7,7 @@ use App\Cliente;
 use App\Estoque;
 use App\Produto;
 use App\Servico;
+use App\Parametro;
 use App\OrdemServico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,7 +95,7 @@ class OrdemServicoController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        //dd($request->all());
         if (Auth::user()->canCadastrarOrdemServico()) {
             try {
                 /* $this->validate($request, [
@@ -146,7 +147,13 @@ class OrdemServicoController extends Controller
      */
     public function show(OrdemServico $ordemServico)
     {
-        //
+        if (Auth::user()->canListarOrdemServico()) {
+            return View('ordem_servico.show')
+                    ->withOrdemServico($ordemServico)
+                    ->withTitulo('Ordem de Serviço')
+                    //->withParametros($parametros)
+                    ->withParametro(Parametro::first());
+        }
     }
 
     /**

@@ -21,11 +21,11 @@ class OrdemServicoProduto extends Model
     ];
 
     public function ordem_servico() {
-        return $this->belongsTo(OrdemServico::class)->withTimestamp();
+        return $this->belongsTo(OrdemServico::class);
     }
 
     public function produto() {
-        return $this->belongsTo(Produto::class)->withTimestamp();
+        return $this->belongsTo(Produto::class);
     }
 
 }
