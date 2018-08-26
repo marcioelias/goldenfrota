@@ -29,25 +29,37 @@ IMPORTANTE: Instalar o composer após a instalação do WampServer, e ao ser sol
 - Navegar pelo windows explorer até o diretório C:\wamp\www (considerando C:\wamp como sendo o local da instalação do WampServer)
 - Clicar com o botão direito do mouse e selecionar a opção "Git Bash Here"
 - Clonar o repositório da versão 2 (mais atual) com o seguinte comando
-        git clone -b v2 https://github.com/marcioelias/goldenfrota.git
+```
+    git clone -b v2 https://github.com/marcioelias/goldenfrota.git
+```
 - Acessar o diretorio goldenfrota que foi criado 
-        cd goldefrota
+```
+    cd goldefrota
+```
 - Instalar as dependências do sistema usando o composer
-        composer install
+```
+    composer install
+```
 - Aguardar até que a instalação seja concluida
 
 
 ## Configurando o sistema
 
 - Copiar o arquivo de configuração de exemplo
-        cp .env.example .env
+```
+    cp .env.example .env
+```
 - Gerar uma key para o sistema 
-        php artisan key:generate
+```
+    php artisan key:generate
+```
 - Criar uma base de dados no MySQL (apenas dar o nome a mesma, não é necessário criar nenhuma tabela).
 - Editar o arquivo .env e alterar os seguites dados
-        DB_DATABASE=NOME-DA-BASE-CRIADA
-        DB_USERNAME=root
-        DB_PASSWORD=
+```
+    DB_DATABASE=NOME-DA-BASE-CRIADA
+    DB_USERNAME=root
+    DB_PASSWORD=
+```
 - Salvar as aterações e fechar o arquivo
 - Rodar os scripts de migração das tabelas
         php artisan migrate
@@ -72,14 +84,16 @@ Sempre que são feitas alterações, implementaçãos e/ou correções no sistem
 Para atualizar o sistema instalado seguindo os passos acima, basta executar poucos comandos.
 
 - Navegar até o diretório onde os se encontram os arquivos do sistema
-
-    C:\wamp\www\goldenfrota
-
+    "C:\wamp\www\goldenfrota"
 - Com o botão direito do mouse no menu suspenso selecionar a opção 
-        Git Bash Here
+    "Git Bash Here"
 - Baixar as atualizações com o comando
-        git pull origin v2
+```
+    git pull origin v2
+```
 - Rodar as atualizações da base de dados
-        php artisan db:migrate -seed
+```
+    php artisan db:migrate -seed
+```
 
 Pronto, sistema atualizado para a última versão do fonte disponível.
