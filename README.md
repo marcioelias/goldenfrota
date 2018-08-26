@@ -62,14 +62,20 @@ IMPORTANTE: Instalar o composer após a instalação do WampServer, e ao ser sol
 ```
 - Salvar as aterações e fechar o arquivo
 - Rodar os scripts de migração das tabelas
-        php artisan migrate
+```
+    php artisan migrate
+```
 - Popular a base de dados com dados padrões
-        php artisan db:seed
+```
+    php artisan db:seed
+```
 
 ## Configuração do webserver (Apache)
 - Criar um virtualhost pelo menu do Wamp 
+```
     Endereço do VirtualHost: goldenfrota
     Local dos arquivos: c:/wamp/www/goldenfrota
+```
 - Com o botão direito do mouse no icone do tray do WampServer, selecionar tools, restart DNS
 
 ## Acessando o sistema
