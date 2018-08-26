@@ -66,4 +66,18 @@ https://git-scm.com/downloads
 - Usuário: super
 - Senha: super
 
+# Para atualizar o sistema 
+    Sempre que são feitas alterações, implementaçãos e/ou correções no sistema o projeto é atualizado no Git, facilitando muito o processo de atualização do mesmo nos servidores onde se encontrar instalado.
 
+    Para atualizar o sistema instalado seguindo os passos acima, basta executar poucos comandos.
+
+- Navegar até o diretório onde os se encontram os arquivos do sistema
+    C:\wamp\www\goldenfrota
+- Com o botão direito do mouse no menu suspenso selecionar a opção 
+    Git Bash Here
+- Baixar as atualizações com o comando
+    git pull origin v2
+- Rodar as atualizações da base de dados
+    php artisan db:migrate -seed
+
+Pronto, sistema atualizado para a última versão do fonte disponível.
