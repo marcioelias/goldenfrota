@@ -67,9 +67,9 @@ https://git-scm.com/downloads
 - Senha: super
 
 # Para atualizar o sistema 
-    Sempre que são feitas alterações, implementaçãos e/ou correções no sistema o projeto é atualizado no Git, facilitando muito o processo de atualização do mesmo nos servidores onde se encontrar instalado.
+Sempre que são feitas alterações, implementaçãos e/ou correções no sistema o projeto é atualizado no Git, facilitando muito o processo de atualização do mesmo nos servidores onde se encontrar instalado.
 
-    Para atualizar o sistema instalado seguindo os passos acima, basta executar poucos comandos.
+Para atualizar o sistema instalado seguindo os passos acima, basta executar poucos comandos.
 
 - Navegar até o diretório onde os se encontram os arquivos do sistema
     C:\wamp\www\goldenfrota
