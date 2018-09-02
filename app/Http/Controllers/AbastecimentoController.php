@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
@@ -128,6 +129,8 @@ class AbastecimentoController extends Controller
             ]); 
 
             try {
+                DB::beginTransaction();
+
                 $abastecimento = new Abastecimento;
                 $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
                 $abastecimento->veiculo_id = $request->veiculo_id;
@@ -136,13 +139,13 @@ class AbastecimentoController extends Controller
                 $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
                 $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
                 $abastecimento->abastecimento_local = false;
-                $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
                 $abastecimento->bico_id = $request->bico_id;
                 $abastecimento->encerrante_inicial = $request->encerrante_inicial;
                 $abastecimento->encerrante_final = $request->encerrante_final;
+                $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
                 
                 if ($abastecimento->save()) {
-                
+
                     if ($request->bico_id) {
                         if (!BicoController::atualizarEncerranteBico($request->bico_id, $request->encerrante_final)) {
                             throw new Exception(__('messages.exception', [
@@ -150,7 +153,18 @@ class AbastecimentoController extends Controller
                             ]));
                         }
                     }
-                
+                    
+                    //Log::debug('Abastecimento Inserido: '.$abastecimento);
+
+                    DB::commit();
+
+                    //Ajusta médias futuras
+                    if (!$this->ajustarMediaAbastecimentosFuturos($abastecimento)) {
+                        throw new \Exception(__('messages.exception', [
+                            'exception' => 'Não foi possível atualizar as médias futuras do veículo'
+                        ]));
+                    }
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.abastecimento'),
                         'name' => $abastecimento->id
@@ -158,6 +172,7 @@ class AbastecimentoController extends Controller
                     return redirect()->action('AbastecimentoController@index');
                 }
             } catch (\Exception $e) {
+                DB::rollback();
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));
@@ -365,16 +380,11 @@ class AbastecimentoController extends Controller
 
     public function obterMediaVeiculo(Veiculo $veiculo, Abastecimento $abastecimentoAtual) {
         try {
-            if ($abastecimentoAtual->id) {
-                $whereAbastAtual = 'id < '.$abastecimentoAtual->id;
-            } else {
-                $whereAbastAtual = '1 = 1';
-            }
+            $whereAbastAtual = 'data_hora_abastecimento < "'.$abastecimentoAtual->data_hora_abastecimento.'"';
             $abastecimento = Abastecimento::where('veiculo_id', $veiculo->id)
-                                ->whereRaw($whereAbastAtual)
-                                ->orderBy('id', 'asc')->first();
-
-            //dd($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo);
+                            ->whereRaw($whereAbastAtual)
+                            ->orderBy('data_hora_abastecimento', 'desc')->first();
+            
             if (!$abastecimento) {
                 //primeiro abastecimento deste veiculo;
                 return 0; 
@@ -643,5 +653,29 @@ class AbastecimentoController extends Controller
                     ->withParametros($parametros)
                     ->withTitulo('Relatório de Abastecimentos - Bicos')
                     ->withParametro(Parametro::first());
+    }
+
+    function ajustarMediaAbastecimentosFuturos(Abastecimento $abastecimento) {
+        try {
+            $abastFuturos = Abastecimento::where('veiculo_id', $abastecimento->veiculo_id)
+                            ->where('data_hora_abastecimento', '>', $abastecimento->data_hora_abastecimento)
+                            ->orderBy('data_hora_abastecimento', 'asc')->get();
+
+            $veiculo = Veiculo::find($abastecimento->veiculo_id);
+
+            DB::beginTransaction();
+            foreach ($abastFuturos as $abastFuturo) {    
+                $abastFuturo->media_veiculo = $this->obterMediaVeiculo($veiculo, $abastFuturo);
+                $abastFuturo->save();
+            }
+
+            DB::commit();
+
+            return true;
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e->getMessage());
+        }
     }
 }
