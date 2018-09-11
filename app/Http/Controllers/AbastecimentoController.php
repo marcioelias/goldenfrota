@@ -251,7 +251,7 @@ class AbastecimentoController extends Controller
                 'volume_abastecimento' => 'required|numeric|min:0',
                 'valor_litro' => 'required|numeric|min:0',
                 'valor_abastecimento' => 'required|numeric|min:0',
-                'atendente_id' => 'required|numeric|min:1'
+                'atendente_id' => 'required_with:id_automacao'
             ]); 
 
             try {
