@@ -34,7 +34,7 @@
         <div class="col col-sm-3 col-md-3 col-lg-3">
             <div class="panel panel-default nf-panel">
                 <label for="#departamento" class="nf-label">Departamento:</label>
-                <div id="departamento">{{ $ordemServico->veiculo->departamento->departamento }}</div>
+                <div id="departamento">{{ isset($ordemServico->veiculo->departamento) ? $ordemServico->veiculo->departamento->departamento : '&nbsp;' }}</div>
             </div>
         </div>
         <div class="col col-sm-2 col-md-2 col-lg-2">
@@ -215,7 +215,7 @@
         <div class="col col-sm-12 col-md-12 col-lg-12">
             <div class="panel panel-default nf-panel">
                 <label for="#obs" class="nf-label">Observações:</label>
-                <div id="obs">{{ $ordemServico->obs }}</div>
+                <div id="obs">{{ ($ordemServico->obs) ? $ordemServico->obs : '&nbsp;' }}</div>
             </div>
         </div>
     </div>
