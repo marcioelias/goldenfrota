@@ -26,19 +26,19 @@
                             {{ item.servico }}
                         </td>
                         <td class="col-md-1 pool-right">
-                            {{ item.valor_servico }}
+                            {{ item.valor_servico | toDecimal3 }}
                             <input type="hidden" :name="'servicos['+index+'][valor_servico]'" :value="item.valor_servico">
                         </td>
                         <td class="col-md-1 pool-right">
-                            {{ item.valor_acrescimo }}
+                            {{ item.valor_acrescimo | toDecimal3 }}
                             <input type="hidden" :name="'servicos['+index+'][valor_acrescimo]'" :value="item.valor_acrescimo">
                         </td>
                         <td class="col-md-1 pool-right">
-                            {{ item.valor_desconto }}
+                            {{ item.valor_desconto | toDecimal3 }}
                             <input type="hidden" :name="'servicos['+index+'][valor_desconto]'" :value="item.valor_desconto">
                         </td>
                         <td class="col-md-1 pool-right">
-                            {{ item.valor_cobrado }}
+                            {{ item.valor_cobrado | toDecimal3 }}
                             <input type="hidden" :name="'servicos['+index+'][valor_cobrado]'" :value="item.valor_cobrado">
                         </td>
                         
@@ -184,7 +184,7 @@
                 get() {
                     let total = 0;
                     for (var i = 0; i < this.servicosSelecionados.length; i++) {
-                        total += this.servicosSelecionados[i].valor_cobrado;
+                        total += parseFloat(this.servicosSelecionados[i].valor_cobrado);
                     }
                     return total;
                 }
@@ -194,16 +194,14 @@
             this.createFields();
             this.servicosDisponiveis = this.servicosData;
             if (this.oldData !== null) {
-                for (var i=0; i<this.oldData.length; i++) {  
-                    this.servicos.push({
-                        'id': this.oldData[i].servico_id,
-                        'servico': this.getServicoById(this.oldData[i].servico_id).servico,
-                        'valor_servico': Number(this.oldData[i].valor_servico),
-                        'valor_acrescimo': Number(this.oldData[i].valor_acrescimo),
-                        'valor_desconto': Number(this.oldData[i].valor_desconto),
-                        'valor_cobrado': Number(this.oldData[i].valor_scobrado)
-                    });
+                for (var i=0; i<this.oldData.length; i++) { 
+                    console.log(this.oldData[i]);
+                    this.valor_servico = parseFloat(this.oldData[i].valor_servico);  
+                    this.valor_acrescimo = parseFloat(this.oldData[i].valor_acrescimo);
+                    this.valor_desconto = parseFloat(this.oldData[i].valor_desconto);
+                    this.valor_cobrado = parseFloat(this.oldData[i].valor_cobrado);
                     this.incluirServico(this.oldData[i].servico_id);
+                    this.limparFormulario();
                 }
             }
         },
@@ -236,14 +234,6 @@
             },
             addServico() {
                 if (this.validarItem()) {
-                    /* this.servicosSelecionados.push({
-                        'id': this.servico_id,
-                        'servico': this.getServicoById(this.servico_id).servico,
-                        'valor_servico': this.valor_servico,
-                        'valor_acrescimo': this.valor_acrescimo,
-                        'valor_desconto': this.valor_desconto,
-                        'valor_cobrado': this.valor_cobrado
-                    }); */
                     this.incluirServico(this.servico_id);
                     this.limparFormulario();
                 }

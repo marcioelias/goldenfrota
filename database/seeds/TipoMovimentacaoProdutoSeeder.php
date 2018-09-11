@@ -40,11 +40,6 @@ class TipoMovimentacaoProdutoSeeder extends Seeder
                 ],
                 [
                     'id' => 5,
-                    'tipo_movimentacao_produto' => 'Entrada - Ordem Serviço',
-                    'eh_entrada' => true
-                ],
-                [
-                    'id' => 6,
                     'tipo_movimentacao_produto' => 'Saída - Ordem Serviço',
                     'eh_entrada' => false
                 ]

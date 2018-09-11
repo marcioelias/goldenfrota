@@ -7,11 +7,13 @@ use App\Produto;
 use App\Parametro;
 use App\Inventario;
 use App\GrupoProduto;
+use App\OrdemServico;
 use App\SaidaEstoque;
 use App\EntradaEstoque;
 use App\MovimentacaoProduto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class MovimentacaoProdutoController extends Controller
@@ -100,6 +102,32 @@ class MovimentacaoProdutoController extends Controller
                         'inventario_id' => $inventario->id
                     ]);
                 }
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    static public function saidaOrdemServico(OrdemServico $ordemServico) {
+        try {
+            /* //usar o metodo sync se possível...
+            $ordemServico->movimentacao_produto->sync(); */
+
+            //remove saidas para a ordem de serviço se houver antes de inserir as atuais
+            foreach ($ordemServico->movimentacao_produto()->get() as $OSMovimentacao) {
+                Log::debug('removendo Movimentacao: '.$OSMovimentacao);
+                $OSMovimentacao->delete();
+            }
+
+            foreach ($ordemServico->produtos as $OrdemServicoProduto) {
+                $ordemServico->movimentacao_produto()->create([
+                    'data_movimentacao' => $ordemServico->created_at,
+                    'estoque_id' => $ordemServico->estoque_id,
+                    'produto_id' => $OrdemServicoProduto->produto_id,
+                    'tipo_movimentacao_produto_id' => 5,
+                    'quantidade_movimentada' => $OrdemServicoProduto->quantidade,
+                    'ordem_servico_id' => $ordemServico->id
+                ]);
             }
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
@@ -376,5 +404,13 @@ class MovimentacaoProdutoController extends Controller
                 ->withTitulo('Movimentação de Estoque - Produtos')
                 ->withParametros($parametros)
                 ->withParametro(Parametro::first());
+    }
+
+    public function destroy(MovimentacaoProduto $movimentacaoProduto) {
+        try {
+            $movimentacaoProduto->delete();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
     }
 }

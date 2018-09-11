@@ -18,7 +18,7 @@ class CreateOrdemServicosTable extends Migration
             $table->boolean('fechada')->default(false);
             $table->integer('veiculo_id')->unsigned();
             $table->integer('km_veiculo');
-            $table->text('obs');
+            $table->text('obs')->nullable();
             $table->integer('user_id')->unsigned();
             $table->foreign('veiculo_id')->references('id')->on('veiculos');
             $table->foreign('user_id')->references('id')->on('users');

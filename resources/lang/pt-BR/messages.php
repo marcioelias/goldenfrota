@@ -28,5 +28,8 @@ return [
     'password_change_success' => 'Senha do usuário :User alterada com sucesso.',
 
     /* Reports */
-    'no_data' => 'Nenhum dado encontrado para os parâmetros informados.'
+    'no_data' => 'Nenhum dado encontrado para os parâmetros informados.',
+
+    /* Status not allow edition */
+    'edit_not_allowed' => ':Model com status ":Status" não permite alterações.'
 ];

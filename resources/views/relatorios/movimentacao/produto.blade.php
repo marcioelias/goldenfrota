@@ -64,6 +64,8 @@
                                     Inventário (Entrada): {{ $movimentacao->inventario_id }}
                                 @elseif($movimentacao->tipo_movimentacao_produto_id == 4)
                                     Inventário (Saída): {{ $movimentacao->inventario_id }}
+                                @elseif($movimentacao->tipo_movimentacao_produto_id == 5) 
+                                    Ordem de Serviço: {{ $movimentacao->ordem_servico_id }}
                                 @endif
                             </td>
                             <td>

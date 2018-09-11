@@ -31,15 +31,41 @@
 
     methods: {
       cancel() {
-        this.$emit('cancel');
+        this.$emit(this._eventCancel);
       },
       confirm() {
-        this.$emit('confirm');
+        this.$emit(this._eventConfirm);
       }
     },
     props: [
       'modalTitle',
-      'modalText'
-    ]
+      'modalText',
+      'eventCancel',
+      'eventConfirm'
+    ],
+    computed: {
+      _eventCancel: {
+        get() {
+          if (this.eventCancel == undefined) {
+            return 'cancel';
+          } else {
+            return this.eventCancel;
+          }
+        }
+      },
+      _eventConfirm: {
+        get() {
+          if (this.eventConfirm == undefined) {
+            return 'confirm';
+          } else {
+            return this.eventConfirm;
+          }
+        }
+      }
+    },
+    mounted() {
+      //
+    }
+
   };
 </script>

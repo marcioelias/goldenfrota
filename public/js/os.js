@@ -300,7 +300,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             get: function get() {
                 var total = 0;
                 for (var i = 0; i < this.servicosSelecionados.length; i++) {
-                    total += this.servicosSelecionados[i].valor_cobrado;
+                    total += parseFloat(this.servicosSelecionados[i].valor_cobrado);
                 }
                 return total;
             }
@@ -311,15 +311,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.servicosDisponiveis = this.servicosData;
         if (this.oldData !== null) {
             for (var i = 0; i < this.oldData.length; i++) {
-                this.servicos.push({
-                    'id': this.oldData[i].servico_id,
-                    'servico': this.getServicoById(this.oldData[i].servico_id).servico,
-                    'valor_servico': Number(this.oldData[i].valor_servico),
-                    'valor_acrescimo': Number(this.oldData[i].valor_acrescimo),
-                    'valor_desconto': Number(this.oldData[i].valor_desconto),
-                    'valor_cobrado': Number(this.oldData[i].valor_scobrado)
-                });
+                console.log(this.oldData[i]);
+                this.valor_servico = parseFloat(this.oldData[i].valor_servico);
+                this.valor_acrescimo = parseFloat(this.oldData[i].valor_acrescimo);
+                this.valor_desconto = parseFloat(this.oldData[i].valor_desconto);
+                this.valor_cobrado = parseFloat(this.oldData[i].valor_cobrado);
                 this.incluirServico(this.oldData[i].servico_id);
+                this.limparFormulario();
             }
         }
     },
@@ -353,14 +351,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         addServico: function addServico() {
             if (this.validarItem()) {
-                /* this.servicosSelecionados.push({
-                    'id': this.servico_id,
-                    'servico': this.getServicoById(this.servico_id).servico,
-                    'valor_servico': this.valor_servico,
-                    'valor_acrescimo': this.valor_acrescimo,
-                    'valor_desconto': this.valor_desconto,
-                    'valor_cobrado': this.valor_cobrado
-                }); */
                 this.incluirServico(this.servico_id);
                 this.limparFormulario();
             }
@@ -517,7 +507,7 @@ var render = function() {
                     _c("td", { staticClass: "col-md-1 pool-right" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.valor_servico) +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_servico)) +
                           "\n                        "
                       ),
                       _c("input", {
@@ -532,7 +522,7 @@ var render = function() {
                     _c("td", { staticClass: "col-md-1 pool-right" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.valor_acrescimo) +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_acrescimo)) +
                           "\n                        "
                       ),
                       _c("input", {
@@ -547,7 +537,7 @@ var render = function() {
                     _c("td", { staticClass: "col-md-1 pool-right" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.valor_desconto) +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_desconto)) +
                           "\n                        "
                       ),
                       _c("input", {
@@ -562,7 +552,7 @@ var render = function() {
                     _c("td", { staticClass: "col-md-1 pool-right" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.valor_cobrado) +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_cobrado)) +
                           "\n                        "
                       ),
                       _c("input", {
@@ -1115,8 +1105,8 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__modal_vue__);
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal2_vue__ = __webpack_require__(219);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__modal2_vue__);
 //
 //
 //
@@ -1266,7 +1256,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ordem-servico-produto',
     components: {
-        modal: __WEBPACK_IMPORTED_MODULE_0__modal_vue___default.a
+        modal2: __WEBPACK_IMPORTED_MODULE_0__modal2_vue___default.a
     },
     props: ['oldData', 'estoques', 'oldEstoqueId', 'estoqueError'],
     data: function data() {
@@ -1317,7 +1307,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     watch: {
         oldData: function oldData() {
-            this.$refs.confirmDelete;
+            //this.$refs.confirmDelete
         },
         estoqueId: function estoqueId() {
             this.getProdutos();
@@ -1353,7 +1343,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 for (var i = 0; i < this.produtos.length; i++) {
                     total += this.produtos[i].quantidade * this.produtos[i].valor_produto;
                 }
-                return total;
+                return parseFloat(total);
             }
         },
         valorUnitario: {
@@ -1372,17 +1362,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        /* if (this.oldEstoqueId !== null) {
-            this.estoqueId = this.oldEstoqueId.estoque_id;
-            this.getProdutos();
+        if (this.oldEstoqueId !== null) {
+            this.estoqueId = this.oldEstoqueId;
+            //this.getProdutos();
         }
-        if (this.estoqueError !== null) {
-            this.errors.estoqueId = true;
-            this.errors.estoqueIdMsg = this.estoqueError.msg;
-        } else {
-            this.errors.estoqueId = false;
-            this.errors.estoqueIdMsg = '';
-        } */
     },
     updated: function updated() {
         $(this.$refs.inputProdutos).selectpicker('refresh');
@@ -1392,7 +1375,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         getProdutos: function getProdutos() {
             var self = this;
-            if (this.estoqueId !== null && this.estoqueId !== 'false') {
+            //if ((this.estoqueId !== null) && (this.estoqueId !== 'false')) {
+            if (this.estoqueId > 0) {
                 axios.get('/produtos_estoque/' + this.estoqueId + '/json').then(function (response) {
                     self.produtosDisponiveis = response.data;
                     self.produtosData = response.data;
@@ -1458,11 +1442,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             return true;
         },
-        confirmDelete: function confirmDelete(index) {
+        confirmDeleteProduto: function confirmDeleteProduto(index) {
             this.deleteIndex = index;
         },
         cancelDelete: function cancelDelete(index) {
             this.deleteIndex = false;
+        },
+        cancelProtuto: function cancelProtuto() {
+            console.log('cancel produto');
+        },
+        confirmProtuto: function confirmProtuto() {
+            console.log('confirm produto');
         },
         addProduto: function addProduto() {
             if (this.validarItem()) {
@@ -1504,7 +1494,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.editingIndex = false;
             this.limparFormulario();
         },
-        deleteItem: function deleteItem() {
+        deleteProduto: function deleteProduto() {
+            console.log('Entrou no deleteProduto: ' + this.deleteIndex);
             this.removerProduto(this.produtos[this.deleteIndex].id);
             this.$delete(this.produtos, this.deleteIndex);
         },
@@ -1581,6 +1572,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 }
             }
+            console.log('index: ' + result);
             return result;
         },
         getProdutoSelecionadoById: function getProdutoSelecionadoById(id) {
@@ -1800,8 +1792,8 @@ var render = function() {
                       _c("td", { staticClass: "col-md-1 text-right" }, [
                         _vm._v(
                           "\n                            " +
-                            _vm._s(item.quantidade) +
-                            "\n                            "
+                            _vm._s(_vm._f("toDecimal3")(item.quantidade)) +
+                            " \n                            "
                         ),
                         _c("input", {
                           attrs: {
@@ -1815,7 +1807,7 @@ var render = function() {
                       _c("td", { staticClass: "col-md-1 text-right" }, [
                         _vm._v(
                           "\n                            " +
-                            _vm._s(item.valor_produto) +
+                            _vm._s(_vm._f("toDecimal3")(item.valor_produto)) +
                             "\n                            "
                         ),
                         _c("input", {
@@ -1830,7 +1822,7 @@ var render = function() {
                       _c("td", { staticClass: "col-md-1 text-right" }, [
                         _vm._v(
                           "\n                            " +
-                            _vm._s(item.valor_desconto) +
+                            _vm._s(_vm._f("toDecimal3")(item.valor_desconto)) +
                             "\n                            "
                         ),
                         _c("input", {
@@ -1845,7 +1837,7 @@ var render = function() {
                       _c("td", { staticClass: "col-md-1 text-right" }, [
                         _vm._v(
                           "\n                            " +
-                            _vm._s(item.valor_acrescimo) +
+                            _vm._s(_vm._f("toDecimal3")(item.valor_acrescimo)) +
                             "\n                            "
                         ),
                         _c("input", {
@@ -1860,7 +1852,7 @@ var render = function() {
                       _c("td", { staticClass: "col-md-1 text-right" }, [
                         _vm._v(
                           "\n                            " +
-                            _vm._s(item.valor_cobrado) +
+                            _vm._s(_vm._f("toDecimal3")(item.valor_cobrado)) +
                             "\n                            "
                         ),
                         _c("input", {
@@ -1914,11 +1906,11 @@ var render = function() {
                             attrs: {
                               type: "button",
                               "data-toggle": "modal",
-                              "data-target": "#confirmDelete"
+                              "data-target": "#confirmDelete2"
                             },
                             on: {
                               click: function($event) {
-                                _vm.confirmDelete(index)
+                                _vm.confirmDeleteProduto(index)
                               }
                             }
                           },
@@ -1943,23 +1935,47 @@ var render = function() {
                         _c("td", { staticClass: "col-md-5" }),
                         _vm._v(" "),
                         _c("td", { staticClass: "col-md-1 text-right" }, [
-                          _c("strong", [_vm._v(_vm._s(this.totalQuantidade()))])
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(
+                                _vm._f("toDecimal3")(this.totalQuantidade())
+                              )
+                            )
+                          ])
                         ]),
                         _vm._v(" "),
                         _c("td", { staticClass: "col-md-1 text-right" }, [
-                          _c("strong", [_vm._v(_vm._s(this.totalValor()))])
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(_vm._f("toDecimal3")(this.totalValor()))
+                            )
+                          ])
                         ]),
                         _vm._v(" "),
                         _c("td", { staticClass: "col-md-1 text-right" }, [
-                          _c("strong", [_vm._v(_vm._s(this.totalDesconto()))])
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(_vm._f("toDecimal3")(this.totalDesconto()))
+                            )
+                          ])
                         ]),
                         _vm._v(" "),
                         _c("td", { staticClass: "col-md-1 text-right" }, [
-                          _c("strong", [_vm._v(_vm._s(this.totalAcrescimo()))])
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(
+                                _vm._f("toDecimal3")(this.totalAcrescimo())
+                              )
+                            )
+                          ])
                         ]),
                         _vm._v(" "),
                         _c("td", { staticClass: "col-md-1 text-right" }, [
-                          _c("strong", [_vm._v(_vm._s(this.totalCobrado()))])
+                          _c("strong", [
+                            _vm._v(
+                              _vm._s(_vm._f("toDecimal3")(this.totalCobrado()))
+                            )
+                          ])
                         ]),
                         _vm._v(" "),
                         _c("td", { staticClass: "col-md-2" })
@@ -2411,12 +2427,12 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("modal", {
+        _c("modal2", {
           attrs: {
             "modal-title": "Corfirmação",
             "modal-text": "Confirma a remoção deste Item?"
           },
-          on: { cancel: _vm.cancelDelete, confirm: _vm.deleteItem }
+          on: { cancel2: _vm.cancelDelete, confirm2: _vm.deleteProduto }
         })
       ],
       1
@@ -2562,6 +2578,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -2592,7 +2609,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         valor_total_os: {
             get: function get() {
-                return this.valor_total_produtos + this.valor_total_servicos;
+                /* var formatter = new Intl.NumberFormat('pt-BR', {
+                    minimumFractionDigits: 3
+                });
+                return formatter.format(this.valor_total_produtos + this.valor_total_servicos); */
+                return parseFloat(this.valor_total_produtos + this.valor_total_servicos);
             }
         }
     }
@@ -2644,23 +2665,23 @@ var render = function() {
             [_vm._v("Valor Total")]
           ),
           _vm._v(" "),
+          _c("div", { staticClass: "form-control" }, [
+            _vm._v(_vm._s(_vm._f("toDecimal3")(_vm.valor_total_os)))
+          ]),
+          _vm._v(" "),
           _c("input", {
             directives: [
               {
                 name: "model",
-                rawName: "v-model.number",
+                rawName: "v-model",
                 value: _vm.valor_total_os,
-                expression: "valor_total_os",
-                modifiers: { number: true }
+                expression: "valor_total_os"
               }
             ],
             ref: "inputValorTotalOs",
             staticClass: "form-control",
             attrs: {
-              type: "number",
-              min: "0,000",
-              max: "9999999999,999",
-              step: "any",
+              type: "hidden",
               name: "valor_total",
               id: "valor_total",
               readonly: ""
@@ -2671,10 +2692,7 @@ var render = function() {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.valor_total_os = _vm._n($event.target.value)
-              },
-              blur: function($event) {
-                _vm.$forceUpdate()
+                _vm.valor_total_os = $event.target.value
               }
             }
           })
@@ -2691,6 +2709,205 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-e2c4c2dc", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ 219:
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(220)
+/* template */
+var __vue_template__ = __webpack_require__(221)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/modal2.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-508e0d08", Component.options)
+  } else {
+    hotAPI.reload("data-v-508e0d08", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ 220:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'modal2',
+
+  methods: {
+    cancel2: function cancel2() {
+      this.$emit('cancel2');
+    },
+    confirm2: function confirm2() {
+      this.$emit('confirm2');
+    }
+  },
+  props: ['modalTitle', 'modalText']
+});
+
+/***/ }),
+
+/***/ 221:
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("transition", { attrs: { name: "modal-fade" } }, [
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "confirmDelete2",
+          role: "dialog",
+          "aria-labelledby": "confirmDeleteLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content modal-default" }, [
+            _c("div", { staticClass: "modal-header" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "close",
+                  attrs: {
+                    type: "button",
+                    "data-dismiss": "modal2",
+                    "aria-hidden": "true"
+                  }
+                },
+                [_vm._v("×")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-1" }, [
+                  _c("span", { staticClass: "glyphicon glyphicon-alert" })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col" }, [
+                  _c("h4", { staticClass: "modal-title" }, [
+                    _c("strong", [_vm._v(_vm._s(this.modalTitle))])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("p", [
+                _vm._v(
+                  "\n              " +
+                    _vm._s(this.modalText) +
+                    "                  \n            "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger",
+                  attrs: {
+                    type: "button",
+                    "data-dismiss": "modal",
+                    id: "confirm2"
+                  },
+                  on: { click: _vm.confirm2 }
+                },
+                [_vm._v("Remover")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button", "data-dismiss": "modal" },
+                  on: { click: _vm.cancel2 }
+                },
+                [_vm._v("Cancelar")]
+              )
+            ])
+          ])
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-508e0d08", module.exports)
   }
 }
 
@@ -2782,13 +2999,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     cancel: function cancel() {
-      this.$emit('cancel');
+      this.$emit(this._eventCancel);
     },
     confirm: function confirm() {
-      this.$emit('confirm');
+      this.$emit(this._eventConfirm);
     }
   },
-  props: ['modalTitle', 'modalText']
+  props: ['modalTitle', 'modalText', 'eventCancel', 'eventConfirm'],
+  computed: {
+    _eventCancel: {
+      get: function get() {
+        if (this.eventCancel == undefined) {
+          return 'cancel';
+        } else {
+          return this.eventCancel;
+        }
+      }
+    },
+    _eventConfirm: {
+      get: function get() {
+        if (this.eventConfirm == undefined) {
+          return 'confirm';
+        } else {
+          return this.eventConfirm;
+        }
+      }
+    }
+  },
+  mounted: function mounted() {
+    //
+  }
 });
 
 /***/ }),

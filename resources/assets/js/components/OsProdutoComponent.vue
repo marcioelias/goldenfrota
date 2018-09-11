@@ -42,30 +42,30 @@
                                 {{ item.produto_descricao }}
                             </td>
                             <td class="col-md-1 text-right">
-                                {{ item.quantidade }}
+                                {{ item.quantidade | toDecimal3 }} 
                                 <input type="hidden" :name="'produtos['+index+'][quantidade]'" :value="item.quantidade">    
                             </td>
                             <td class="col-md-1 text-right">
-                                {{ item.valor_produto }}
+                                {{ item.valor_produto | toDecimal3 }}
                                 <input type="hidden" :name="'produtos['+index+'][valor_produto]'" :value="item.valor_produto">    
                             </td>
                             <td class="col-md-1 text-right">
-                                {{ item.valor_desconto }}
+                                {{ item.valor_desconto | toDecimal3 }}
                                 <input type="hidden" :name="'produtos['+index+'][valor_desconto]'" :value="item.valor_desconto">    
                             </td>
                             <td class="col-md-1 text-right">
-                                {{ item.valor_acrescimo }}
+                                {{ item.valor_acrescimo | toDecimal3 }}
                                 <input type="hidden" :name="'produtos['+index+'][valor_acrescimo]'" :value="item.valor_acrescimo">    
                             </td>
                             <td class="col-md-1 text-right">
-                                {{ item.valor_cobrado }}
+                                {{ item.valor_cobrado | toDecimal3 }}
                                 <input type="hidden" :name="'produtos['+index+'][valor_cobrado]'" :value="item.valor_cobrado">    
                             </td>    
                             <td class="col-md-1">
                                 <button type="button" class="btn-xs btn-warning" @click="editItem(index)" v-show="!editing">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </button>
-                                <button type="button" class="btn-xs btn-danger" @click="confirmDelete(index)" data-toggle="modal" data-target="#confirmDelete" v-show="!editing">
+                                <button type="button" class="btn-xs btn-danger" @click="confirmDeleteProduto(index)" data-toggle="modal" data-target="#confirmDelete2" v-show="!editing">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </button>
                             </td>
@@ -75,11 +75,11 @@
                         <tr class="success">
                             <td class="col-md-1"><strong>{{ this.produtos.length }}</strong></td>
                             <td class="col-md-5"></td>
-                            <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() }}</strong></td>
-                            <td class="col-md-1 text-right"><strong>{{ this.totalValor() }}</strong></td>
-                            <td class="col-md-1 text-right"><strong>{{ this.totalDesconto() }}</strong></td>
-                            <td class="col-md-1 text-right"><strong>{{ this.totalAcrescimo() }}</strong></td>
-                            <td class="col-md-1 text-right"><strong>{{ this.totalCobrado() }}</strong></td>
+                            <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() | toDecimal3 }}</strong></td>
+                            <td class="col-md-1 text-right"><strong>{{ this.totalValor() | toDecimal3 }}</strong></td>
+                            <td class="col-md-1 text-right"><strong>{{ this.totalDesconto() | toDecimal3 }}</strong></td>
+                            <td class="col-md-1 text-right"><strong>{{ this.totalAcrescimo() | toDecimal3 }}</strong></td>
+                            <td class="col-md-1 text-right"><strong>{{ this.totalCobrado() | toDecimal3 }}</strong></td>
                             <td class="col-md-2"></td>
                         </tr>
                     </tfoot>
@@ -136,18 +136,18 @@
                     </div>
                 </div>
             </div>
-            <modal @cancel="cancelDelete" @confirm="deleteItem" :modal-title="'Corfirmação'" :modal-text="'Confirma a remoção deste Item?'" />
+            <modal2 @cancel2="cancelDelete" @confirm2="deleteProduto" :modal-title="'Corfirmação'" :modal-text="'Confirma a remoção deste Item?'" />
         </div>
     </div>
 </template>
 
 <script>
-    import modal from './modal.vue';
+    import modal2 from './modal2.vue';
 
     export default {
         name: 'ordem-servico-produto',
         components: {
-            modal
+            modal2
         },
         props: [
             'oldData',
@@ -202,7 +202,7 @@
         },
         watch: {
             oldData: function() {
-               this.$refs.confirmDelete
+               //this.$refs.confirmDelete
             },
             estoqueId: function() {
                 this.getProdutos();
@@ -238,7 +238,7 @@
                     for (var i = 0; i < this.produtos.length; i++) {
                         total += this.produtos[i].quantidade * this.produtos[i].valor_produto;
                     }
-                    return total;
+                    return parseFloat(total);
                 }
             },
             valorUnitario: {
@@ -259,17 +259,10 @@
             }
         },
         mounted() {
-            /* if (this.oldEstoqueId !== null) {
-                this.estoqueId = this.oldEstoqueId.estoque_id;
-                this.getProdutos();
+            if (this.oldEstoqueId !== null) {
+                this.estoqueId = this.oldEstoqueId;
+                //this.getProdutos();
             }
-            if (this.estoqueError !== null) {
-                this.errors.estoqueId = true;
-                this.errors.estoqueIdMsg = this.estoqueError.msg;
-            } else {
-                this.errors.estoqueId = false;
-                this.errors.estoqueIdMsg = '';
-            } */
         },
         updated() {
             $(this.$refs.inputProdutos).selectpicker('refresh');
@@ -278,7 +271,8 @@
         methods: {
             getProdutos() {
                 var self = this;
-                if ((this.estoqueId !== null) && (this.estoqueId !== 'false')) {
+                //if ((this.estoqueId !== null) && (this.estoqueId !== 'false')) {
+                if (this.estoqueId > 0) {
                     axios.get('/produtos_estoque/'+this.estoqueId+'/json')
                         .then(function(response) {
                             self.produtosDisponiveis = response.data;
@@ -345,11 +339,17 @@
                 }
                 return true;
             },
-            confirmDelete(index) {
+            confirmDeleteProduto(index) {
                 this.deleteIndex = index;
             },
             cancelDelete(index) {
                 this.deleteIndex = false;
+            },
+            cancelProtuto() {
+                console.log('cancel produto');
+            },
+            confirmProtuto() {
+                console.log('confirm produto');
             },
             addProduto() {
                 if (this.validarItem()) {
@@ -391,7 +391,8 @@
                 this.editingIndex = false;
                 this.limparFormulario();
             },
-            deleteItem() {
+            deleteProduto() {
+                console.log('Entrou no deleteProduto: '+this.deleteIndex);
                 this.removerProduto(this.produtos[this.deleteIndex].id);
                 this.$delete(this.produtos, this.deleteIndex);
             },
@@ -468,6 +469,7 @@
                         break;
                     } 
                 }
+                console.log('index: '+result);
                 return result;
             },
             getProdutoSelecionadoById(id) {

@@ -1505,13 +1505,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     cancel: function cancel() {
-      this.$emit('cancel');
+      this.$emit(this._eventCancel);
     },
     confirm: function confirm() {
-      this.$emit('confirm');
+      this.$emit(this._eventConfirm);
     }
   },
-  props: ['modalTitle', 'modalText']
+  props: ['modalTitle', 'modalText', 'eventCancel', 'eventConfirm'],
+  computed: {
+    _eventCancel: {
+      get: function get() {
+        if (this.eventCancel == undefined) {
+          return 'cancel';
+        } else {
+          return this.eventCancel;
+        }
+      }
+    },
+    _eventConfirm: {
+      get: function get() {
+        if (this.eventConfirm == undefined) {
+          return 'confirm';
+        } else {
+          return this.eventConfirm;
+        }
+      }
+    }
+  },
+  mounted: function mounted() {
+    //
+  }
 });
 
 /***/ }),

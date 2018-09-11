@@ -59,8 +59,8 @@
                         :servicos-data="{{ json_encode($servicos) }}" 
                         :old-servicos-data="{{ json_encode(old('servicos')) }}"
                         v-bind:estoques="{{ json_encode($estoques) }}" 
-                        :old-estoque-id="{{ json_encode(['estoque_id' => old('estoque_id')]) }}"
-                        :old-produtos-data="{{ json_encode(old('items')) }}">
+                        :old-estoque-id="{{ json_encode(old('estoque_id')) }}"
+                        :old-produtos-data="{{ json_encode(old('produtos')) }}">
                     </ordem-servico>
                 </div>
                 

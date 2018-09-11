@@ -3,7 +3,9 @@
 namespace App;
 
 use App\User;
+use App\Estoque;
 use App\Veiculo;
+use App\MovimentacaoProduto;
 use App\OrdemServicoProduto;
 use App\OrdemServicoServico;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +13,9 @@ use Illuminate\Database\Eloquent\Model;
 class OrdemServico extends Model
 {
     protected $fillable = [
+        'estoque_id',
         'fechada',
+        'data_fechamento',
         'veiculo_id',
         'km_veiculo',
         'obs', 
@@ -33,5 +37,13 @@ class OrdemServico extends Model
 
     public function produtos() {
         return $this->hasMany(OrdemServicoProduto::class);
+    }
+
+    public function movimentacao_produto() { 
+        return $this->hasMany(MovimentacaoProduto::class);
+    }
+
+    public function estoque() {
+        return $this->belongsTo(Estoque::class);
     }
 }

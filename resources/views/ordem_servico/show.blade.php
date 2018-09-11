@@ -13,8 +13,12 @@
                     <label for="#os_fechada" class="nf-label">Fechada:</label>
                     <div id="os_fechada">{{ ($ordemServico->fechada) ? 'Sim' : 'Não' }}</div>
                 </div>
-                <div class="pull-right">
-                    <label for="#data_os" class="nf-label">Data:</label>
+                <div class="pull-right" style="margin-left: 25px">
+                    <label for="#data_os" class="nf-label">Data Fechamento:</label>
+                    <div id="data_os">{{ ($ordemServico->fechada) ? date_format(date_create($ordemServico->data_fechamento), 'd/m/Y - H:i:s') : '___/___/______ - ___:___:___   ' }}</div>
+                </div>
+                <div class="pull-right" style="margin-left: 25px">
+                    <label for="#data_os" class="nf-label">Data Abertura:</label>
                     <div id="data_os">{{ date_format(date_create($ordemServico->created_at), 'd/m/Y - H:i:s') }}</div>
                 </div>
             </div>

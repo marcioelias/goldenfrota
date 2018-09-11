@@ -5,6 +5,7 @@ namespace App;
 use App\Estoque;
 use App\Produto;
 use App\Inventario;
+use App\OrdemServico;
 use App\SaidaEstoque;
 use App\EntradaEstoque;
 use App\TipoMovimentacaoProduto;
@@ -43,5 +44,9 @@ class MovimentacaoProduto extends Model
 
     public function saida_estoque() {
         return $this->belongsTo(SaidaEstoque::class);
+    }
+
+    public function ordem_servico() {
+        return $this->belongsTo(OrdemServico::class);
     }
 }

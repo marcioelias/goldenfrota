@@ -4,10 +4,11 @@
         <ordem-servico-produto v-on:updateTotalProd="updateTotalProdutos" v-bind:estoques="estoques" :old-estoque-id="oldEstoqueId" :old-data="oldProdutosData"></ordem-servico-produto>
         <div class="col col-sm-4 pull-right" style="padding: 0px !important;">
             <label for="inputValorTotalOs" class="control-label">Valor Total</label>
-            <input type="number" min="0,000" max="9999999999,999" step="any" ref="inputValorTotalOs" v-model.number="valor_total_os" class="form-control" name="valor_total" id="valor_total" readonly>
+            <div class="form-control">{{ valor_total_os | toDecimal3 }}</div>
+            <input type="hidden" ref="inputValorTotalOs" v-model="valor_total_os" class="form-control" name="valor_total" id="valor_total" readonly>
         </div>
     </div>
-</template>
+</template> 
 
 <script>
 import ordemServicoServico from './OsServicoComponent.vue';
@@ -28,7 +29,7 @@ export default {
     data() {
         return {
             valor_total_produtos: 0,
-            valor_total_servicos: 0
+            valor_total_servicos: 0 
         }
     },
     methods: {
@@ -44,7 +45,11 @@ export default {
     computed: {
         valor_total_os: {
             get() {
-                return this.valor_total_produtos + this.valor_total_servicos;
+                /* var formatter = new Intl.NumberFormat('pt-BR', {
+                    minimumFractionDigits: 3
+                });
+                return formatter.format(this.valor_total_produtos + this.valor_total_servicos); */
+                return parseFloat(this.valor_total_produtos + this.valor_total_servicos);
             }
         }
     }

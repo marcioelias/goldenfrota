@@ -37,4 +37,5 @@ return [
     'saida_estoque' => 'Saída de Estoque',
     'grupo_servico' => 'Grupo de Serviço',
     'servico' => 'Serviço',
+    'ordem_servico' => 'Ordem de Serviço'
 ];
