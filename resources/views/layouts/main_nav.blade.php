@@ -20,6 +20,7 @@
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
                 @auth
+                @role(['super', 'administrador'])
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         Configurações
@@ -79,6 +80,7 @@
                         <li><a href="{{route('parametro.create')}}">Parâmetros</a></li>            
                     </ul>    
                 </li>
+                @endrole
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         Produtos
