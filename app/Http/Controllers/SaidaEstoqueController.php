@@ -44,11 +44,13 @@ class SaidaEstoqueController extends Controller
                                     ->leftJoin('clientes', 'clientes.id', 'saida_estoques.cliente_id')
                                     ->where('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
                                     ->orWhere('clientes.fantasia', 'like', '%'.$request->searchField.'%')
+                                    ->orderBy('id', 'desc')
                                     ->paginate();
             } else {
                 $saidas = DB::table('saida_estoques')
                                     ->select('saida_estoques.*', 'clientes.nome_razao as nome_cliente')
                                     ->leftJoin('clientes', 'clientes.id', 'saida_estoques.cliente_id')
+                                    ->orderBy('id', 'desc')
                                     ->paginate();
             }
 
