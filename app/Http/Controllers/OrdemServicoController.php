@@ -233,10 +233,14 @@ class OrdemServicoController extends Controller
                     $ordemServico->servicos()->delete();
 
                     /* inclui produtos */
-                    $ordemServico->produtos()->createMany($request->produtos);
+                    if (is_array($request->produtos)) {
+                        $ordemServico->produtos()->createMany($request->produtos);
+                    }
 
                     /* inclui serviços */
-                    $ordemServico->servicos()->createMany($request->servicos);
+                    if (is_array($request->servicos)) {
+                        $ordemServico->servicos()->createMany($request->servicos);
+                    }
 
                     /* movimenta o estoque dos produtos */
                     MovimentacaoProdutoController::saidaOrdemServico($ordemServico);

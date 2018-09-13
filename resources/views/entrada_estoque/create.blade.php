@@ -78,7 +78,7 @@
                 <div id="entrada_estoque_produtos" class="{{ $errors->has('items') ? ' has-error' : '' }}">
                     <entrada_estoque :produtos-data="{{ json_encode($produtos) }}" :old-data="{{ json_encode(old('items')) }}"></entrada_estoque>
                     @if ($errors->has('items'))
-                        <span class="help-block">
+                        <span class="help-block"> 
                             <strong>{{ $errors->first('items') }}</strong>
                         </span>
                     @endif
