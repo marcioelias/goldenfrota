@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class TipoMovimentacaoCombustivelSeeder extends Seeder
+class TipoMovCombSeeder extends Seeder
 {
     /**
      * Run the database seeds.
