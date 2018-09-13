@@ -1478,6 +1478,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.produto_id = item.id;
             this.editing = true;
             this.editingIndex = index;
+            this.produtosDisponiveis.push(item);
         },
         updateProduto: function updateProduto() {
             this.produtos[this.editingIndex] = {
@@ -1493,6 +1494,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.editing = false;
             this.editingIndex = false;
             this.limparFormulario();
+            this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(this.produto_id));
+            this.$emit('updateTotalProd', this.valor_total);
         },
         deleteProduto: function deleteProduto() {
             console.log('Entrou no deleteProduto: ' + this.deleteIndex);
@@ -2683,20 +2686,20 @@ if (false) {
 
 /***/ }),
 
-/***/ 200:
+/***/ 205:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(201);
+module.exports = __webpack_require__(206);
 
 
 /***/ }),
 
-/***/ 201:
+/***/ 206:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OsComponent_vue__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OsComponent_vue__ = __webpack_require__(207);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_OsComponent_vue__);
 
 
@@ -2709,15 +2712,15 @@ var os = new Vue({
 
 /***/ }),
 
-/***/ 202:
+/***/ 207:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(203)
+var __vue_script__ = __webpack_require__(208)
 /* template */
-var __vue_template__ = __webpack_require__(204)
+var __vue_template__ = __webpack_require__(209)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -2757,7 +2760,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 203:
+/***/ 208:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2821,7 +2824,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 204:
+/***/ 209:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -3183,4 +3186,4 @@ module.exports = Component.exports
 
 /***/ })
 
-},[200]);
+},[205]);

@@ -1478,6 +1478,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.produto_id = item.id;
             this.editing = true;
             this.editingIndex = index;
+            this.produtosDisponiveis.push(item);
         },
         updateProduto: function updateProduto() {
             this.produtos[this.editingIndex] = {
@@ -1493,6 +1494,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.editing = false;
             this.editingIndex = false;
             this.limparFormulario();
+            this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(this.produto_id));
+            this.$emit('updateTotalProd', this.valor_total);
         },
         deleteProduto: function deleteProduto() {
             console.log('Entrou no deleteProduto: ' + this.deleteIndex);
@@ -2683,15 +2686,15 @@ if (false) {
 
 /***/ }),
 
-/***/ 198:
+/***/ 203:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(199);
+module.exports = __webpack_require__(204);
 
 
 /***/ }),
 
-/***/ 199:
+/***/ 204:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2983,4 +2986,4 @@ module.exports = Component.exports
 
 /***/ })
 
-},[198]);
+},[203]);

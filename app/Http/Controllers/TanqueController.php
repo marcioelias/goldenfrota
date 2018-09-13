@@ -224,15 +224,39 @@ class TanqueController extends Controller
     }
 
     public function getPosicaoEstoque(Tanque $tanque) {
-        $entradas = DB::table('tanque_movimentacoes')
+        $posicao = DB::table('movimentacao_combustiveis')
+        ->select(
+            DB::raw(
+                'SUM(
+                    CASE tipo_movimentacao_combustiveis.eh_entrada
+                        WHEN 1 THEN
+                            movimentacao_combustiveis.quantidade
+                        WHEN 0 THEN
+                            movimentacao_combustiveis.quantidade * -1
+                    END
+                ) as posicao'
+            )
+        )
+        ->leftJoin('tanques', 'tanques.id', 'movimentacao_combustiveis.tanque_id')
+        ->leftJoin('tipo_movimentacao_combustiveis', 'tipo_movimentacao_combustiveis.id', 'movimentacao_combustiveis.tipo_movimentacao_combustivel_id')
+        ->where('movimentacao_combustiveis.tanque_id', $tanque->id)
+        ->first();
+
+        return ($posicao->posicao) ? $posicao->posicao : 0;
+        
+        /* dd(($posicao == null) ? $posicao : 0);
+        
+        
+        $entradas = DB::table('movimentacao_combustiveis')
+
                         ->where([
                             ['tanque_id', $tanque->id],
-                            ['entrada_combustivel', true],
+                            ['tipo_', true],
                             ['ativo', true]
                         ])
                         ->sum('quantidade_combustivel');
 
-        $saidas = DB::table('tanque_movimentacoes')
+        $saidas = DB::table('tanque_movimentacoes') 
                         ->where([
                             ['tanque_id', $tanque->id],
                             ['entrada_combustivel', false],
@@ -240,11 +264,15 @@ class TanqueController extends Controller
                         ])
                         ->sum('quantidade_combustivel');
 
-        return $entradas - $saidas;
+        return $entradas - $saidas; */
     }
 
     public function listagemTanques() {
         $tanques = Tanque::all(); 
+
+        foreach($tanques as $tanque) {
+            $tanque->posicao = $this->getPosicaoEstoque($tanque);
+        }
 
         return View('relatorios.tanques.listagem_tanques')->withTanques($tanques)->withTitulo('Listagem de Tanques')->withParametro(Parametro::first());
     }

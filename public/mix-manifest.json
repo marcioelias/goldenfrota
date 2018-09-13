@@ -6,6 +6,7 @@
     "/js/osservico.js": "/js/osservico.js",
     "/js/saidaestoque.js": "/js/saidaestoque.js",
     "/js/estoqueproduto.js": "/js/estoqueproduto.js",
+    "/js/entradatanque.js": "/js/entradatanque.js",
     "/js/entradaestoque.js": "/js/entradaestoque.js",
     "/js/inventarioestoque.js": "/js/inventarioestoque.js",
     "/js/other.js": "/js/other.js",

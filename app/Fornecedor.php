@@ -5,6 +5,7 @@ namespace App;
 use App\Uf;
 use App\Produto;
 use App\TipoPessoa;
+use App\EntradaTanque;
 use Illuminate\Database\Eloquent\Model;
 
 class Fornecedor extends Model
@@ -40,5 +41,9 @@ class Fornecedor extends Model
 
     public function produtos() {
         return $this->belongsToMany(Produto::class);
+    }
+
+    public function entrada_tanques() {
+        return $this->hasMany(EntradaTanque::class);
     }
 }

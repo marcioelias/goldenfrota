@@ -165,8 +165,11 @@
                         @permission('listar-abastecimento')
                         <li><a href="{{route('abastecimento.index')}}">Abastecimentos</a></li>
                         @endpermission
-                        @permission('listar-tanque-movimentacao')
+                        {{--  @permission('listar-tanque-movimentacao')
                         <li><a href="{{route('tanque_movimentacao.index')}}">Entrada de Combustíveis</a></li>
+                        @endpermission  --}}
+                        @permission('listar-entrada-tanque')
+                        <li><a href="{{route('entrada_tanque.index')}}">Entrada de Combustíveis</a></li>
                         @endpermission
                         <li class="divider"></li>
                         @permission('listar-entrada-estoque')

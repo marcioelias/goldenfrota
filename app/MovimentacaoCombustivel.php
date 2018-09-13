@@ -4,6 +4,7 @@ namespace App;
 
 use App\Tanque;
 use App\Abastecimento;
+use App\EntradaTanque;
 use App\TipoMovimentacaoCombustivel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,5 +29,9 @@ class MovimentacaoCombustivel extends Model
 
     public function abastecimento() {
         return $this->belongsTo(Abastecimento::class);
+    }
+
+    public function entrada_tanque() {
+        return $this->belongsTo(EntradaTanque::class);
     }
 }

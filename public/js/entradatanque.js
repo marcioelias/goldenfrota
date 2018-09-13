@@ -1,4 +1,4 @@
-webpackJsonp([7],{
+webpackJsonp([6],{
 
 /***/ 1:
 /***/ (function(module, exports) {
@@ -110,41 +110,41 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
-/***/ 178:
+/***/ 183:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(179);
+module.exports = __webpack_require__(184);
 
 
 /***/ }),
 
-/***/ 179:
+/***/ 184:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_EntradaEstoqueItemsComponent_vue__ = __webpack_require__(180);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_EntradaEstoqueItemsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_EntradaEstoqueItemsComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_EntradaTanqueItemsComponent_vue__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_EntradaTanqueItemsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_EntradaTanqueItemsComponent_vue__);
 
 
 var leads = new Vue({
-    el: '#entrada_estoque_produtos',
+    el: '#entrada_tanque_combustiveis',
     components: {
-        entrada_estoque: __WEBPACK_IMPORTED_MODULE_0__components_EntradaEstoqueItemsComponent_vue___default.a
+        entrada_tanque: __WEBPACK_IMPORTED_MODULE_0__components_EntradaTanqueItemsComponent_vue___default.a
     }
 });
 
 /***/ }),
 
-/***/ 180:
+/***/ 185:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(181)
+var __vue_script__ = __webpack_require__(186)
 /* template */
-var __vue_template__ = __webpack_require__(182)
+var __vue_template__ = __webpack_require__(187)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -161,7 +161,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/EntradaEstoqueItemsComponent.vue"
+Component.options.__file = "resources/assets/js/components/EntradaTanqueItemsComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -170,9 +170,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6f60b455", Component.options)
+    hotAPI.createRecord("data-v-5ebfe14d", Component.options)
   } else {
-    hotAPI.reload("data-v-6f60b455", Component.options)
+    hotAPI.reload("data-v-5ebfe14d", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -184,7 +184,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 181:
+/***/ 186:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -283,35 +283,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'entrada_estoque',
+    name: 'entrada_tanque',
     components: {
         modal: __WEBPACK_IMPORTED_MODULE_0__modal_vue___default.a
     },
@@ -320,45 +296,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             editing: false,
             editingIndex: false,
             items: [],
-            produto_id: false,
+            tanque_id: false,
             quantidade: 1,
             valorUnitario: 0,
-            desconto: 0,
-            acrescimo: 0,
             isModalVisible: false,
             deleteIndex: false,
-            produtosDisponiveis: [],
-            produtosSelecionados: [],
+            tanquesDisponiveis: [],
+            tanquesSelecionados: [],
             errors: {
-                inputProdutos: false,
-                inputProdutosMsg: '',
+                inputTanques: false,
+                inputTanquesMsg: '',
                 inputQuantidade: false,
                 inputQuantidadeMsg: '',
                 inputValorUnitario: false,
-                inputValorUnitariodeMsg: '',
-                inputDesconto: false,
-                inputDescontoMsg: '',
-                inputAcrescimo: false,
-                inputAcrescimoMsg: ''
+                inputValorUnitariodeMsg: ''
             }
         };
     },
 
-    props: ['produtosData', 'oldData'],
+    props: ['tanquesData', 'oldData'],
     watch: {
         oldData: function oldData() {
             this.$refs.confirmDelete;
         }
     },
     computed: {
-        produtosDisponiveisOrdenados: function produtosDisponiveisOrdenados() {
+        tanquesDisponiveisOrdenados: function tanquesDisponiveisOrdenados() {
             function compare(a, b) {
-                if (a.produto_descricao < b.produto_descricao) return -1;
-                if (a.produto_descricao > b.produto_descricao) return 1;
+                if (a.tanque < b.tanque) return -1;
+                if (a.tanque > b.tanque) return 1;
                 return 0;
             }
 
-            return this.produtosDisponiveis.sort(compare);
+            return this.tanquesDisponiveis.sort(compare);
         },
         valor_total: {
             get: function get() {
@@ -371,39 +341,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        this.produtosDisponiveis = this.produtosData;
+        this.tanquesDisponiveis = this.tanquesData;
         if (this.oldData !== null) {
             for (var i = 0; i < this.oldData.length; i++) {
                 this.items.push({
-                    'id': this.oldData[i].produto_id,
-                    'produto_descricao': this.getProdutoById(this.oldData[i].produto_id).produto_descricao,
+                    'id': this.oldData[i].tanque_id,
+                    'tanque': this.getTanqueById(this.oldData[i].tanque_id).tanque,
                     'quantidade': Number(this.oldData[i].quantidade),
-                    'valor_unitario': Number(this.oldData[i].valor_unitario),
-                    'valor_desconto': Number(this.oldData[i].valor_desconto),
-                    'valor_acrescimo': Number(this.oldData[i].valor_acrescimo)
+                    'valor_unitario': Number(this.oldData[i].valor_unitario)
                 });
-                this.incluirProduto(this.oldData[i].produto_id);
+                this.incluirEntrada(this.oldData[i].tanque_id);
             }
         }
     },
     updated: function updated() {
-        $(this.$refs.inputProdutos).selectpicker('refresh');
+        $(this.$refs.inputTanques).selectpicker('refresh');
     },
 
     methods: {
         validarItem: function validarItem() {
-            if (this.produto_id == '' || this.produto_id <= 0) {
-                this.errors.inputProdutos = true;
-                this.errors.inputProdutosMsg = 'Nenhum Produto selecionado.';
+            if (this.tanque_id == '' || this.tanque_id <= 0) {
+                this.errors.inputTanques = true;
+                this.errors.inputTanquesMsg = 'Nenhum Tanque selecionado.';
                 return false;
             } else {
-                this.errors.inputProdutos = false;
-                this.errors.inputProdutosMsg = '';
+                this.errors.inputTanques = false;
+                this.errors.inputTanquesMsg = '';
             }
 
             if (this.quantidade == '' || this.quantidade <= 0) {
                 this.errors.inputQuantidade = true;
-                this.errors.inputQuantidadeMsg = 'Informe a quantidade do produto.';
+                this.errors.inputQuantidadeMsg = 'Informe a quantidade.';
                 return false;
             } else {
                 this.errors.inputQuantidade = false;
@@ -412,29 +380,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (this.valorUnitario == '' || this.valorUnitario <= 0) {
                 this.errors.inputValorUnitario = true;
-                this.errors.inputValorUnitarioMsg = 'Informe o Valor Unitário do produto.';
+                this.errors.inputValorUnitarioMsg = 'Informe o Valor Unitário.';
                 return false;
             } else {
                 this.errors.inputValorUnitario = false;
                 this.errors.inputValorUnitarioMsg = '';
             }
-
-            /* if ((this.desconto == '') || (this.desconto < 0)) {
-                this.errors.inputDesconto = true;
-                this.errors.inputDescontoMsg = 'Informe o Valor de Desconto.';
-                return false;
-            } else {
-                this.errors.inputDesconto = false;
-                this.errors.inputDescontoMsg = '';
-            }
-             if ((this.acrescimo == '') || (this.acrescimo < 0)) {
-                this.errors.inputAcrescimo = true;
-                this.errors.inputAcrescimoMsg = 'Informe o Valor de Acréscimo.';
-                return false;
-            } else {
-                this.errors.inputAcrescimo = false;
-                this.errors.inputAcrescimoMsg = '';
-            } */
             return true;
         },
         confirmDelete: function confirmDelete(index) {
@@ -443,17 +394,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         cancelDelete: function cancelDelete(index) {
             this.deleteIndex = false;
         },
-        addProduto: function addProduto() {
+        addEntrada: function addEntrada() {
             if (this.validarItem()) {
                 this.items.push({
-                    'id': this.produto_id,
-                    'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
+                    'id': this.tanque_id,
+                    'tanque': this.getTanqueById(this.tanque_id).tanque,
                     'quantidade': this.quantidade,
                     'valor_unitario': this.valorUnitario,
                     'valor_desconto': this.desconto,
                     'valor_acrescimo': this.acrescimo
                 });
-                this.incluirProduto(this.produto_id);
+                this.incluirEntrada(this.tanque_id);
                 this.limparFormulario();
             }
         },
@@ -461,30 +412,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var item = this.items[index];
             this.quantidade = item.quantidade;
             this.valorUnitario = item.valor_unitario;
-            this.desconto = item.valor_desconto;
-            this.acrescimo = item.valor_acrescimo;
-            this.produto_id = item.id;
+            this.tanque_id = item.id;
             this.editing = true;
             this.editingIndex = index;
-            this.produtosDisponiveis.push(item);
+            this.tanquesDisponiveis.push(item);
         },
-        updateProduto: function updateProduto() {
+        updateEntrada: function updateEntrada() {
             this.items[this.editingIndex] = {
-                'id': this.produto_id,
-                'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
+                'id': this.tanque_id,
+                'tanque': this.getTanqueById(this.tanque_id).tanque,
                 'quantidade': this.quantidade,
-                'valor_unitario': this.valorUnitario,
-                'valor_desconto': this.desconto,
-                'valor_acrescimo': this.acrescimo
+                'valor_unitario': this.valorUnitario
             };
 
             this.editing = false;
             this.editingIndex = false;
             this.limparFormulario();
-            this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(this.produto_id));
+            this.$delete(this.tanquesDisponiveis, this.getTanqueIndexById(this.tanque_id));
         },
         deleteItem: function deleteItem() {
-            this.removerProduto(this.items[this.deleteIndex].id);
+            this.removerEntrada(this.items[this.deleteIndex].id);
             this.$delete(this.items, this.deleteIndex);
         },
         limparFormulario: function limparFormulario() {
@@ -493,7 +440,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.valorUnitario = 0;
             this.desconto = 0;
             this.acrescimo = 0;
-            this.$refs.inputProdutos.focus();
+            this.$refs.inputTanques.focus();
         },
         totalQuantidade: function totalQuantidade() {
             var result = 0;
@@ -523,53 +470,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             return result;
         },
-        getProdutoById: function getProdutoById(id) {
+        getTanqueById: function getTanqueById(id) {
             var result = 0;
-            for (var i = 0; i < this.produtosData.length; i++) {
-                if (this.produtosData[i].id == id) {
-                    result = this.produtosData[i];
+            for (var i = 0; i < this.tanquesData.length; i++) {
+                if (this.tanquesData[i].id == id) {
+                    result = this.tanquesData[i];
                     break;
                 }
             }
             return result;
         },
-        getProdutoIndexById: function getProdutoIndexById(id) {
+        getTanqueIndexById: function getTanqueIndexById(id) {
             var result = 0;
-            for (var i = 0; i < this.produtosData.length; i++) {
-                if (this.produtosData[i].id == id) {
+            for (var i = 0; i < this.tanquesData.length; i++) {
+                if (this.tanquesData[i].id == id) {
                     result = i;
                     break;
                 }
             }
             return result;
         },
-        getProdutoSelecionadoById: function getProdutoSelecionadoById(id) {
+        getTanqueSelecionadoById: function getTanqueSelecionadoById(id) {
             var result = 0;
-            for (var i = 0; i < this.produtosSelecionados.length; i++) {
-                if (this.produtosSelecionados[i].id == id) {
-                    result = this.produtosSelecionados[i];
+            for (var i = 0; i < this.tanquesSelecionados.length; i++) {
+                if (this.tanquesSelecionados[i].id == id) {
+                    result = this.tanquesSelecionados[i];
                     break;
                 }
             }
             return result;
         },
-        getProdutoSelecionadoIndexById: function getProdutoSelecionadoIndexById(id) {
+        getTanqueSelecionadoIndexById: function getTanqueSelecionadoIndexById(id) {
             var result = 0;
-            for (var i = 0; i < this.produtosSelecionados.length; i++) {
-                if (this.produtosSelecionados[i].id == id) {
+            for (var i = 0; i < this.tanquesSelecionados.length; i++) {
+                if (this.tanquesSelecionados[i].id == id) {
                     result = i;
                     break;
                 }
             }
             return result;
         },
-        incluirProduto: function incluirProduto(id) {
-            this.produtosSelecionados.push(this.getProdutoById(id));
-            this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(id));
+        incluirEntrada: function incluirEntrada(id) {
+            this.tanquesSelecionados.push(this.getTanqueById(id));
+            this.$delete(this.tanquesDisponiveis, this.getTanqueIndexById(id));
         },
-        removerProduto: function removerProduto(id) {
-            this.produtosDisponiveis.push(this.getProdutoSelecionadoById(id));
-            this.$delete(this.produtosSelecionados, this.getProdutoSelecionadoIndexById(id));
+        removerEntrada: function removerEntrada(id) {
+            this.tanquesDisponiveis.push(this.getTanqueSelecionadoById(id));
+            this.$delete(this.tanquesSelecionados, this.getTanqueSelecionadoIndexById(id));
         }
     }
 });
@@ -577,7 +524,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 182:
+/***/ 187:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -618,21 +565,21 @@ var render = function() {
                       _c("input", {
                         attrs: {
                           type: "hidden",
-                          name: "items[" + index + "][produto_id]"
+                          name: "items[" + index + "][tanque_id]"
                         },
                         domProps: { value: item.id }
                       })
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "col-md-6" }, [
+                    _c("td", { staticClass: "col-md-5" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.produto_descricao) +
+                          _vm._s(item.tanque) +
                           "\n                    "
                       )
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
+                    _c("td", { staticClass: "col-md-2 text-right" }, [
                       _vm._v(
                         "\n                        " +
                           _vm._s(item.quantidade) +
@@ -647,7 +594,7 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
+                    _c("td", { staticClass: "col-md-2 text-right" }, [
                       _vm._v(
                         "\n                        " +
                           _vm._s(item.valor_unitario) +
@@ -662,37 +609,7 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(item.valor_desconto) +
-                          "\n                        "
-                      ),
-                      _c("input", {
-                        attrs: {
-                          type: "hidden",
-                          name: "items[" + index + "][valor_desconto]"
-                        },
-                        domProps: { value: item.valor_desconto }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(item.valor_acrescimo) +
-                          "\n                        "
-                      ),
-                      _c("input", {
-                        attrs: {
-                          type: "hidden",
-                          name: "items[" + index + "][valor_acrescimo]"
-                        },
-                        domProps: { value: item.valor_acrescimo }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1" }, [
+                    _c("td", { staticClass: "col-md-2" }, [
                       _c(
                         "button",
                         {
@@ -760,22 +677,14 @@ var render = function() {
                         _c("strong", [_vm._v(_vm._s(this.items.length))])
                       ]),
                       _vm._v(" "),
-                      _c("td", { staticClass: "col-md-6" }),
+                      _c("td", { staticClass: "col-md-5" }),
                       _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                      _c("td", { staticClass: "col-md-2 text-right" }, [
                         _c("strong", [_vm._v(_vm._s(this.totalQuantidade()))])
                       ]),
                       _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                      _c("td", { staticClass: "col-md-2 text-right" }, [
                         _c("strong", [_vm._v(_vm._s(this.totalValor()))])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _c("strong", [_vm._v(_vm._s(this.totalDesconto()))])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _c("strong", [_vm._v(_vm._s(this.totalAcrescimo()))])
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "col-md-2" })
@@ -814,8 +723,8 @@ var render = function() {
             "div",
             {
               class: {
-                "col-md-7": true,
-                " has-error": this.errors.inputProdutos
+                "col-md-6": true,
+                " has-error": this.errors.inputTanques
               },
               staticStyle: {
                 "padding-right": "0 !important",
@@ -830,16 +739,16 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.produto_id,
-                      expression: "produto_id"
+                      value: _vm.tanque_id,
+                      expression: "tanque_id"
                     }
                   ],
-                  ref: "inputProdutos",
+                  ref: "inputTanques",
                   staticClass: "form-control selectpicker",
                   attrs: {
                     "data-live-search": "true",
-                    name: "inputProdutos",
-                    id: "inputProdutos"
+                    name: "inputTanques",
+                    id: "inputTanques"
                   },
                   on: {
                     change: function($event) {
@@ -851,7 +760,7 @@ var render = function() {
                           var val = "_value" in o ? o._value : o.value
                           return val
                         })
-                      _vm.produto_id = $event.target.multiple
+                      _vm.tanque_id = $event.target.multiple
                         ? $$selectedVal
                         : $$selectedVal[0]
                     }
@@ -862,14 +771,14 @@ var render = function() {
                     _vm._v(" Nada Selecionado ")
                   ]),
                   _vm._v(" "),
-                  _vm._l(_vm.produtosDisponiveisOrdenados, function(
-                    produto,
+                  _vm._l(_vm.tanquesDisponiveisOrdenados, function(
+                    tanque,
                     index
                   ) {
                     return _c(
                       "option",
-                      { key: index, domProps: { value: produto.id } },
-                      [_vm._v(_vm._s(produto.produto_descricao))]
+                      { key: index, domProps: { value: tanque.id } },
+                      [_vm._v(_vm._s(tanque.tanque))]
                     )
                   })
                 ],
@@ -880,9 +789,9 @@ var render = function() {
                 "span",
                 {
                   staticClass: "help-block",
-                  attrs: { "v-if": this.errors.inputProdutos }
+                  attrs: { "v-if": this.errors.inputTanques }
                 },
-                [_c("strong", [_vm._v(_vm._s(this.errors.inputProdutosMsg))])]
+                [_c("strong", [_vm._v(_vm._s(this.errors.inputTanquesMsg))])]
               )
             ]
           ),
@@ -891,7 +800,7 @@ var render = function() {
             "div",
             {
               class: {
-                "col-md-1": true,
+                "col-md-2": true,
                 " has-error": this.errors.inputQuantidade
               },
               staticStyle: {
@@ -949,7 +858,7 @@ var render = function() {
             "div",
             {
               class: {
-                "col-md-1": true,
+                "col-md-2": true,
                 " has-error": this.errors.inputValorUnitario
               },
               staticStyle: {
@@ -1007,123 +916,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c(
-            "div",
-            {
-              class: {
-                "col-md-1": true,
-                " has-error": this.errors.inputDesconto
-              },
-              staticStyle: {
-                "padding-right": "0 !important",
-                "padding-left": "0 !important"
-              }
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model.number",
-                    value: _vm.desconto,
-                    expression: "desconto",
-                    modifiers: { number: true }
-                  }
-                ],
-                ref: "inputDesconto",
-                staticClass: "form-control",
-                attrs: {
-                  type: "number",
-                  min: "0,000",
-                  max: "9999999999,999",
-                  step: "any",
-                  name: "inputDesconto",
-                  id: "inputDesconto"
-                },
-                domProps: { value: _vm.desconto },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.desconto = _vm._n($event.target.value)
-                  },
-                  blur: function($event) {
-                    _vm.$forceUpdate()
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "span",
-                {
-                  staticClass: "help-block",
-                  attrs: { "v-if": this.errors.inputDesconto }
-                },
-                [_c("strong", [_vm._v(_vm._s(this.errors.inputDescontoMsg))])]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              class: {
-                "col-md-1": true,
-                " has-error": this.errors.inputAcrescimo
-              },
-              staticStyle: {
-                "padding-right": "0 !important",
-                "padding-left": "0 !important"
-              }
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model.number",
-                    value: _vm.acrescimo,
-                    expression: "acrescimo",
-                    modifiers: { number: true }
-                  }
-                ],
-                ref: "inputAcrescimo",
-                staticClass: "form-control",
-                attrs: {
-                  type: "number",
-                  min: "0,000",
-                  max: "9999999999,999",
-                  step: "any",
-                  name: "inputAcrescimo",
-                  id: "inputAcrescimo"
-                },
-                domProps: { value: _vm.acrescimo },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.acrescimo = _vm._n($event.target.value)
-                  },
-                  blur: function($event) {
-                    _vm.$forceUpdate()
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "span",
-                {
-                  staticClass: "help-block",
-                  attrs: { "v-if": this.errors.inputAcrescimo }
-                },
-                [_c("strong", [_vm._v(_vm._s(this.errors.inputAcrescimoMsg))])]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-1" }, [
+          _c("div", { staticClass: "col-md-2" }, [
             _c(
               "button",
               {
@@ -1137,7 +930,7 @@ var render = function() {
                 ],
                 staticClass: "btn btn-success",
                 attrs: { type: "button" },
-                on: { click: _vm.addProduto }
+                on: { click: _vm.addEntrada }
               },
               [_c("span", { staticClass: "glyphicon glyphicon-plus" })]
             ),
@@ -1155,7 +948,7 @@ var render = function() {
                 ],
                 staticClass: "btn btn-success",
                 attrs: { type: "button" },
-                on: { click: _vm.updateProduto }
+                on: { click: _vm.updateEntrada }
               },
               [_c("span", { staticClass: "glyphicon glyphicon-ok" })]
             )
@@ -1180,7 +973,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "panel-heading" }, [
-      _c("strong", [_vm._v("Produtos")])
+      _c("strong", [_vm._v("Combustíveis")])
     ])
   },
   function() {
@@ -1191,17 +984,13 @@ var staticRenderFns = [
       _c("tr", { staticClass: "primary" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-6" }, [_vm._v("Produto")]),
+        _c("th", { staticClass: "col-md-5" }, [_vm._v("Tanque")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Qtd")]),
+        _c("th", { staticClass: "col-md-2" }, [_vm._v("Qtd")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Vlr. Un.")]),
+        _c("th", { staticClass: "col-md-2" }, [_vm._v("Vlr. Un.")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Vlr. Desc.")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Vlr. Acres.")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Ações")])
+        _c("th", { staticClass: "col-md-2" }, [_vm._v("Ações")])
       ])
     ])
   }
@@ -1211,7 +1000,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6f60b455", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-5ebfe14d", module.exports)
   }
 }
 
@@ -1439,4 +1228,4 @@ if (false) {
 
 /***/ })
 
-},[178]);
+},[183]);

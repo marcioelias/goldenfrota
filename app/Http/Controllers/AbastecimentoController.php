@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\BicoController;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\MovimentacaoCombustivelController;
 
 class AbastecimentoController extends Controller
 {
@@ -145,6 +146,10 @@ class AbastecimentoController extends Controller
                 $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
                 
                 if ($abastecimento->save()) {
+
+
+                    /* Se informado o bico, movimenta o estoque do tanque */
+                    MovimentacaoCombustivelController::saidaAbastecimento($abastecimento);
 
                     if ($request->bico_id) {
                         if (!BicoController::atualizarEncerranteBico($request->bico_id, $request->encerrante_final)) {

@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UfsTableSeeder::class);
         $this->call(LaratrustSeeder::class);
         $this->call(TipoMovimentacaoProdutoSeeder::class);
+        $this->call(TipoMovimentacaoCombustivelSeeder::class);
     }
 }

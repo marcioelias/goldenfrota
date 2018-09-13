@@ -375,6 +375,7 @@
                 this.produto_id = item.id;
                 this.editing = true;
                 this.editingIndex = index;
+                this.produtosDisponiveis.push(item);
             },
             updateProduto() {
                 this.produtos[this.editingIndex] = {
@@ -390,6 +391,8 @@
                 this.editing = false;
                 this.editingIndex = false;
                 this.limparFormulario();
+                this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(this.produto_id));
+                this.$emit('updateTotalProd', this.valor_total);
             },
             deleteProduto() {
                 console.log('Entrou no deleteProduto: '+this.deleteIndex);

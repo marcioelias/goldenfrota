@@ -35,6 +35,7 @@ return [
             'inventario' => 'c,r,u,d',
             'tanque-movimentacao' => 'c,r,u,d',
             'tipo_movimentacao_produto' => 'c,r,u,d',
+            'entrada_tanque' => 'c,r,u,d',
             'posicao_pneu' => 'c,r,u,d',
             'ordem_servico' => 'c,r,u,d',
             'posicao_tanques_grafico' => 'a',

@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Veiculo;
+use App\TanqueMovimentacao;
 use App\MovimentacaoCombustivel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,14 +28,14 @@ class Abastecimento extends Model
     ];
 
     public function tanque_movimentacao() {
-        return $this->hasOne('App\TanqueMovimentacao');
+        return $this->hasOne(TanqueMovimentacao::class);
     }
 
     public function veiculo() {
-        return $this->belongsTo('App\Veiculo');
+        return $this->belongsTo(Veiculo::class);
     }
 
-    public function movimentacao_combustiveis() {
-        return $this->hasMany(MovimentacaoCombustivel::class);
+    public function movimentacao_combustivel() {
+        return $this->hasOne(MovimentacaoCombustivel::class);
     }
 }
