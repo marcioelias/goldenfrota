@@ -147,11 +147,10 @@ class AbastecimentoController extends Controller
                 
                 if ($abastecimento->save()) {
 
-
-                    /* Se informado o bico, movimenta o estoque do tanque */
-                    MovimentacaoCombustivelController::saidaAbastecimento($abastecimento);
-
                     if ($request->bico_id) {
+                        /* Se informado o bico, movimenta o estoque do tanque */
+                        MovimentacaoCombustivelController::saidaAbastecimento($abastecimento);
+                        
                         if (!BicoController::atualizarEncerranteBico($request->bico_id, $request->encerrante_final)) {
                             throw new Exception(__('messages.exception', [
                                 'exception' => 'Não foi possível atualizar o encerrante do bico'
