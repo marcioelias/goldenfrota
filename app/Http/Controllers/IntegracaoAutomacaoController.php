@@ -288,7 +288,6 @@ class IntegracaoAutomacaoController extends Controller
         }
     }
 
-
     protected function limparArquivoAbastecimentosServidor() {
         if (!Storage::disk('ftp')->delete('abastecimentos.hir')) {
             Log::alert('Não foi possível apagar o arquivo abastecimentos.hir do servidor...', []);
