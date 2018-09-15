@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Tanque;
 use App\AjusteTanque;
 use Illuminate\Http\Request;
+use App\Rules\ValidarVolumeTanque;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -104,16 +105,17 @@ class AjusteTanqueController extends Controller
     public function store(Request $request)
     {
         if (Auth::user()->canCadastrarAjusteTanque()) {
+            $this->validate($request, [
+                'tanque_id' => 'required',
+                'quantidade_informada' => [
+                    'required', 
+                    'numeric', 
+                    'min:0',
+                    new ValidarVolumeTanque($request->tanque_id)
+                ]
+            ]);   
+            
             try {
-                $this->validate($request, [
-                    'tanque_id' => 'required',
-                    'quantidade_informada' => [
-                        'required', 
-                        'numeric', 
-                        'min:0'
-                    ]
-                ]);                        
-                
                 DB::beginTransaction();
 
                 $saldo_atual = TanqueController::getPosicaoEstoque(Tanque::find($request->tanque_id));
