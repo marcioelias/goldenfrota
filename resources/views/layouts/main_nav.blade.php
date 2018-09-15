@@ -171,6 +171,9 @@
                         @permission('listar-entrada-tanque')
                         <li><a href="{{route('entrada_tanque.index')}}">Entrada de Combustíveis</a></li>
                         @endpermission
+                        @permission('listar-ajuste-tanque')
+                        <li><a href="{{route('ajuste_tanque.index')}}">Ajustes de Tanque</a></li>
+                        @endpermission
                         <li class="divider"></li>
                         @permission('listar-entrada-estoque')
                         <li><a href="{{route('entrada_estoque.index')}}">Entradas no Estoque</a></li>

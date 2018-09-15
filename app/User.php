@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\AjusteTanque;
 use App\OrdemServico;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
@@ -32,5 +33,9 @@ class User extends Authenticatable
 
     public function ordem_servico() {
         return $this->hasMany(OrdemServico::class);
+    }
+
+    public function ajuste_tanque() {
+        return $this->hasMany(AjusteTanque::class);
     }
 }

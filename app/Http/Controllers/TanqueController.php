@@ -223,7 +223,7 @@ class TanqueController extends Controller
         return View('relatorios.tanques.posicao_tanques')->withTitulo('Posição de Estoque - Tanques')->withGraficos($graficos);
     }
 
-    public function getPosicaoEstoque(Tanque $tanque) {
+    static public function getPosicaoEstoque(Tanque $tanque) {
         $posicao = DB::table('movimentacao_combustiveis')
         ->select(
             DB::raw(

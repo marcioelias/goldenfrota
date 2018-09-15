@@ -38,5 +38,6 @@ return [
     'grupo_servico' => 'Grupo de Serviço',
     'servico' => 'Serviço',
     'ordem_servico' => 'Ordem de Serviço',
-    'entrada_tanque' => 'Entrada de Combustível'
+    'entrada_tanque' => 'Entrada de Combustível',
+    'ajuste_tanque' => 'Ajuste de Tanque'
 ];

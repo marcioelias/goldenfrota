@@ -37,6 +37,16 @@ class TipoMovCombSeeder extends Seeder
                     'id' => 4,
                     'tipo_movimentacao_combustivel' => 'Saída - Aferição',
                     'eh_entrada' => false
+                ],
+                [
+                    'id' => 5,
+                    'tipo_movimentacao_combustivel' => 'Entrada - Ajuste',
+                    'eh_entrada' => true
+                ],
+                [
+                    'id' => 6,
+                    'tipo_movimentacao_combustivel' => 'Saída - Ajuste',
+                    'eh_entrada' => false
                 ]
             ]
         );
