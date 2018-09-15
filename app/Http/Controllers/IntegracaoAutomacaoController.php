@@ -159,6 +159,7 @@ class IntegracaoAutomacaoController extends Controller
     > = Caracter marcador de fim de regsitro
     */
     public function ImportarAbastecimentos() {
+        $errosImportacao = false;
         if (Storage::disk('ftp')->exists('abastecimentos.hir')) {
             try {
                 $arquivo = Storage::disk('ftp')->get('abastecimentos.hir');
@@ -248,26 +249,35 @@ class IntegracaoAutomacaoController extends Controller
                             Log::info($e);
                         }
 
-                        DB::transaction(function($dados) use ($abastecimento, $bico) {
-                            $movimentacao = new TanqueMovimentacao;
-                            $movimentacao->entrada_combustivel = false;
-                            $movimentacao->data_movimentacao = $abastecimento->data_hora_abastecimento;
-                            $movimentacao->documento = 'ABAST'.$abastecimento->id_automacao;
-                            $movimentacao->tanque_id = $bico->tanque_id;
-                            $movimentacao->quantidade_combustivel = $abastecimento->volume_abastecimento;
 
-                            if ($movimentacao->save()) {
-                                $abastecimento->tanque_movimentacao_id = $movimentacao->id;
-                                $abastecimento->save();
+                        try {
+                            DB::beginTransaction();
+
+                            if($abastecimento->save()) {
+                                /* Movimenta o estoque do tanque */
+                                if (MovimentacaoCombustivelController::saidaAbastecimento($abastecimento)) {
+                                    DB::commit();
+                                    Log::info('Novo abastecimento: '.$abastecimento.' importado da Automação.');
+                                } else {
+                                    throw new \Exception('Erro ao efetuar a movimentação no tanque. ['.implode("|",$registro).']');
+                                }
+                            } else {
+                                throw new \Exception('Erro ao inserir o abastecimento. ['.implode("|",$registro).']');
                             }
-                            Log::info('salvou: '.$abastecimento);
-                        });   
+                        } catch (\Exception $e) {
+                            $errosImportacao = true;
+                            DB::rollback();
+                            Log::error($e->getMessage());
+                        }
                     } else {
                         Log::alert('Erro ao importar registro: '.implode("|",$registro), []);
                     }
                 }
             } finally {
-                $this->limparArquivoAbastecimentosServidor();
+                /* Elimina o arquivo do servidor apenas se conseguir importar todos os abastecimentos */
+                if (!$errosImportacao) {
+                    $this->limparArquivoAbastecimentosServidor();
+                }
             }
             
             Session::flash('success', 'Abastecimentos Importados com sucesso!');
