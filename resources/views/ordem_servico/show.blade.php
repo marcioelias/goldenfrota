@@ -138,7 +138,7 @@
                 ID
             </div>
         </div>
-        <div class="col col-sm-7 col-md-7 col-lg-7">
+        <div class="col col-sm-6 col-md-6 col-lg-6">
             <div class="panel panel-default nf-panel">
                 Produto
             </div>
@@ -146,6 +146,11 @@
         <div class="col col-sm-1 col-md-1 col-lg-1">
             <div class="panel panel-default nf-panel">
                 Qtd
+            </div>
+        </div>
+        <div class="col col-sm-1 col-md-1 col-lg-1">
+            <div class="panel panel-default nf-panel">
+                Vlr. Un.
             </div>
         </div>
         <div class="col col-sm-1 col-md-1 col-lg-1">
@@ -165,13 +170,14 @@
         </div>
     </div>
     @foreach($ordemServico->produtos as $item)
+    {{--  {{dd($item)}}  --}}
     <div class="row">
         <div class="col col-sm-1 col-md-1 col-lg-1">
             <div class="panel panel-default nf-panel">
                 <div>{{ $item->produto_id }}</div>
             </div>
         </div>
-        <div class="col col-sm-7 col-md-7 col-lg-7">
+        <div class="col col-sm-6 col-md-6 col-lg-6">
             <div class="panel panel-default nf-panel">
                 <div>{{ $item->produto->produto_descricao }}</div>
             </div>
@@ -179,6 +185,11 @@
         <div class="col col-sm-1 col-md-1 col-lg-1">
             <div class="panel panel-default nf-panel">
                 <div>{{ $item->quantidade }}</div>
+            </div>
+        </div>
+        <div class="col col-sm-1 col-md-1 col-lg-1">
+            <div class="panel panel-default nf-panel">
+                <div>{{ $item->valor_produto }}</div>
             </div>
         </div>
         <div class="col col-sm-1 col-md-1 col-lg-1">
