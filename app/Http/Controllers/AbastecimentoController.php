@@ -70,7 +70,7 @@ class AbastecimentoController extends Controller
                                     ->where('veiculos.placa', 'like', '%'.$request->searchField.'%')
                                     ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
                                     /* ->orderBy('abastecimentos.id', 'desc') */
-                                    ->orderBy('abastecimentos.data_hora_abastecimento', 'asc')
+                                    ->orderBy('abastecimentos.data_hora_abastecimento', 'desc')
                                     ->paginate();
             } else {
                 $abastecimentos = DB::table('abastecimentos')
@@ -82,7 +82,7 @@ class AbastecimentoController extends Controller
                                     ->whereRaw('((abastecimentos.abastecimento_local = '.(isset($request->abast_local) ? $request->abast_local : -1).') or ('.(isset($request->abast_local) ? $request->abast_local : -1).' = -1))')
                                     ->whereRaw($whereData)
                                     /* ->orderBy('abastecimentos.id', 'desc') */
-                                    ->orderBy('abastecimentos.data_hora_abastecimento', 'asc')
+                                    ->orderBy('abastecimentos.data_hora_abastecimento', 'desc')
                                     ->paginate();
             }
 
@@ -590,7 +590,7 @@ class AbastecimentoController extends Controller
                             ->whereRaw($whereTipoAbastecimento)
                             ->where('departamentos.id', $departamento->id)
                             ->orderBy('veiculos.placa', 'asc')
-                            ->orderBy('abastecimentos.data_hora_abastecimento', 'asc')
+                            ->orderBy('abastecimentos.data_hora_abastecimento', 'desc')
                             /* ->orderBy('abastecimentos.id', 'desc') */
                             ->distinct()
                             ->get();
