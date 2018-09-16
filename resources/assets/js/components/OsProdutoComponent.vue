@@ -103,21 +103,21 @@
                         </span>
                     </div>
                     <div v-bind:class="{'col-md-1': true, ' has-error': this.errors.inputValorUnitario}" style="padding-right: 0 !important; padding-left: 0 !important;">
-                        <input :disabled="((estoqueId == 'false') || (estoqueId == null))" type="number" min="0,000" max="9999999999,999" step="any" ref="inputValorUnitario" v-model.number="valorUnitario" class="form-control" name="inputValorUnitario" id="inputValorUnitario" readonly>
+                        <input :disabled="((estoqueId == 'false') || (estoqueId == null))" type="number" min="0,000" max="9999999999,999" step="any" ref="inputValorUnitario" v-model.number="valor_unitario" class="form-control" name="inputValorUnitario" id="inputValorUnitario" readonly>
                         <span class="help-block" :v-if="this.errors.inputValorUnitario">
                             <strong>{{ this.errors.inputValorUnitarioMsg }}</strong>
                         </span>
                     </div>
-                    <div v-bind:class="{'col-md-1': true, ' has-error': this.errors.inputDesconto}" style="padding-right: 0 !important; padding-left: 0 !important;">
-                        <input :disabled="((estoqueId == 'false') || (estoqueId == null))" type="number" min="0,000" max="9999999999,999" step="any" ref="inputDesconto" v-model.number="desconto" class="form-control" name="inputDesconto" id="inputDesconto">
-                        <span class="help-block" :v-if="this.errors.inputDesconto">
-                            <strong>{{ this.errors.inputDescontoMsg }}</strong>
-                        </span>
-                    </div>
                     <div v-bind:class="{'col-md-1': true, ' has-error': this.errors.inputAcrescimo}" style="padding-right: 0 !important; padding-left: 0 !important;">
-                        <input :disabled="((estoqueId == 'false') || (estoqueId == null))" type="number" min="0,000" max="9999999999,999" step="any" ref="inputAcrescimo" v-model.number="acrescimo" class="form-control" name="inputAcrescimo" id="inputAcrescimo">
+                        <input :disabled="((estoqueId == 'false') || (estoqueId == null))" type="number" min="0,000" max="9999999999,999" step="any" ref="inputAcrescimo" v-model.number="valor_acrescimo" class="form-control" name="inputAcrescimo" id="inputAcrescimo">
                         <span class="help-block" :v-if="this.errors.inputAcrescimo">
                             <strong>{{ this.errors.inputAcrescimoMsg }}</strong>
+                        </span>
+                    </div>
+                    <div v-bind:class="{'col-md-1': true, ' has-error': this.errors.inputDesconto}" style="padding-right: 0 !important; padding-left: 0 !important;">
+                        <input :disabled="((estoqueId == 'false') || (estoqueId == null))" type="number" min="0,000" max="9999999999,999" step="any" ref="inputDesconto" v-model.number="valor_desconto" class="form-control" name="inputDesconto" id="inputDesconto">
+                        <span class="help-block" :v-if="this.errors.inputDesconto">
+                            <strong>{{ this.errors.inputDescontoMsg }}</strong>
                         </span>
                     </div>
                     <div v-bind:class="{'col-md-1': true, ' has-error': this.errors.inputValorCobrado}" style="padding-right: 0 !important; padding-left: 0 !important;">
@@ -161,9 +161,10 @@
                 editingIndex: false,
                 produtos: [],
                 quantidade: 1,
-                desconto: 0,
-                acrescimo: 0,
+                valor_desconto: 0,
+                valor_acrescimo: 0,
                 valor_cobrado: 0,
+                valor_unitario: 0,
                 isModalVisible: false,
                 deleteIndex: false,
                 produtosDisponiveis: [],
@@ -197,7 +198,7 @@
                 },
                 set estoqueId(value) {                    
                     this._estoqueId = value;
-                }
+                },
             }
         },
         watch: {
@@ -220,6 +221,9 @@
                 this.calcTotalProdutoItem();
             },
             produto_id: function() {
+                if (!this.editing) {
+                    this.valor_unitario = this.getProdutoById(this.produto_id).valor_venda;
+                }
                 this.calcTotalProdutoItem();
             }
         },
@@ -234,16 +238,12 @@
             },
             valor_total: {
                 get() {
+                    console.log('entrou no valor_total');
                     let total = 0;
                     for (var i = 0; i < this.produtos.length; i++) {
-                        total += this.produtos[i].quantidade * this.produtos[i].valor_produto;
+                        total += ((parseFloat(this.produtos[i].valor_produto) + parseFloat(this.produtos[i].valor_acrescimo))-parseFloat(this.produtos[i].valor_desconto))*this.produtos[i].quantidade;
                     }
                     return parseFloat(total);
-                }
-            },
-            valorUnitario: {
-                get() {
-                    return this.getProdutoById(this.produto_id).valor_venda;
                 }
             },
             produtosDisponiveisOrdenados: function() {
@@ -269,6 +269,13 @@
             $(this.$refs.estoqueId).selectpicker('refresh');
         },
         methods: {
+            getValorTotal() {
+                let total = 0;
+                for (var i = 0; i < this.produtos.length; i++) {
+                    total += ((parseFloat(this.produtos[i].valor_produto) + parseFloat(this.produtos[i].valor_acrescimo))-parseFloat(this.produtos[i].valor_desconto))*this.produtos[i].quantidade;
+                }
+                return parseFloat(total);
+            },
             getProdutos() {
                 var self = this;
                 //if ((this.estoqueId !== null) && (this.estoqueId !== 'false')) {
@@ -329,7 +336,7 @@
                     this.errors.inputQuantidadeMsg = '';
                 }
 
-                if ((this.valorUnitario == '') || (this.valorUnitario <= 0)) {
+                if ((this.valor_unitario == '') || (this.valor_unitario <= 0)) {
                     this.errors.inputValorUnitario = true;
                     this.errors.inputValorUnitarioMsg = 'Informe o Valor Unitário do produto.';
                     return false;
@@ -346,56 +353,56 @@
                 this.deleteIndex = false;
             },
             cancelProtuto() {
-                console.log('cancel produto');
+                //console.log('cancel produto');
             },
             confirmProtuto() {
-                console.log('confirm produto');
+                //console.log('confirm produto');
             },
             addProduto() {
                 if (this.validarItem()) {
                     this.produtos.push({
                         'id': this.produto_id,
                         'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
-                        'quantidade': this.quantidade,
-                        'valor_produto': this.valorUnitario,
-                        'valor_desconto': this.desconto,
-                        'valor_acrescimo': this.acrescimo,
-                        'valor_cobrado': this.valor_cobrado
+                        'quantidade': Number(this.quantidade),
+                        'valor_produto': Number(this.getProdutoById(this.produto_id).valor_venda),
+                        'valor_desconto': Number(this.valor_desconto),
+                        'valor_acrescimo': Number(this.valor_acrescimo),
+                        'valor_cobrado': Number(this.valor_cobrado)
                     });
                     this.incluirProduto(this.produto_id);
                     this.limparFormulario();
                 }
             },
             editItem(index) {
-                let item = this.produtos[index];
-                this.quantidade = item.quantidade;
-                this.valorUnitario = item.valor_produto;
-                this.desconto = item.valor_desconto;
-                this.acrescimo = item.valor_acrescimo;
-                this.produto_id = item.id;
                 this.editing = true;
                 this.editingIndex = index;
+                let item = this.produtos[index];
+                this.produto_id = item.id;
+                this.quantidade = Number(item.quantidade);
+                this.valor_unitario = Number(item.valor_produto);
+                this.valor_desconto = Number(item.valor_desconto);
+                this.valor_acrescimo = Number(item.valor_acrescimo);
                 this.produtosDisponiveis.push(item);
             },
             updateProduto() {
                 this.produtos[this.editingIndex] = {
                     'id': this.produto_id,
                     'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
-                    'quantidade': this.quantidade,
-                    'valor_produto': this.valorUnitario,
-                    'valor_desconto': this.desconto,
-                    'valor_acrescimo': this.acrescimo,
-                    'valor_cobrado': this.valor_cobrado
+                    'quantidade': Number(this.quantidade),
+                    'valor_produto': Number(this.valor_unitario),
+                    'valor_desconto': Number(this.valor_desconto),
+                    'valor_acrescimo': Number(this.valor_acrescimo),
+                    'valor_cobrado': Number(this.valor_cobrado)
                 };
 
                 this.editing = false;
                 this.editingIndex = false;
                 this.limparFormulario();
                 this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(this.produto_id));
-                this.$emit('updateTotalProd', this.valor_total);
+                let VLTotal = this.getValorTotal();
+                this.$emit('updateTotalProd', VLTotal);
             },
             deleteProduto() {
-                console.log('Entrou no deleteProduto: '+this.deleteIndex);
                 this.removerProduto(this.produtos[this.deleteIndex].id);
                 this.$delete(this.produtos, this.deleteIndex);
             },
@@ -403,10 +410,10 @@
                 this.produto_id = null;
                 this.produtoSelecionado = false;
                 this.quantidade = 1;
-                //this.valorUnitario = '';
-                this.desconto = 0.00;
-                this.acrescimo = 0.00;
-                this.valor_cobrado = 0.00;
+                this.valor_unitario = 0.000;
+                this.valor_desconto = 0.000;
+                this.valor_acrescimo = 0.000;
+                this.valor_cobrado = 0.000;
                 this.$refs.inputProdutos.focus();
             },
             totalQuantidade() {
@@ -472,7 +479,7 @@
                         break;
                     } 
                 }
-                console.log('index: '+result);
+                //console.log('index: '+result);
                 return result;
             },
             getProdutoSelecionadoById(id) {
@@ -506,7 +513,8 @@
                 this.$emit('updateTotalProd', this.valor_total);
             },
             calcTotalProdutoItem() {
-                this.valor_cobrado = ((parseFloat((isNaN(this.valorUnitario) || (this.valorUnitario == '')) ? 0 : this.valorUnitario) +
+                //console.log('entrou no valor cobrado');
+                this.valor_cobrado = ((parseFloat((isNaN(this.valor_unitario) || (this.valor_unitario == '')) ? 0 : this.valor_unitario) +
                                       parseFloat((isNaN(this.valor_acrescimo) || (this.valor_acrescimo == '')) ? 0 : this.valor_acrescimo)) - 
                                       parseFloat((isNaN(this.valor_desconto) || (this.valor_desconto == '')) ? 0 : this.valor_desconto)) *
                                       parseFloat((isNaN(this.quantidade) || (this.quantidade == '')) ? 1 : this.quantidade);

@@ -34,11 +34,11 @@ export default {
     },
     methods: {
        updateTotalServicos(value) {
-           console.log('updateTotalServicos: '+value);
+           //console.log('updateTotalServicos: '+value);
            this.valor_total_servicos = value;
        },
        updateTotalProdutos(value) {
-           console.log('updateTotalProdutos: '+value);
+           //console.log('updateTotalProdutos: '+value);
            this.valor_total_produtos = value;
        } 
     },

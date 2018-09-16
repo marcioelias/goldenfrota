@@ -1265,9 +1265,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             editingIndex: false,
             produtos: [],
             quantidade: 1,
-            desconto: 0,
-            acrescimo: 0,
+            valor_desconto: 0,
+            valor_acrescimo: 0,
             valor_cobrado: 0,
+            valor_unitario: 0,
             isModalVisible: false,
             deleteIndex: false,
             produtosDisponiveis: [],
@@ -1325,6 +1326,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.calcTotalProdutoItem();
         },
         produto_id: function produto_id() {
+            if (!this.editing) {
+                this.valor_unitario = this.getProdutoById(this.produto_id).valor_venda;
+            }
             this.calcTotalProdutoItem();
         }
     },
@@ -1339,16 +1343,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         valor_total: {
             get: function get() {
+                console.log('entrou no valor_total');
                 var total = 0;
                 for (var i = 0; i < this.produtos.length; i++) {
-                    total += this.produtos[i].quantidade * this.produtos[i].valor_produto;
+                    total += (parseFloat(this.produtos[i].valor_produto) + parseFloat(this.produtos[i].valor_acrescimo) - parseFloat(this.produtos[i].valor_desconto)) * this.produtos[i].quantidade;
                 }
                 return parseFloat(total);
-            }
-        },
-        valorUnitario: {
-            get: function get() {
-                return this.getProdutoById(this.produto_id).valor_venda;
             }
         },
         produtosDisponiveisOrdenados: function produtosDisponiveisOrdenados() {
@@ -1373,6 +1373,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        getValorTotal: function getValorTotal() {
+            var total = 0;
+            for (var i = 0; i < this.produtos.length; i++) {
+                total += (parseFloat(this.produtos[i].valor_produto) + parseFloat(this.produtos[i].valor_acrescimo) - parseFloat(this.produtos[i].valor_desconto)) * this.produtos[i].quantidade;
+            }
+            return parseFloat(total);
+        },
         getProdutos: function getProdutos() {
             var self = this;
             //if ((this.estoqueId !== null) && (this.estoqueId !== 'false')) {
@@ -1432,7 +1439,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.errors.inputQuantidadeMsg = '';
             }
 
-            if (this.valorUnitario == '' || this.valorUnitario <= 0) {
+            if (this.valor_unitario == '' || this.valor_unitario <= 0) {
                 this.errors.inputValorUnitario = true;
                 this.errors.inputValorUnitarioMsg = 'Informe o Valor Unitário do produto.';
                 return false;
@@ -1449,56 +1456,56 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.deleteIndex = false;
         },
         cancelProtuto: function cancelProtuto() {
-            console.log('cancel produto');
+            //console.log('cancel produto');
         },
         confirmProtuto: function confirmProtuto() {
-            console.log('confirm produto');
+            //console.log('confirm produto');
         },
         addProduto: function addProduto() {
             if (this.validarItem()) {
                 this.produtos.push({
                     'id': this.produto_id,
                     'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
-                    'quantidade': this.quantidade,
-                    'valor_produto': this.valorUnitario,
-                    'valor_desconto': this.desconto,
-                    'valor_acrescimo': this.acrescimo,
-                    'valor_cobrado': this.valor_cobrado
+                    'quantidade': Number(this.quantidade),
+                    'valor_produto': Number(this.getProdutoById(this.produto_id).valor_venda),
+                    'valor_desconto': Number(this.valor_desconto),
+                    'valor_acrescimo': Number(this.valor_acrescimo),
+                    'valor_cobrado': Number(this.valor_cobrado)
                 });
                 this.incluirProduto(this.produto_id);
                 this.limparFormulario();
             }
         },
         editItem: function editItem(index) {
-            var item = this.produtos[index];
-            this.quantidade = item.quantidade;
-            this.valorUnitario = item.valor_produto;
-            this.desconto = item.valor_desconto;
-            this.acrescimo = item.valor_acrescimo;
-            this.produto_id = item.id;
             this.editing = true;
             this.editingIndex = index;
+            var item = this.produtos[index];
+            this.produto_id = item.id;
+            this.quantidade = Number(item.quantidade);
+            this.valor_unitario = Number(item.valor_produto);
+            this.valor_desconto = Number(item.valor_desconto);
+            this.valor_acrescimo = Number(item.valor_acrescimo);
             this.produtosDisponiveis.push(item);
         },
         updateProduto: function updateProduto() {
             this.produtos[this.editingIndex] = {
                 'id': this.produto_id,
                 'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
-                'quantidade': this.quantidade,
-                'valor_produto': this.valorUnitario,
-                'valor_desconto': this.desconto,
-                'valor_acrescimo': this.acrescimo,
-                'valor_cobrado': this.valor_cobrado
+                'quantidade': Number(this.quantidade),
+                'valor_produto': Number(this.valor_unitario),
+                'valor_desconto': Number(this.valor_desconto),
+                'valor_acrescimo': Number(this.valor_acrescimo),
+                'valor_cobrado': Number(this.valor_cobrado)
             };
 
             this.editing = false;
             this.editingIndex = false;
             this.limparFormulario();
             this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(this.produto_id));
-            this.$emit('updateTotalProd', this.valor_total);
+            var VLTotal = this.getValorTotal();
+            this.$emit('updateTotalProd', VLTotal);
         },
         deleteProduto: function deleteProduto() {
-            console.log('Entrou no deleteProduto: ' + this.deleteIndex);
             this.removerProduto(this.produtos[this.deleteIndex].id);
             this.$delete(this.produtos, this.deleteIndex);
         },
@@ -1506,10 +1513,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.produto_id = null;
             this.produtoSelecionado = false;
             this.quantidade = 1;
-            //this.valorUnitario = '';
-            this.desconto = 0.00;
-            this.acrescimo = 0.00;
-            this.valor_cobrado = 0.00;
+            this.valor_unitario = 0.000;
+            this.valor_desconto = 0.000;
+            this.valor_acrescimo = 0.000;
+            this.valor_cobrado = 0.000;
             this.$refs.inputProdutos.focus();
         },
         totalQuantidade: function totalQuantidade() {
@@ -1575,7 +1582,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 }
             }
-            console.log('index: ' + result);
+            //console.log('index: '+result);
             return result;
         },
         getProdutoSelecionadoById: function getProdutoSelecionadoById(id) {
@@ -1609,7 +1616,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$emit('updateTotalProd', this.valor_total);
         },
         calcTotalProdutoItem: function calcTotalProdutoItem() {
-            this.valor_cobrado = (parseFloat(isNaN(this.valorUnitario) || this.valorUnitario == '' ? 0 : this.valorUnitario) + parseFloat(isNaN(this.valor_acrescimo) || this.valor_acrescimo == '' ? 0 : this.valor_acrescimo) - parseFloat(isNaN(this.valor_desconto) || this.valor_desconto == '' ? 0 : this.valor_desconto)) * parseFloat(isNaN(this.quantidade) || this.quantidade == '' ? 1 : this.quantidade);
+            //console.log('entrou no valor cobrado');
+            this.valor_cobrado = (parseFloat(isNaN(this.valor_unitario) || this.valor_unitario == '' ? 0 : this.valor_unitario) + parseFloat(isNaN(this.valor_acrescimo) || this.valor_acrescimo == '' ? 0 : this.valor_acrescimo) - parseFloat(isNaN(this.valor_desconto) || this.valor_desconto == '' ? 0 : this.valor_desconto)) * parseFloat(isNaN(this.quantidade) || this.quantidade == '' ? 1 : this.quantidade);
         }
     }
 });
@@ -2351,8 +2359,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model.number",
-                      value: _vm.valorUnitario,
-                      expression: "valorUnitario",
+                      value: _vm.valor_unitario,
+                      expression: "valor_unitario",
                       modifiers: { number: true }
                     }
                   ],
@@ -2368,13 +2376,13 @@ var render = function() {
                     id: "inputValorUnitario",
                     readonly: ""
                   },
-                  domProps: { value: _vm.valorUnitario },
+                  domProps: { value: _vm.valor_unitario },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.valorUnitario = _vm._n($event.target.value)
+                      _vm.valor_unitario = _vm._n($event.target.value)
                     },
                     blur: function($event) {
                       _vm.$forceUpdate()
@@ -2402,65 +2410,6 @@ var render = function() {
               {
                 class: {
                   "col-md-1": true,
-                  " has-error": this.errors.inputDesconto
-                },
-                staticStyle: {
-                  "padding-right": "0 !important",
-                  "padding-left": "0 !important"
-                }
-              },
-              [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model.number",
-                      value: _vm.desconto,
-                      expression: "desconto",
-                      modifiers: { number: true }
-                    }
-                  ],
-                  ref: "inputDesconto",
-                  staticClass: "form-control",
-                  attrs: {
-                    disabled: _vm.estoqueId == "false" || _vm.estoqueId == null,
-                    type: "number",
-                    min: "0,000",
-                    max: "9999999999,999",
-                    step: "any",
-                    name: "inputDesconto",
-                    id: "inputDesconto"
-                  },
-                  domProps: { value: _vm.desconto },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.desconto = _vm._n($event.target.value)
-                    },
-                    blur: function($event) {
-                      _vm.$forceUpdate()
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    staticClass: "help-block",
-                    attrs: { "v-if": this.errors.inputDesconto }
-                  },
-                  [_c("strong", [_vm._v(_vm._s(this.errors.inputDescontoMsg))])]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                class: {
-                  "col-md-1": true,
                   " has-error": this.errors.inputAcrescimo
                 },
                 staticStyle: {
@@ -2474,8 +2423,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model.number",
-                      value: _vm.acrescimo,
-                      expression: "acrescimo",
+                      value: _vm.valor_acrescimo,
+                      expression: "valor_acrescimo",
                       modifiers: { number: true }
                     }
                   ],
@@ -2490,13 +2439,13 @@ var render = function() {
                     name: "inputAcrescimo",
                     id: "inputAcrescimo"
                   },
-                  domProps: { value: _vm.acrescimo },
+                  domProps: { value: _vm.valor_acrescimo },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.acrescimo = _vm._n($event.target.value)
+                      _vm.valor_acrescimo = _vm._n($event.target.value)
                     },
                     blur: function($event) {
                       _vm.$forceUpdate()
@@ -2515,6 +2464,65 @@ var render = function() {
                       _vm._v(_vm._s(this.errors.inputAcrescimoMsg))
                     ])
                   ]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                class: {
+                  "col-md-1": true,
+                  " has-error": this.errors.inputDesconto
+                },
+                staticStyle: {
+                  "padding-right": "0 !important",
+                  "padding-left": "0 !important"
+                }
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model.number",
+                      value: _vm.valor_desconto,
+                      expression: "valor_desconto",
+                      modifiers: { number: true }
+                    }
+                  ],
+                  ref: "inputDesconto",
+                  staticClass: "form-control",
+                  attrs: {
+                    disabled: _vm.estoqueId == "false" || _vm.estoqueId == null,
+                    type: "number",
+                    min: "0,000",
+                    max: "9999999999,999",
+                    step: "any",
+                    name: "inputDesconto",
+                    id: "inputDesconto"
+                  },
+                  domProps: { value: _vm.valor_desconto },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.valor_desconto = _vm._n($event.target.value)
+                    },
+                    blur: function($event) {
+                      _vm.$forceUpdate()
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    staticClass: "help-block",
+                    attrs: { "v-if": this.errors.inputDesconto }
+                  },
+                  [_c("strong", [_vm._v(_vm._s(this.errors.inputDescontoMsg))])]
                 )
               ]
             ),
