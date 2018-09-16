@@ -588,7 +588,8 @@ class AbastecimentoController extends Controller
                             ->whereRaw($whereTipoAbastecimento)
                             ->where('departamentos.id', $departamento->id)
                             ->orderBy('veiculos.placa', 'asc')
-                            ->orderBy('abastecimentos.id', 'desc')
+                            ->orderBy('abastecimentos.data_hora_abastecimento', 'asc')
+                            /* ->orderBy('abastecimentos.id', 'desc') */
                             ->distinct()
                             ->get();
                     $departamento->abastecimentos = $abastecimentos;
@@ -648,7 +649,8 @@ class AbastecimentoController extends Controller
                                             ->join('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
                                             ->where('abastecimentos.bico_id', '=', $bico->id)
                                             ->whereRaw($whereData)
-                                            ->orderBy('abastecimentos.id', 'asc')
+                                            /* ->orderBy('abastecimentos.id', 'asc') */
+                                            ->orderBy('abastecimentos.data_hora_abastecimento', 'asc')
                                             ->get();
         }       
 
