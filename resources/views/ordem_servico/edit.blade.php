@@ -16,7 +16,7 @@
                     'inputs' => [
                         [
                             'type' => 'select',
-                            'field' => 'cliente_id',
+                            'field' => 'cliente_id_readonly',
                             'label' => 'Cliente',
                             'items' => $ordemServico->veiculo->cliente->get(),
                             'inputSize' => 6,
@@ -26,8 +26,13 @@
                             'indexSelected' => $ordemServico->veiculo->cliente_id
                         ],
                         [
+                            'type' => 'hidden',
+                            'field' => 'cliente_id',
+                            'inputValue' => $ordemServico->veiculo->cliente_id
+                        ],
+                        [
                             'type' => 'select',
-                            'field' => 'veiculo_id',
+                            'field' => 'veiculo_id_readonly',
                             'label' => 'Veiculo',
                             'items' => $ordemServico->veiculo->get(),
                             'inputSize' => 3,
@@ -35,6 +40,11 @@
                             'keyField' => 'id',
                             'disabled' => true,
                             'indexSelected' => $ordemServico->veiculo_id
+                        ],
+                        [
+                            'type' => 'hidden',
+                            'field' => 'veiculo_id',
+                            'inputValue' => $ordemServico->veiculo_id
                         ],
                         [
                             'type' => 'number',

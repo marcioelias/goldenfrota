@@ -102,13 +102,13 @@ class OrdemServicoController extends Controller
         //return redirect()->back()->withInput();
         //dd(Estoque::find($request->estoque_id));
         if (Auth::user()->canCadastrarOrdemServico()) {
+            $this->validate($request, [
+                'cliente_id' => 'required',
+                'veiculo_id' => 'required',
+                'km_veiculo' => 'required|numeric|min:0',
+                //'servicos' => 'array|size:1',
+            ]);
             try {
-                /* $this->validate($request, [
-                    'cliente_id' => 'required',
-                    'veidulo_id' => 'required',
-                    'km_veiculo' => 'required',
-                    //'servicos' => 'array|size:1',
-                ]); */
 
                 DB::beginTransaction();
 
@@ -216,6 +216,12 @@ class OrdemServicoController extends Controller
     public function update(Request $request, OrdemServico $ordemServico)
     {
         if (Auth::user()->canAlterarOrdemServico()) {
+            $this->validate($request, [
+                'cliente_id' => 'required',
+                'veiculo_id' => 'required',
+                'km_veiculo' => 'required|numeric|min:0',
+                //'servicos' => 'array|size:1',
+            ]);
             try {
                 DB::beginTransaction();
 

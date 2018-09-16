@@ -162,6 +162,13 @@
                 ])
                 @endcomponent
             @endif
+            @if($input['type'] == 'hidden')
+                @component('components.input-hidden', [
+                    'field' => $input['field'],
+                    'inputValue' => $input['inputValue'],
+                ])
+                @endcomponent
+            @endif
         @endforeach
     </div>
 </div>
