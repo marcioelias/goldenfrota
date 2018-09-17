@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Bico;
 use App\Veiculo;
 use App\TanqueMovimentacao;
 use App\MovimentacaoCombustivel;
@@ -37,5 +38,9 @@ class Abastecimento extends Model
 
     public function movimentacao_combustivel() {
         return $this->hasOne(MovimentacaoCombustivel::class);
+    }
+
+    public function bico() {
+        return $this->belongsTo(Bico::class);
     }
 }

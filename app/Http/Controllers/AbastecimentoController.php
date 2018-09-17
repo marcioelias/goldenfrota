@@ -254,25 +254,24 @@ class AbastecimentoController extends Controller
                 'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
                 'veiculo_id' => 'required',
                 'km_veiculo' => 'required|numeric|min:0',
-                'volume_abastecimento' => 'required|numeric|min:0',
+                //'volume_abastecimento' => 'required|numeric|min:0',
                 'valor_litro' => 'required|numeric|min:0',
                 'valor_abastecimento' => 'required|numeric|min:0',
                 'atendente_id' => 'required_with:id_automacao'
             ]); 
 
             try {
-                $abastecimento = Abastecimento::find($abastecimento->id);
                 $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
                 $abastecimento->veiculo_id = $request->veiculo_id;
                 $abastecimento->km_veiculo = $request->km_veiculo;
-                $abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
+                //$abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
                 $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
                 $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
                 $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
                 $abastecimento->atendente_id = $request->atendente_id;
-                $abastecimento->bico_id = $request->bico_id;
-                $abastecimento->encerrante_inicial= $request->encerrante_inicial;
-                $abastecimento->encerrante_final = $request->encerrante_final; 
+                //$abastecimento->bico_id = $request->bico_id;
+                //$abastecimento->encerrante_inicial= $request->encerrante_inicial;
+                //$abastecimento->encerrante_final = $request->encerrante_final; 
                 $abastecimento->inconsistencias_importacao = $this->existemInconsisteciasImportacao($abastecimento);
 
                 if ($abastecimento->inconsistencias_importacao) {
@@ -281,7 +280,8 @@ class AbastecimentoController extends Controller
                     $abastecimento->obs_abastecimento = '';
                 }
 
-                if ($abastecimento->abastecimento_local) {
+                
+                /* if ($abastecimento->abastecimento_local) {
                     //abastecimento local tem movimentação de estoque, atualiza a movimentação
                     DB::transaction(function($dados) use($abastecimento) {
                         $movimentacao = TanqueMovimentacao::find($abastecimento->tanque_movimentacao_id);
@@ -291,16 +291,25 @@ class AbastecimentoController extends Controller
                     });
                     Session::flash('success', 'Abastecimento '.$abastecimento->id.' alterado com sucesso.');
                     //return redirect()->action('AbastecimentoController@index');                
-                } else {
+                } else { */
                     if ($abastecimento->save()) {
                         Session::flash('success', __('messages.update_success', [
                             'model' => __('models.abastecimento'),
                             'name' => $abastecimento->id
                         ]));
                         return redirect()->action('AbastecimentoController@index');
+                    } else {
+                        Session::flash('error', __('messages.update_error', [
+                            'model' => 'models.abastecimento',
+                            'name' => $abastecimento->id
+                        ]));
+
+                        return redirect()->back()->withInput();
                     }
-                }
+               /*  } */
+
             } catch (\Exception $e) {
+                Log::error($e);
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));

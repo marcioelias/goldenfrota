@@ -4,6 +4,7 @@ namespace App;
 
 use App\Bico;
 use App\Combustivel;
+use App\Abastecimento;
 use App\MovimentacaoCombustivel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,5 +23,9 @@ class Tanque extends Model
 
     public function movimentacao_combustieveis() {
         return $this->hasMany(MovimentacaoCombustivel::class);
+    }
+
+    public function abastecimentos(){
+        return $this->hasMany(Abastecimento::class);        
     }
 }

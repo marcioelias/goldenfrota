@@ -83,6 +83,7 @@
                             'label' => 'Quantidade',
                             'required' => true,
                             'inputSize' => 4,
+                            'disabled' => true,
                             'inputValue' => $abastecimento->volume_abastecimento                            
                         ],
                         [
@@ -140,6 +141,7 @@
                                     'displayField' => 'num_bico',
                                     'keyField' => 'id',
                                     'defaultNone' => true,
+                                    'disabled' => true,
                                     'indexSelected' => $abastecimento->bico_id
                                 ],
                                 [
@@ -148,6 +150,7 @@
                                     'label' => 'Encerrante Inicial',
                                     'required' => true,
                                     'inputSize' => 4,
+                                    'disabled' => true,
                                     'inputValue' => $abastecimento->encerrante_inicial                            
                                 ],
                                 [
@@ -156,6 +159,7 @@
                                     'label' => 'Encerrante Final',
                                     'required' => true,
                                     'inputSize' => 4,
+                                    'disabled' => true,
                                     'inputValue' => $abastecimento->encerrante_final                 
                                 ]
                             ]
