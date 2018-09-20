@@ -331,7 +331,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.errors.inputEstoquesMsg = '';
             }
 
-            if (this.estoque_minimo == '' || this.estoque_minimo < 0) {
+            if (Number(this.estoque_minimo) < 0) {
                 this.errors.inputEstoqueMinimo = true;
                 this.errors.inputEstoqueMinimoMsg = 'Informe o estoque mínimo do produto.';
                 return false;
