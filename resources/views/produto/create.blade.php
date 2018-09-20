@@ -90,7 +90,7 @@
                             'inputSize' => 4
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'integer',
                             'field' => 'vencimento_km',
                             'label' => 'Vencimento em Km',
                             'inputSize' => 4
