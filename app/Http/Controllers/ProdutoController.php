@@ -22,8 +22,16 @@ class ProdutoController extends Controller
         'produto_desc_red' => 'Descrição Reduzida',
         'unidade' => 'Unidade',
         'grupo_produto' => 'Grupo',
-        'valor_custo' => 'Preço de Custo',
-        'valor_venda' => 'Preço de Venda',
+        'valor_custo' => [
+            'label' => 'Preço de Custo',
+            'type' => 'decimal',
+            'decimais' => 3
+        ],
+        'valor_venda' => [
+            'label' => 'Preço de Venda',
+            'type' => 'decimal',
+            'decimais' => 3
+        ],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -173,7 +181,6 @@ class ProdutoController extends Controller
             try {
                 DB::beginTransaction();
                 $produto->fill($request->all());
-
                 if ($produto->save()) {
                     $produto->fornecedores()->sync($request->fornecedores);
                     $produto->estoques()->sync($request->estoques);

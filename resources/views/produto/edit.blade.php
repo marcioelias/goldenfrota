@@ -62,14 +62,14 @@
                             'indexSelected' => $produto->unidade_id
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'valor_custo',
                             'label' => 'Preço de Custo',
                             'inputSize' => 4,
                             'inputValue' => $produto->valor_custo
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'valor_venda',
                             'label' => 'Preço de Venda',
                             'inputSize' => 4,

@@ -60,13 +60,13 @@
                             'liveSearch' => true,
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'valor_custo',
                             'label' => 'Preço de Custo',
                             'inputSize' => 4
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'valor_venda',
                             'label' => 'Preço de Venda',
                             'inputSize' => 4
