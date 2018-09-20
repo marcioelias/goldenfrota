@@ -26,6 +26,7 @@
                 $input['picker_end'] = isset($input['picker_end']) ? $input['picker_end'] : false;
                 $input['vModel'] = isset($input['vModel']) ? $input['vModel'] : false;
                 $input['readOnly'] = isset($input['readOnly']) ? $input['readOnly'] : false;
+                $input['maxLength'] = isset($input['maxLength']) ? $input['maxLength'] : false;
             @endphp
             @if($input['type'] == 'text')
                 @component('components.input-text', [
@@ -38,7 +39,8 @@
                     'id' => $input['id'],
                     'css' => $input['css'],
                     'vModel' => $input['vModel'],
-                    'readOnly' => $input['readOnly']
+                    'readOnly' => $input['readOnly'],
+                    'maxLength' => $input['maxLength']
                 ])
                 @endcomponent
             @endif

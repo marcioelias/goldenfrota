@@ -29,6 +29,7 @@
                             'field' => 'produto_desc_red',
                             'label' => 'Descrição Reduzida',
                             'inputSize' => 2,
+                            'maxLength' => 10,
                             'inputValue' => $produto->produto_desc_red
                         ],
                         [

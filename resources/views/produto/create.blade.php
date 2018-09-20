@@ -29,7 +29,8 @@
                             'type' => 'text',
                             'field' => 'produto_desc_red',
                             'label' => 'Descrição Reduzida',
-                            'inputSize' => 2
+                            'inputSize' => 2,
+                            'maxLength' => 10
                         ],
                         [
                             'type' => 'select',
