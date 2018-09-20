@@ -75,10 +75,10 @@ class ProdutoController extends Controller
     {
         if (Auth::user()->canCadastrarProduto()) {
             return View('produto.create', [
-                'unidades' => Unidade::all(),
-                'grupoProdutos' => GrupoProduto::all(),
-                'listaEstoques' => Estoque::all(),
-                'fornecedores' => Fornecedor::all()
+                'unidades' => Unidade::where('ativo', true)->get(),
+                'grupoProdutos' => GrupoProduto::where('ativo', true)->get(),
+                'listaEstoques' => Estoque::where('ativo', true)->get(),
+                'fornecedores' => Fornecedor::where('ativo', true)->get()
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -149,11 +149,13 @@ class ProdutoController extends Controller
             }
             return View('produto.edit', [
                 'produto' => $produto,
-                'unidades' => Unidade::all(),
-                'grupoProdutos' => GrupoProduto::all(),
-                'listaEstoques' => Estoque::all(),
+                'unidades' => Unidade::has('produtos')->orWhere('ativo', true)->get(),
+                'grupoProdutos' => GrupoProduto::has('produtos')->orWhere('ativo', true)->get(),
+                'listaEstoques' => Estoque::has('produtos')->orWhere('ativo', true)->get(),
                 'estoques' => $estoqueProdutos,
-                'fornecedores' => Fornecedor::all()
+                'fornecedores' => Fornecedor::has('produtos')->orWhere('ativo', true)->get()
+                
+                //$produto->fornecedores()->get()//Fornecedor::where('ativo', true)->get()
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
