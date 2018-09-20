@@ -147,6 +147,24 @@
                 ])    
                 @endcomponent
             @endif
+            @if($input['type'] == 'integer')
+                @component('components.input-integer', [
+                    'field' => $input['field'],
+                    'label' => $input['label'],
+                    'inputSize' => $input['inputSize'],
+                    'inputValue' => $input['inputValue'],
+                    'disabled' => $input['disabled'],
+                    'name' => $input['name'],
+                    'id' => $input['id'],
+                    'css' => $input['css'],
+                    'numMin' => $input['numMin'],
+                    'numMax' => $input['numMax'],
+                    'numStep' => $input['numStep'],
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
+                ])    
+                @endcomponent
+            @endif
             @if($input['type'] == 'btn-group')
                 @component('components.input-btn-group', [
                     'field' => $input['field'],

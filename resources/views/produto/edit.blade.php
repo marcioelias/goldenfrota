@@ -89,7 +89,7 @@
                             'indexSelected' => $produto->controla_vencimento
                         ],  
                         [
-                            'type' => 'text',
+                            'type' => 'integer',
                             'field' => 'vencimento_dias',
                             'label' => 'Vencimento em Dias',
                             'inputSize' => 4,
