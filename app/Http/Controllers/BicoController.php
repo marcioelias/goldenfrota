@@ -208,7 +208,7 @@ class BicoController extends Controller
     }
 
     public function getBicoJson(Request $request) {
-        return response()->json(Bico::find(1)->with('tanque.combustivel')->first());
+        return response()->json(Bico::find($request->id)->with('tanque.combustivel')->first());
     }
 
     static public function atualizarEncerranteBico($bicoId, $encerrante) {

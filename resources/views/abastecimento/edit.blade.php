@@ -279,11 +279,11 @@
                 var qtdAbastecimento = $('#volume_abastecimento').val();
                 var mediaCalculada = ((kmAtual - kmAnterior) / qtdAbastecimento).toFixed(3);
 
-                console.log('kmAnterior = ' + kmAnterior);
-                console.log('kmAtual = ' + kmAtual);
-                console.log('qtdAbastecimento = ' + qtdAbastecimento);
-                console.log('kmPercorrido = ' + (kmAtual - kmAnterior));
-                console.log('mediaCalculada = ' + mediaCalculada);
+                //console.log('kmAnterior = ' + kmAnterior);
+                //console.log('kmAtual = ' + kmAtual);
+                //console.log('qtdAbastecimento = ' + qtdAbastecimento);
+                //console.log('kmPercorrido = ' + (kmAtual - kmAnterior));
+                //console.log('mediaCalculada = ' + mediaCalculada);
 
 
                 $('#media_atual').val(mediaCalculada);

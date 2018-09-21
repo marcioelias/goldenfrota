@@ -160,12 +160,9 @@
     <script>
         $(document).ready(function() {
             //$('#valor_litro').mask('#.000', {{--  {reverse: true}  --}});
-           {{--   $('#volume_abastecimento').mask('#00.00#', {reverse: true});
-            $('#valor_abastecimento').mask('#00.00', {reverse: true});  --}}
             $('#km_veiculo').mask('#');
 
             function CalcValorAbastecimento() {
-                //console.log('calculou abastecimento');
                 var volume, valor_unitario = 0;
                 volume = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
                 valor_unitario = parseFloat($('#valor_litro').val().replace(',', '.'));
@@ -182,18 +179,10 @@
                 qtdAbast = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
 
                 if (qtdAbast > 0) {
-                    //console.log('qtdAbast: '+qtdAbast);
-                    //console.log('encIni: '+encIni);
                     $('#encerrante_final').val(encIni + qtdAbast);
                 }
 
             }
-
-            $('#volume_abastecimento').keyup(CalcValorAbastecimento, CalcularEncerranteFinal);
-            $('#volume_abastecimento').blur(CalcValorAbastecimento, CalcularEncerranteFinal);
-
-            $('#valor_litro').keyup(CalcValorAbastecimento);
-            $('#valor_litro').blur(CalcValorAbastecimento);
 
             var buscarDadosBico = function() {  
                 var bico = {};
@@ -208,7 +197,6 @@
                     dataType: 'JSON',
                     cache: false,
                     success: function (data) {
-                        //console.log(data);
                         $("#encerrante_inicial").val(data.encerrante);
                         $("#combustivel_descricao").val(data.tanque.combustivel.descricao);
                         $("#valor_litro").val(data.tanque.combustivel.valor);
@@ -218,7 +206,6 @@
                         $('.selectpicker').selectpicker('refresh');
                     },
                     error: function (data) {
-                        //console.log(data);
                     }
                 });
             }
@@ -229,7 +216,6 @@
                 cliente.id = $('#cliente_id').val();
                 cliente._token = $('input[name="_token"]').val();
 
-                //console.log(cliente);
                 $.ajax({
                     url: '{{ route("veiculos.json") }}',
                     type: 'POST',
@@ -237,7 +223,6 @@
                     dataType: 'JSON',
                     cache: false,
                     success: function (data) {
-                        //console.log(data);
                         $("#veiculo_id")
                             .removeAttr('disabled')
                             .find('option')
@@ -258,10 +243,25 @@
                         $('.selectpicker').selectpicker('refresh');
                     },
                     error: function (data) {
-                        //console.log(data);
                     }
                 });
             }
+            $('#volume_abastecimento').on('keyup', () => {
+                CalcValorAbastecimento(); 
+                CalcularEncerranteFinal();
+            });
+            $('#volume_abastecimento').on('blur', () => {
+                CalcValorAbastecimento();
+                CalcularEncerranteFinal();
+            });
+
+            $('#valor_litro').on('keyup', () => {
+                CalcValorAbastecimento();
+            });
+
+            $('#valor_litro').on('blur', () => {
+                CalcValorAbastecimento();
+            });
 
             $('#cliente_id').on('changed.bs.select', buscarVeiculos);
             $('#bico_id').on('changed.bs.select', buscarDadosBico);
