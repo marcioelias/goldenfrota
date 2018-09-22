@@ -307,6 +307,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -329,6 +337,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             deleteIndex: false,
             produtosDisponiveis: [],
             produtosSelecionados: [],
+            _valorTotalItem: 0,
+            get valorTotalItem() {
+                return (this.valorUnitario - this.desconto + this.acrescimo) * this.quantidade;
+            },
+            set valorTotalItem(value) {
+                this._valorTotalItem = value;
+            },
             errors: {
                 inputProdutos: false,
                 inputProdutosMsg: '',
@@ -380,7 +395,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     'quantidade': Number(this.oldData[i].quantidade),
                     'valor_unitario': Number(this.oldData[i].valor_unitario),
                     'valor_desconto': Number(this.oldData[i].valor_desconto),
-                    'valor_acrescimo': Number(this.oldData[i].valor_acrescimo)
+                    'valor_acrescimo': Number(this.oldData[i].valor_acrescimo),
+                    'valor_total_item': (Number(this.oldData[i].valor_unitario) - Number(this.oldData[i].valor_desconto) + Number(this.oldData[i].valor_acrescimo)) * Number(this.oldData[i].quantidade)
                 });
                 this.incluirProduto(this.oldData[i].produto_id);
             }
@@ -451,7 +467,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     'quantidade': this.quantidade,
                     'valor_unitario': this.valorUnitario,
                     'valor_desconto': this.desconto,
-                    'valor_acrescimo': this.acrescimo
+                    'valor_acrescimo': this.acrescimo,
+                    'valor_total_item': this.valorTotalItem
                 });
                 this.incluirProduto(this.produto_id);
                 this.limparFormulario();
@@ -463,6 +480,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.valorUnitario = item.valor_unitario;
             this.desconto = item.valor_desconto;
             this.acrescimo = item.valor_acrescimo;
+            this.valorTotalItem = item.valor_total_item;
             this.produto_id = item.id;
             this.editing = true;
             this.editingIndex = index;
@@ -475,7 +493,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'quantidade': this.quantidade,
                 'valor_unitario': this.valorUnitario,
                 'valor_desconto': this.desconto,
-                'valor_acrescimo': this.acrescimo
+                'valor_acrescimo': this.acrescimo,
+                'valor_total_item': this.valorTotalItem
             };
 
             this.editing = false;
@@ -520,6 +539,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var result = 0;
             for (var i = 0; i < this.items.length; i++) {
                 result += this.items[i].valor_acrescimo;
+            }
+            return result;
+        },
+        totalItem: function totalItem() {
+            var result = 0;
+            for (var i = 0; i < this.items.length; i++) {
+                result += this.items[i].valor_total_item;
             }
             return result;
         },
@@ -624,7 +650,7 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "col-md-6" }, [
+                    _c("td", { staticClass: "col-md-5" }, [
                       _vm._v(
                         "\n                        " +
                           _vm._s(item.produto_descricao) +
@@ -635,7 +661,7 @@ var render = function() {
                     _c("td", { staticClass: "col-md-1 text-right" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.quantidade) +
+                          _vm._s(_vm._f("toDecimal3")(item.quantidade)) +
                           "\n                        "
                       ),
                       _c("input", {
@@ -650,7 +676,7 @@ var render = function() {
                     _c("td", { staticClass: "col-md-1 text-right" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.valor_unitario) +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_unitario)) +
                           "\n                        "
                       ),
                       _c("input", {
@@ -665,7 +691,7 @@ var render = function() {
                     _c("td", { staticClass: "col-md-1 text-right" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.valor_desconto) +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_desconto)) +
                           "\n                        "
                       ),
                       _c("input", {
@@ -680,7 +706,7 @@ var render = function() {
                     _c("td", { staticClass: "col-md-1 text-right" }, [
                       _vm._v(
                         "\n                        " +
-                          _vm._s(item.valor_acrescimo) +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_acrescimo)) +
                           "\n                        "
                       ),
                       _c("input", {
@@ -690,6 +716,14 @@ var render = function() {
                         },
                         domProps: { value: item.valor_acrescimo }
                       })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 text-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_total_item)) +
+                          "                            \n                    "
+                      )
                     ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "col-md-1" }, [
@@ -760,22 +794,44 @@ var render = function() {
                         _c("strong", [_vm._v(_vm._s(this.items.length))])
                       ]),
                       _vm._v(" "),
-                      _c("td", { staticClass: "col-md-6" }),
+                      _c("td", { staticClass: "col-md-5" }),
                       _vm._v(" "),
                       _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _c("strong", [_vm._v(_vm._s(this.totalQuantidade()))])
+                        _c("strong", [
+                          _vm._v(
+                            _vm._s(_vm._f("toDecimal3")(this.totalQuantidade()))
+                          )
+                        ])
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _c("strong", [_vm._v(_vm._s(this.totalValor()))])
+                        _c("strong", [
+                          _vm._v(
+                            _vm._s(_vm._f("toDecimal3")(this.totalValor()))
+                          )
+                        ])
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _c("strong", [_vm._v(_vm._s(this.totalDesconto()))])
+                        _c("strong", [
+                          _vm._v(
+                            _vm._s(_vm._f("toDecimal3")(this.totalDesconto()))
+                          )
+                        ])
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _c("strong", [_vm._v(_vm._s(this.totalAcrescimo()))])
+                        _c("strong", [
+                          _vm._v(
+                            _vm._s(_vm._f("toDecimal3")(this.totalAcrescimo()))
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                        _c("strong", [
+                          _vm._v(_vm._s(_vm._f("toDecimal3")(this.totalItem())))
+                        ])
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "col-md-2" })
@@ -814,7 +870,7 @@ var render = function() {
             "div",
             {
               class: {
-                "col-md-7": true,
+                "col-md-6": true,
                 " has-error": this.errors.inputProdutos
               },
               staticStyle: {
@@ -1123,6 +1179,53 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "col-md-1",
+              staticStyle: {
+                "padding-right": "0 !important",
+                "padding-left": "0 !important"
+              }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.number",
+                    value: _vm.valorTotalItem,
+                    expression: "valorTotalItem",
+                    modifiers: { number: true }
+                  }
+                ],
+                ref: "inputTotalItem",
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  min: "0,000",
+                  max: "9999999999,999",
+                  step: "any",
+                  name: "inputTotalItem",
+                  id: "inputTotalItem",
+                  readonly: ""
+                },
+                domProps: { value: _vm.valorTotalItem },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.valorTotalItem = _vm._n($event.target.value)
+                  },
+                  blur: function($event) {
+                    _vm.$forceUpdate()
+                  }
+                }
+              })
+            ]
+          ),
+          _vm._v(" "),
           _c("div", { staticClass: "col-md-1" }, [
             _c(
               "button",
@@ -1191,7 +1294,7 @@ var staticRenderFns = [
       _c("tr", { staticClass: "primary" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-6" }, [_vm._v("Produto")]),
+        _c("th", { staticClass: "col-md-5" }, [_vm._v("Produto")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Qtd")]),
         _vm._v(" "),
@@ -1200,6 +1303,8 @@ var staticRenderFns = [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Vlr. Desc.")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Vlr. Acres.")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-md-1" }, [_vm._v("Total")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Ações")])
       ])

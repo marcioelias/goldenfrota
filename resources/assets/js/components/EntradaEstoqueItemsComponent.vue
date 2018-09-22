@@ -8,11 +8,12 @@
                 <thead>
                     <tr class="primary">
                         <th class="col-md-1">Id</th>
-                        <th class="col-md-6">Produto</th>
+                        <th class="col-md-5">Produto</th>
                         <th class="col-md-1">Qtd</th>
                         <th class="col-md-1">Vlr. Un.</th>
                         <th class="col-md-1">Vlr. Desc.</th>
                         <th class="col-md-1">Vlr. Acres.</th>
+                        <th class="col-md-1">Total</th>
                         <th class="col-md-1">Ações</th>
                     </tr>
                 </thead>
@@ -22,24 +23,27 @@
                             {{ item.id }}
                             <input type="hidden" :name="'items['+index+'][produto_id]'" :value="item.id">
                         </td>
-                        <td class="col-md-6">
+                        <td class="col-md-5">
                             {{ item.produto_descricao }}
                         </td>
                         <td class="col-md-1 text-right">
-                            {{ item.quantidade }}
+                            {{ item.quantidade | toDecimal3 }}
                             <input type="hidden" :name="'items['+index+'][quantidade]'" :value="item.quantidade">    
                         </td>
                         <td class="col-md-1 text-right">
-                            {{ item.valor_unitario }}
+                            {{ item.valor_unitario | toDecimal3 }}
                             <input type="hidden" :name="'items['+index+'][valor_unitario]'" :value="item.valor_unitario">    
                         </td>
                         <td class="col-md-1 text-right">
-                            {{ item.valor_desconto }}
+                            {{ item.valor_desconto | toDecimal3 }}
                             <input type="hidden" :name="'items['+index+'][valor_desconto]'" :value="item.valor_desconto">    
                         </td>
                         <td class="col-md-1 text-right">
-                            {{ item.valor_acrescimo }}
+                            {{ item.valor_acrescimo | toDecimal3 }}
                             <input type="hidden" :name="'items['+index+'][valor_acrescimo]'" :value="item.valor_acrescimo">    
+                        </td>
+                        <td class="col-md-1 text-right">
+                            {{ item.valor_total_item | toDecimal3 }}                            
                         </td>
                         <td class="col-md-1">
                             <button type="button" class="btn-xs btn-warning" @click="editItem(index)" v-show="!editing">
@@ -54,11 +58,12 @@
                 <tfoot v-if="this.items.length > 0">
                     <tr class="success">
                         <td class="col-md-1"><strong>{{ this.items.length }}</strong></td>
-                        <td class="col-md-6"></td>
-                        <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() }}</strong></td>
-                        <td class="col-md-1 text-right"><strong>{{ this.totalValor() }}</strong></td>
-                        <td class="col-md-1 text-right"><strong>{{ this.totalDesconto() }}</strong></td>
-                        <td class="col-md-1 text-right"><strong>{{ this.totalAcrescimo() }}</strong></td>
+                        <td class="col-md-5"></td>
+                        <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() | toDecimal3 }}</strong></td>
+                        <td class="col-md-1 text-right"><strong>{{ this.totalValor() | toDecimal3 }}</strong></td>
+                        <td class="col-md-1 text-right"><strong>{{ this.totalDesconto() | toDecimal3 }}</strong></td>
+                        <td class="col-md-1 text-right"><strong>{{ this.totalAcrescimo() | toDecimal3 }}</strong></td>
+                        <td class="col-md-1 text-right"><strong>{{ this.totalItem() | toDecimal3 }}</strong></td>
                         <td class="col-md-2"></td>
                     </tr>
                 </tfoot>
@@ -67,7 +72,7 @@
         <div class="panel-footer">
             <div class="row">
                 <input type="hidden" name="valor_total" v-model="valor_total">
-                <div v-bind:class="{'col-md-7': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
+                <div v-bind:class="{'col-md-6': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
                     <select ref="inputProdutos" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
                         <option selected value="false"> Nada Selecionado </option>
                         <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.produto_descricao }}</option>
@@ -99,6 +104,9 @@
                     <span class="help-block" :v-if="this.errors.inputAcrescimo">
                         <strong>{{ this.errors.inputAcrescimoMsg }}</strong>
                     </span>
+                </div>
+                <div class="col-md-1" style="padding-right: 0 !important; padding-left: 0 !important;">
+                    <input type="number" min="0,000" max="9999999999,999" step="any" ref="inputTotalItem" v-model.number="valorTotalItem" class="form-control" name="inputTotalItem" id="inputTotalItem" readonly>
                 </div>
                 <div class="col-md-1">
                     <button type="button" class="btn btn-success" @click="addProduto" v-show="!editing">
@@ -136,6 +144,13 @@
                 deleteIndex: false,
                 produtosDisponiveis: [],
                 produtosSelecionados: [],
+                _valorTotalItem: 0,
+                get valorTotalItem() {
+                    return ((this.valorUnitario-this.desconto)+this.acrescimo)*this.quantidade;
+                },
+                set valorTotalItem(value) {
+                    this._valorTotalItem = value;
+                },
                 errors: {
                     inputProdutos: false,
                     inputProdutosMsg: '',
@@ -191,7 +206,8 @@
                         'quantidade': Number(this.oldData[i].quantidade),
                         'valor_unitario': Number(this.oldData[i].valor_unitario),
                         'valor_desconto': Number(this.oldData[i].valor_desconto),
-                        'valor_acrescimo': Number(this.oldData[i].valor_acrescimo)
+                        'valor_acrescimo': Number(this.oldData[i].valor_acrescimo),
+                        'valor_total_item': ((Number(this.oldData[i].valor_unitario)-Number(this.oldData[i].valor_desconto))+Number(this.oldData[i].valor_acrescimo))*Number(this.oldData[i].quantidade)
                     });
                     this.incluirProduto(this.oldData[i].produto_id);
                 }
@@ -262,7 +278,8 @@
                         'quantidade': this.quantidade,
                         'valor_unitario': this.valorUnitario,
                         'valor_desconto': this.desconto,
-                        'valor_acrescimo': this.acrescimo
+                        'valor_acrescimo': this.acrescimo,
+                        'valor_total_item': this.valorTotalItem
                     });
                     this.incluirProduto(this.produto_id);
                     this.limparFormulario();
@@ -274,6 +291,7 @@
                 this.valorUnitario = item.valor_unitario;
                 this.desconto = item.valor_desconto;
                 this.acrescimo = item.valor_acrescimo;
+                this.valorTotalItem = item.valor_total_item;
                 this.produto_id = item.id;
                 this.editing = true;
                 this.editingIndex = index;
@@ -286,7 +304,8 @@
                     'quantidade': this.quantidade,
                     'valor_unitario': this.valorUnitario,
                     'valor_desconto': this.desconto,
-                    'valor_acrescimo': this.acrescimo
+                    'valor_acrescimo': this.acrescimo,
+                    'valor_total_item': this.valorTotalItem
                 };
 
                 this.editing = false;
@@ -331,6 +350,13 @@
                 let result = 0;
                 for (var i=0; i<this.items.length; i++) {  
                     result += this.items[i].valor_acrescimo;
+                }
+                return result;
+            },
+            totalItem() {
+                let result = 0;
+                for (var i=0; i<this.items.length; i++) {  
+                    result += this.items[i].valor_total_item;
                 }
                 return result;
             },
