@@ -32,6 +32,7 @@ class AbastecimentoController extends Controller
         'valor_abastecimento' => ['label' => 'Valor Total', 'type' => 'decimal', 'decimais' => 3], 
         'placa' => 'Veículo',
         'km_veiculo' => ['label' => 'Kilometragem', 'type' => 'decimal', 'decimais' => 1],
+        'media_veiculo' => ['label' => 'Média', 'type' => 'decimal', 'decimais' => 2],
         'abastecimento_local' => ['label' => 'Abastecimento Local', 'type' => 'bool'],
         //'ativo' => ['label' => 'Ativo', 'type' => 'bool'],
 
