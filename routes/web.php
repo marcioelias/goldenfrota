@@ -94,10 +94,14 @@ Route::middleware(['auth:web'])->group(function() {
     Route::post('relatorios/estoque_minimo', 'MovimentacaoProdutoController@relatorioEstoqueMinimo')->name('relatorio_estoque_minimo');
     Route::get('relatorios/movimentacao_produto', 'MovimentacaoProdutoController@paramRelatorioMovimetacaoEstoque')->name('param_relatorio_movimentacao_estoque');
     Route::post('relatorios/movimentacao_produto', 'MovimentacaoProdutoController@relatorioMovimentacaoEstoque')->name('relatorio_movimentacao_estoque');
+
+    Route::get('setting', 'SettingController@index')->name('setting.index');
+    Route::put('setting', 'SettingController@update')->name('setting.update');
 });
 
 /* Route::get('relatorios/abastecimentos/imprimir', 'AbastecimentoController@gerarPdfRelatorioAbastecimentos')->name('imprimir_relatorio_abastecimentos'); */
-
-Route::get('teste', 'IntegracaoAutomacaoController@teste')->name('teste');
+/* 
+Route::get('teste', 'IntegracaoAutomacaoController@configFTP')->name('teste');
 
 Route::get('g', 'TanqueController@relPosicaoTanque');
+ */

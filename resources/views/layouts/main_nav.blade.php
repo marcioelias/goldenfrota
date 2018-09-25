@@ -77,7 +77,11 @@
                             </ul>
                         </li> 
                         <li class="divider"></li> 
-                        <li><a href="{{route('parametro.create')}}">Parâmetros</a></li>            
+                        <li><a href="{{route('parametro.create')}}">Parâmetros</a></li>
+                        @role('super')
+                        <li class="divider"></li> 
+                        <li><a href="{{route('setting.index')}}">Configurações</a></li>            
+                        @endrole
                     </ul>    
                 </li>
                 @endrole

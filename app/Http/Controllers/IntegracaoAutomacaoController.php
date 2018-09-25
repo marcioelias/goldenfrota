@@ -11,8 +11,10 @@ use App\TanqueMovimentacao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\AbastecimentoController;
 
 class IntegracaoAutomacaoController extends Controller
@@ -30,18 +32,29 @@ class IntegracaoAutomacaoController extends Controller
         > = Caracter marcador de fim de regsitro
     */
     public function ExportarAtendentes() {
-        $conteudo = '';
-        $atendentes = Atendente::where('ativo', true)->get();
-        foreach ($atendentes as $atendente) {
-            $conteudo = '<01;';
-            $conteudo .= substr('                '.$atendente->senha_atendente, -16).';';
-            $conteudo .= substr('          '.$atendente->usuario_atendente, -10).';';
-            $conteudo .= '>';
+        try {
+            $conteudo = '';
+            $atendentes = Atendente::where('ativo', true)->get();
+            foreach ($atendentes as $atendente) {
+                $conteudo = '<01;';
+                $conteudo .= substr('                '.$atendente->senha_atendente, -16).';';
+                $conteudo .= substr('          '.$atendente->usuario_atendente, -10).';';
+                $conteudo .= '>';
+            }
+
+            $conteudo = $this->cryptAPI($conteudo);
+
+            /* Config da conta de FTP */
+            $this->configFTP();
+
+            Storage::disk('ftp')->put('funcionarios.hir', $conteudo);
+        } catch (\Exception $e) {
+            Session::flash('error', __('messages.exception', [
+                'exception' => $e->getMessage()
+            ]));
+
+            return redirect()->back();
         }
-
-        $conteudo = $this->cryptAPI($conteudo);
-
-        Storage::disk('ftp')->put('funcionarios.hir', $conteudo);
     }
 
     /* 
@@ -58,18 +71,29 @@ class IntegracaoAutomacaoController extends Controller
     */
 
     public function ExportarProdutos() {
-        $conteudo = '';
-        $produtos = Produto::where('ativo', true)->get();
-        foreach ($produtos as $produto) {
-            $conteudo .= '<01;';
-            $conteudo .= substr('   '.$produto->id, -3).';';
-            $conteudo .= substr('          '.$produto->produto_desc_red, -10).';';
-            $conteudo .= '>';
+        try {
+            $conteudo = '';
+            $produtos = Produto::where('ativo', true)->get();
+            foreach ($produtos as $produto) {
+                $conteudo .= '<01;';
+                $conteudo .= substr('   '.$produto->id, -3).';';
+                $conteudo .= substr('          '.$produto->produto_desc_red, -10).';';
+                $conteudo .= '>';
+            }
+
+            $conteudo = $this->cryptAPI($conteudo);
+
+            /* Config da conta de FTP */
+            $this->configFTP();
+
+            Storage::disk('ftp')->put('produtos.hir', $conteudo);
+        } catch (\Exception $e) {
+            Session::flash('error', __('messages.exception', [
+                'exception' => $e->getMessage()
+            ]));
+
+            return redirect()->back();
         }
-
-        $conteudo = $this->cryptAPI($conteudo);
-
-        Storage::disk('ftp')->put('produtos.hir', $conteudo);
     }
 
 
@@ -87,18 +111,29 @@ class IntegracaoAutomacaoController extends Controller
     */
     
     public function ExportarVeiculos() {
-        $conteudo = '';
-        $veiculos = Veiculo::where('ativo', true)->get();
-        foreach ($veiculos as $veiculo) {
-            $conteudo .= '<01;';
-            $conteudo .= substr('                '.$veiculo->placa, -16).';';
-            $conteudo .= substr('        '.$veiculo->tag, -8);
-            $conteudo .= '>';
+        try {
+            $conteudo = '';
+            $veiculos = Veiculo::where('ativo', true)->get();
+            foreach ($veiculos as $veiculo) {
+                $conteudo .= '<01;';
+                $conteudo .= substr('                '.$veiculo->placa, -16).';';
+                $conteudo .= substr('        '.$veiculo->tag, -8);
+                $conteudo .= '>';
+            }
+
+            $conteudo = $this->cryptAPI($conteudo);
+
+            /* Config da conta de FTP */
+            $this->configFTP();
+
+            Storage::disk('ftp')->put('veiculos.hir', $conteudo);
+        } catch(\Exception $e) {
+            Session::flash('error', __('messages.exception', [
+                'exception' => $e->getMessage()
+            ]));
+
+            return redirect()->back();
         }
-
-        $conteudo = $this->cryptAPI($conteudo);
-
-        Storage::disk('ftp')->put('veiculos.hir', $conteudo);
     }
 
     public function Exportar() {
@@ -159,132 +194,143 @@ class IntegracaoAutomacaoController extends Controller
     > = Caracter marcador de fim de regsitro
     */
     public function ImportarAbastecimentos() {
-        $errosImportacao = false;
-        if (Storage::disk('ftp')->exists('abastecimentos.hir')) {
-            try {
-                $arquivo = Storage::disk('ftp')->get('abastecimentos.hir');
-                $arquivo = $this->cryptAPI($arquivo);
-                
+        try {
+            /* Config da conta de FTP */
+            $this->configFTP();
 
-                $registros = array();
-                
-                $linhas = explode('>', $arquivo);
-                foreach ($linhas as $linha) {
-                    $linha = str_replace('<', '', $linha);
-                    $linha = explode(';', $linha);
-                    if (count($linha) > 1) {
-                        $registros[] = $linha;
-                    }
-                }
-                
-                $dataInicio = \DateTime::createFromFormat('Y-m-d H:i:s', 
-                                    Abastecimento::whereNotNull('id_automacao')
-                                            ->orderBy('data_hora_abastecimento', 'desc')
-                                            ->pluck('data_hora_abastecimento')
-                                            ->first());
-                foreach ($registros as $registro)  {
-                    if (count($registro) == 17) {
-                        try {
-                            $abastecimento = new Abastecimento;
-                            $abastecimentoController = new AbastecimentoController;
-                            $obs = null;
-    
-                            $atendente = Atendente::where('usuario_atendente', '=', trim($registro[12]))->first();
-                            $bico = Bico::where('num_bico', '=', trim($registro[3]))->first();
-                            $veiculo = Veiculo::where('placa', '=', $this->formataPlacaVeiculo(trim($registro[13])))->first();
-    
-    
-                            if (!$bico) {   
-                                $obs .= 'Bico ['.trim($registro[3]).']: Não encontrado!&#10;';
-                            } else {
-                                $abastecimento->bico_id = $bico->id;
-                            }
-    
-                            if (!$atendente) {
-                                $obs .= 'Atendente ['.trim($registro[12]).']: Não encontrado!&#10;';
-                            } else {
-                                $abastecimento->atendente_id = $atendente->id;
-                            }
-    
-                            $abastecimento->id_automacao = trim($registro[1]);
-                            $abastecimento->ns_automacao = trim($registro[2]);           
-                            $abastecimento->data_hora_abastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5])->format('Y-m-d H:i:s');
-                            
-                            $abastecimento->valor_abastecimento = $this->formataValorDecimal(trim($registro[6]));
-                            $abastecimento->volume_abastecimento = $this->formataValorDecimal(trim($registro[7]), 3);
-                            $abastecimento->valor_litro = $this->formataValorDecimal(trim($registro[8]), trim($registro[9]));
-                            $abastecimento->encerrante_inicial = $this->formataValorDecimal(trim($registro[10]));
-                            $abastecimento->encerrante_final = $this->formataValorDecimal(trim($registro[11]));
-                            $abastecimento->km_veiculo = $this->formataValorDecimal(trim($registro[15]), 1);
-    
-                            /* se valor total zerado, calcula valor total */
-                            if ($abastecimento->valor_abastecimento == 0) {
-                                $abastecimento->valor_abastecimento = round($abastecimento->volume_abastecimento * $abastecimento->valor_litro, 2);
-                            }
-    
-                            if (!$veiculo) {
-                                $obs .= 'Veículo ['.trim($registro[14]).']: Não encontrado!&#10;';
-                                $abastecimento->media_veiculo = 0;
-                            } else {
-                                $abastecimento->veiculo_id = $veiculo->id;
-                                $abastecimento->media_veiculo = $abastecimentoController->obterMediaVeiculo($veiculo, $abastecimento);
-                            }
-    
-                            if ($abastecimento->km_veiculo <= 0) {
-                                $obs .= 'KM não informada para.&#10;';
-                            }
-                            
-                            if ($obs){
-                                $obs = 'Inconsistências encontradas, verifique.&#10;'.$obs;
-                                $abastecimento->obs_abastecimento = $obs;
-                                $abastecimento->inconsistencias_importacao = true;
-                            } 
-                            
-                            $dataAbastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5]);
+            $errosImportacao = false;
+            if (Storage::disk('ftp')->exists('abastecimentos.hir')) {
+                try {
+                    $arquivo = Storage::disk('ftp')->get('abastecimentos.hir');
+                    $arquivo = $this->cryptAPI($arquivo);
+                    
 
-                            if ( $dataAbastecimento <= $dataInicio) {
-                                continue;
-                            } 
-                        } catch (\Exception $e) {
-                            Log::info($e);
+                    $registros = array();
+                    
+                    $linhas = explode('>', $arquivo);
+                    foreach ($linhas as $linha) {
+                        $linha = str_replace('<', '', $linha);
+                        $linha = explode(';', $linha);
+                        if (count($linha) > 1) {
+                            $registros[] = $linha;
                         }
-
-
-                        try {
-                            DB::beginTransaction();
-
-                            if($abastecimento->save()) {
-                                /* Movimenta o estoque do tanque */
-                                if (MovimentacaoCombustivelController::saidaAbastecimento($abastecimento)) {
-                                    DB::commit();
-                                    Log::info('Novo abastecimento: '.$abastecimento.' importado da Automação.');
+                    }
+                    
+                    $dataInicio = \DateTime::createFromFormat('Y-m-d H:i:s', 
+                                        Abastecimento::whereNotNull('id_automacao')
+                                                ->orderBy('data_hora_abastecimento', 'desc')
+                                                ->pluck('data_hora_abastecimento')
+                                                ->first());
+                    foreach ($registros as $registro)  {
+                        if (count($registro) == 17) {
+                            try {
+                                $abastecimento = new Abastecimento;
+                                $abastecimentoController = new AbastecimentoController;
+                                $obs = null;
+        
+                                $atendente = Atendente::where('usuario_atendente', '=', trim($registro[12]))->first();
+                                $bico = Bico::where('num_bico', '=', trim($registro[3]))->first();
+                                $veiculo = Veiculo::where('placa', '=', $this->formataPlacaVeiculo(trim($registro[13])))->first();
+        
+        
+                                if (!$bico) {   
+                                    $obs .= 'Bico ['.trim($registro[3]).']: Não encontrado!&#10;';
                                 } else {
-                                    throw new \Exception('Erro ao efetuar a movimentação no tanque. ['.implode("|",$registro).']');
+                                    $abastecimento->bico_id = $bico->id;
                                 }
-                            } else {
-                                throw new \Exception('Erro ao inserir o abastecimento. ['.implode("|",$registro).']');
+        
+                                if (!$atendente) {
+                                    $obs .= 'Atendente ['.trim($registro[12]).']: Não encontrado!&#10;';
+                                } else {
+                                    $abastecimento->atendente_id = $atendente->id;
+                                }
+        
+                                $abastecimento->id_automacao = trim($registro[1]);
+                                $abastecimento->ns_automacao = trim($registro[2]);           
+                                $abastecimento->data_hora_abastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5])->format('Y-m-d H:i:s');
+                                
+                                $abastecimento->valor_abastecimento = $this->formataValorDecimal(trim($registro[6]));
+                                $abastecimento->volume_abastecimento = $this->formataValorDecimal(trim($registro[7]), 3);
+                                $abastecimento->valor_litro = $this->formataValorDecimal(trim($registro[8]), trim($registro[9]));
+                                $abastecimento->encerrante_inicial = $this->formataValorDecimal(trim($registro[10]));
+                                $abastecimento->encerrante_final = $this->formataValorDecimal(trim($registro[11]));
+                                $abastecimento->km_veiculo = $this->formataValorDecimal(trim($registro[15]), 1);
+        
+                                /* se valor total zerado, calcula valor total */
+                                if ($abastecimento->valor_abastecimento == 0) {
+                                    $abastecimento->valor_abastecimento = round($abastecimento->volume_abastecimento * $abastecimento->valor_litro, 2);
+                                }
+        
+                                if (!$veiculo) {
+                                    $obs .= 'Veículo ['.trim($registro[14]).']: Não encontrado!&#10;';
+                                    $abastecimento->media_veiculo = 0;
+                                } else {
+                                    $abastecimento->veiculo_id = $veiculo->id;
+                                    $abastecimento->media_veiculo = $abastecimentoController->obterMediaVeiculo($veiculo, $abastecimento);
+                                }
+        
+                                if ($abastecimento->km_veiculo <= 0) {
+                                    $obs .= 'KM não informada para.&#10;';
+                                }
+                                
+                                if ($obs){
+                                    $obs = 'Inconsistências encontradas, verifique.&#10;'.$obs;
+                                    $abastecimento->obs_abastecimento = $obs;
+                                    $abastecimento->inconsistencias_importacao = true;
+                                } 
+                                
+                                $dataAbastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5]);
+
+                                if ( $dataAbastecimento <= $dataInicio) {
+                                    continue;
+                                } 
+                            } catch (\Exception $e) {
+                                Log::info($e);
                             }
-                        } catch (\Exception $e) {
-                            $errosImportacao = true;
-                            DB::rollback();
-                            Log::error($e->getMessage());
+
+
+                            try {
+                                DB::beginTransaction();
+
+                                if($abastecimento->save()) {
+                                    /* Movimenta o estoque do tanque */
+                                    if (MovimentacaoCombustivelController::saidaAbastecimento($abastecimento)) {
+                                        DB::commit();
+                                        Log::info('Novo abastecimento: '.$abastecimento.' importado da Automação.');
+                                    } else {
+                                        throw new \Exception('Erro ao efetuar a movimentação no tanque. ['.implode("|",$registro).']');
+                                    }
+                                } else {
+                                    throw new \Exception('Erro ao inserir o abastecimento. ['.implode("|",$registro).']');
+                                }
+                            } catch (\Exception $e) {
+                                $errosImportacao = true;
+                                DB::rollback();
+                                Log::error($e->getMessage());
+                            }
+                        } else {
+                            Log::alert('Erro ao importar registro: '.implode("|",$registro), []);
                         }
-                    } else {
-                        Log::alert('Erro ao importar registro: '.implode("|",$registro), []);
+                    }
+                } finally {
+                    /* Elimina o arquivo do servidor apenas se conseguir importar todos os abastecimentos */
+                    if (!$errosImportacao) {
+                        $this->limparArquivoAbastecimentosServidor();
                     }
                 }
-            } finally {
-                /* Elimina o arquivo do servidor apenas se conseguir importar todos os abastecimentos */
-                if (!$errosImportacao) {
-                    $this->limparArquivoAbastecimentosServidor();
-                }
+                
+                Session::flash('success', 'Abastecimentos Importados com sucesso!');
+                return redirect()->action('AbastecimentoController@index');
+            } else {
+                Session::flash('success', 'Não existem abastecimentos a serem importados!');
+                return redirect()->action('AbastecimentoController@index');
             }
-            
-            Session::flash('success', 'Abastecimentos Importados com sucesso!');
-            return redirect()->action('AbastecimentoController@index');
-        } else {
-            Session::flash('success', 'Não existem abastecimentos a serem importados!');
-            return redirect()->action('AbastecimentoController@index');
+        } catch(\Exception $e) {
+            Session::flash('error', __('messages.exception', [
+                'exception' => $e->getMessage()
+            ]));
+
+            return redirect()->back();
         }
     }
 
@@ -305,5 +351,44 @@ class IntegracaoAutomacaoController extends Controller
         }
 
         return $result;
+    }
+
+    protected function configFTP() {
+        try {
+            $configs = SettingController::getGroupSetting(1)->settings()->get(); //ID = 1 (FTP)
+
+            //return $configs;
+            foreach($configs as $config) {
+                switch ($config['key']) {
+                    case 'ftp_server':
+                        Config::set('filesystems.disks.ftp.host', $config['value']);
+                        break;
+                    case 'ftp_user':
+                        Config::set('filesystems.disks.ftp.username', $config['value']);
+                        break;
+                    case 'ftp_pass':
+                        Config::set('filesystems.disks.ftp.password', $config['value']);
+                        break;
+                    case 'ftp_port':
+                        Config::set('filesystems.disks.ftp.port', (int)$config['value']);
+                        break;
+                    case 'ftp_root':
+                        Config::set('filesystems.disks.ftp.root', $config['value']);
+                        break;
+                    case 'ftp_passive':
+                        Config::set('filesystems.disks.ftp.passive', (bool)$config['value']);
+                        break;
+                    case 'ftp_ssl':
+                        Config::set('filesystems.disks.ftp.ssl', (bool)$config['value']);
+                        break;
+                    case 'ftp_timeout':
+                        Config::set('filesystems.disks.ftp.timeout', (int)$config['value']);
+                        break;
+
+                }
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('Erro na configuração da Conta FTP. ['.$e->getMessage().'].');
+        }
     }
 }
