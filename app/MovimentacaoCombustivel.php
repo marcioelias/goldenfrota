@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Tanque;
+use App\Afericao;
 use App\Abastecimento;
 use App\EntradaTanque;
 use App\TipoMovimentacaoCombustivel;
@@ -16,7 +17,9 @@ class MovimentacaoCombustivel extends Model
         'tanque_id', 
         'tipo_movimentacao_combustivel_id',
         'quantidade',
-        'abastecimento_id'
+        'abastecimento_id',
+        'ajuste_tanque_id',
+        'afericao_id'
     ];
 
     public function tanque() {
@@ -33,5 +36,9 @@ class MovimentacaoCombustivel extends Model
 
     public function entrada_tanque() {
         return $this->belongsTo(EntradaTanque::class);
+    }
+
+    public function afericao() {
+        return $this->belongsTo(Afericao::class);
     }
 }

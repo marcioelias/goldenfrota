@@ -97,6 +97,8 @@ Route::middleware(['auth:web'])->group(function() {
 
     Route::get('setting', 'SettingController@index')->name('setting.index');
     Route::put('setting', 'SettingController@update')->name('setting.update');
+    Route::get('afericao/{abastecimento}', 'AfericaoController@create')->name('afericao.create');
+    Route::post('afericao', 'AfericaoController@store')->name('afericao.store');
 });
 
 /* Route::get('relatorios/abastecimentos/imprimir', 'AbastecimentoController@gerarPdfRelatorioAbastecimentos')->name('imprimir_relatorio_abastecimentos'); */

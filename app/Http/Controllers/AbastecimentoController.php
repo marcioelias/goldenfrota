@@ -34,6 +34,7 @@ class AbastecimentoController extends Controller
         'km_veiculo' => ['label' => 'Kilometragem', 'type' => 'decimal', 'decimais' => 1],
         'media_veiculo' => ['label' => 'Média', 'type' => 'decimal', 'decimais' => 2],
         'abastecimento_local' => ['label' => 'Abastecimento Local', 'type' => 'bool'],
+        'eh_afericao' => ['label' => 'Aferição', 'type' => 'bool']
         //'ativo' => ['label' => 'Ativo', 'type' => 'bool'],
 
     );

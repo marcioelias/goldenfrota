@@ -7,7 +7,12 @@
         'model' => 'abastecimento',
         'tableTitle' => 'Abastecimento',
         'displayField' => 'id',
-        'actions' => ['edit', 'destroy'],
+        'actions' => [
+            [
+                'custom_action' => 'components.customActions.AfericaoAbastecimento'
+            ],
+            'edit', 
+            'destroy'],
         'colorLineCondition' => [
             'field' => 'inconsistencias_importacao',
             'value' => '1',

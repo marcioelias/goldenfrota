@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Afericao;
 use App\AjusteTanque;
 use App\OrdemServico;
 use Illuminate\Notifications\Notifiable;
@@ -37,5 +38,9 @@ class User extends Authenticatable
 
     public function ajuste_tanque() {
         return $this->hasMany(AjusteTanque::class);
+    }
+
+    public function afericoes() {
+        return $this->hasMany(Afericao::class);
     }
 }

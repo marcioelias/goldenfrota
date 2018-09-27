@@ -39,6 +39,7 @@ return [
             'ajuste_tanque' => 'c,r,d',
             'posicao_pneu' => 'c,r,u,d',
             'ordem_servico' => 'c,r,u,d',
+            'afericao' => 'c',
             'posicao_tanques_grafico' => 'a',
             'media_consumo_veiculos_grafico' => 'a',
             'listagem_clientes' => 'a',

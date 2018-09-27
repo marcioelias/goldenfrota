@@ -39,5 +39,6 @@ return [
     'servico' => 'Serviço',
     'ordem_servico' => 'Ordem de Serviço',
     'entrada_tanque' => 'Entrada de Combustível',
-    'ajuste_tanque' => 'Ajuste de Tanque'
+    'ajuste_tanque' => 'Ajuste de Tanque',
+    'afericao' => 'Aferição'
 ];
