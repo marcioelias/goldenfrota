@@ -162,6 +162,14 @@ return [
         'bairro' => 'Bairro',
         'cidade' => 'Cidade',
         'uf' => 'UF',
+        'cliente_id' => 'Cliente',
+        'veiculo_id' => 'Veículo',
+        'km_veiculo' => 'KM do Veículo',
+        'volume abastecimento' => 'Quantidade',
+        'campo valor' => 'Valor Unitário',
+        'valor abastecimento' => 'Valor Total',
+        'eh_afericao' => 'Aferição',
+        'true' => 'Verdadeiro'
     ],
 
 ];

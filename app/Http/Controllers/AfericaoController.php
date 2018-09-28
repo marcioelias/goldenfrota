@@ -117,6 +117,20 @@ class AfericaoController extends Controller
      */
     public function destroy(Afericao $afericao)
     {
-        //
+        try {
+            return $afericao->delete();
+        } catch (\Exception $e) {
+            switch ($e->getCode()) {
+                case 23000:
+                    Session::flash('error', __('messages.fk_exception'));
+                    break;
+                default:
+                    Session::flash('error', __('messages.exception', [
+                        'exception' => $e->getMessage()
+                    ]));
+                    break;
+            }
+            return redirect()->action('AbastecimentoController@index');
+        }
     }
 }

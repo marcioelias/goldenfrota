@@ -35,8 +35,18 @@
                             'liveSearch' => true,
                             'keyField' => 'id',
                             'defaultNone' => true,
-                            'inputSize' => 8
+                            'inputSize' => 7 
                         ],
+                        [
+                            'type' => 'checkbox',
+                            'field' => 'eh_afericao',
+                            'label' => 'Aferição',
+                            'dataWidth' => 65,
+                            'inputSize' => 1,
+                            'dataSize' => 'default',
+                            'disabled' => false,
+                            'permission' => 'cadastrar-afericao'
+                        ]
                     ]
                 ])
                 @endcomponent

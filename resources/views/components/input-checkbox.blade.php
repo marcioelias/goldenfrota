@@ -1,5 +1,5 @@
 @php
-    $inputSize = isset($inputSize) ? '-'.$inputSize : '-12';
+    $inputSize = isset($inputSize) ? '-'.$inputSize : '-1';
     $disabled = isset($disabled) ? $disabled : false;
     $autofocus = isset($autofocus) ? $autofocus : false;
     $required = isset($required) ? $required : false;
@@ -13,12 +13,20 @@
     $dataSize = isset($dataSize) ? $dataSize : 'mini';
     $dataOnStyle = isset($dataOnStyle) ? $dataOnStyle : 'success';
     $dataOffStyle = isset($dataOffStyle) ? $dataOffStyle : 'default';
-    $checked = isset($inputValue) ? ($value == $inputValue) : false;
+    $checked = isset($inputValue) ? (($inputValue) || (old($field))) : old($field);
+    $permission = isset($permission) ? $permission : true;
 @endphp
 
-<input type="checkbox" 
+@permission($permission)
+<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }}">
+    @if(isset($label))
+        @component('components.label', ['label' => $label, 'field' => $field, 'required' => $required])
+        @endcomponent
+    @endif  
+
+    <input type="checkbox" class="form-control" 
     name="{{$name}}"
-    value="{{$value}}"
+    value=true
     {{ ($checked) ? 'checked' : '' }} 
     data-toggle="toggle" 
     data-width="{{$dataWidth}}" 
@@ -26,6 +34,13 @@
     data-off="{{$dataOff}}"
     data-size="{{$dataSize}}"
     data-onstyle="{{$dataOnStyle}}"
-    data-offstyle="{{$dataOffStyle}}">
-    {{$label}}
+    data-offstyle="{{$dataOffStyle}}"
+    {{ ($disabled) ? 'disabled=disabled' : '' }}>
 
+    @if ($errors->has($field))
+        <span class="help-block">
+            <strong>{{ $errors->first($field) }}</strong>
+        </span>
+    @endif
+</div>
+@endpermission

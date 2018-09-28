@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Bico;
 use App\Cliente;
 use App\Veiculo;
+use App\Afericao;
 use App\Atendente;
 use App\Parametro;
 use App\Departamento;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\BicoController;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\AfericaoController;
 use App\Http\Controllers\MovimentacaoCombustivelController;
 
 class AbastecimentoController extends Controller
@@ -126,11 +128,13 @@ class AbastecimentoController extends Controller
         if (Auth::user()->canCadastrarAbastecimento()) {
             $this->validate($request, [
                 'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
-                'veiculo_id' => 'required',
-                'km_veiculo' => 'required|numeric|min:0',
+                'cliente_id' => 'required_if:eh_afericao,false|required_without:eh_afericao',
+                'veiculo_id' => 'required_if:eh_afericao,false|required_without:eh_afericao',
+                'km_veiculo' => 'required_if:eh_afericao,false|required_without:eh_afericao',
                 'volume_abastecimento' => 'required|numeric|min:0',
                 'valor_litro' => 'required|numeric|min:0',
-                'valor_abastecimento' => 'required|numeric|min:0'
+                'valor_abastecimento' => 'required|numeric|min:0',
+                'bico_id' => 'required_if:eh_afericao,true'
             ]); 
 
             try {
@@ -147,13 +151,29 @@ class AbastecimentoController extends Controller
                 $abastecimento->bico_id = $request->bico_id;
                 $abastecimento->encerrante_inicial = $request->encerrante_inicial;
                 $abastecimento->encerrante_final = $request->encerrante_final;
-                $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
+                /* Calcula a média do veículo, caso seja informado um veículo */
+                if ($request->veiculo_id) {
+                    $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
+                } else {
+                    $abastecimento->media_veiculo = 0;
+                }
+                $abastecimento->eh_afericao = (bool)$request->eh_afericao;
                 
                 if ($abastecimento->save()) {
 
                     if ($request->bico_id) {
-                        /* Se informado o bico, movimenta o estoque do tanque */
-                        MovimentacaoCombustivelController::saidaAbastecimento($abastecimento);
+                        /* Se for aferição, faz a movimentação de saída e entrada por aferição */
+                        if (isset($request->eh_afericao) && ($request->eh_afericao)) {
+                            $afericao = Afericao::create([
+                                'abastecimento_id' => $abastecimento->id,
+                                'user_id' => Auth::user()->id
+                            ]);
+
+                            MovimentacaoCombustivelController::cadastroAfericao($afericao);
+                        } else {
+                            /* Se informado o bico, movimenta o estoque do tanque */
+                            MovimentacaoCombustivelController::saidaAbastecimento($abastecimento);
+                        }
                         
                         if (!BicoController::atualizarEncerranteBico($request->bico_id, $request->encerrante_final)) {
                             throw new Exception(__('messages.exception', [
@@ -252,6 +272,11 @@ class AbastecimentoController extends Controller
     public function update(Request $request, Abastecimento $abastecimento)
     {
         if (Auth::user()->canAlterarAbastecimento()) {
+            /* Se for aferição não é permitido alteração, direciona de volta a tela de consulta */
+            if ($abastecimento->eh_afericao) {
+                return redirect()->action('AbastecimentoController@index');
+            }
+
             $this->validate($request, [
                 'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
                 'veiculo_id' => 'required',

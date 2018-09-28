@@ -1,3 +1,4 @@
+@permission('cadastrar-afericao')
 @if ($data->eh_afericao)
     <button class="btn btn-xs btn-success" disabled>
         <i class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="top" title="{{__('Aferição')}}" data-original-title="{{__('Aferição')}}"></i>
@@ -7,3 +8,4 @@
         <i class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="top" title="{{__('Aferição')}}" data-original-title="{{__('Aferição')}}"></i>
     </a>
 @endif
+@endpermission
