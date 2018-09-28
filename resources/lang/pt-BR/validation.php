@@ -169,7 +169,8 @@ return [
         'campo valor' => 'Valor Unitário',
         'valor abastecimento' => 'Valor Total',
         'eh_afericao' => 'Aferição',
-        'true' => 'Verdadeiro'
+        'true' => 'Verdadeiro',
+        'password' => 'Senha'
     ],
 
 ];
