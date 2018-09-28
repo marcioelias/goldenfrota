@@ -648,6 +648,7 @@ class AbastecimentoController extends Controller
        
         $data_inicial = $request->data_inicial;
         $data_final = $request->data_final;
+        $media = $request->mostra_media;
         $parametros = array();
 
         if($data_inicial && $data_final) {
@@ -694,6 +695,7 @@ class AbastecimentoController extends Controller
 
         return View('relatorios.abastecimentos.relatorio_abastecimentos_bico')
                     ->withBicos($bicos)
+                    ->withMedia($media)
                     ->withParametros($parametros)
                     ->withTitulo('Relatório de Abastecimentos - Bicos')
                     ->withParametro(Parametro::first());

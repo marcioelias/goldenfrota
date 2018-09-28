@@ -49,7 +49,16 @@
                             'liveSearch' => true,
                             'keyField' => 'id',
                             'defaultNone' => true,
-                            'inputSize' => 6
+                            'inputSize' => 5
+                        ],
+                        [
+                            'type' => 'checkbox',
+                            'field' => 'mostra_media',
+                            'label' => 'KM Média',
+                            'dataWidth' => 65,
+                            'inputSize' => 1,
+                            'dataSize' => 'default',
+                            'disabled' => false
                         ]
                     ]
                 ])  
