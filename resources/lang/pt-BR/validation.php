@@ -171,7 +171,10 @@ return [
         'eh_afericao' => 'Aferição',
         'true' => 'Verdadeiro',
         'password' => 'Senha',
-        'estoque_id' => 'Estoque'
+        'estoque_id' => 'Estoque',
+        'servico' => 'Serviço',
+        'grupo_servico_id' => 'Grupo de Serviço',
+        'valor_servico' => 'Valor',
     ],
 
 ];
