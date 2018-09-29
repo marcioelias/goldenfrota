@@ -19,9 +19,6 @@
             <td>
                 Ajuste
             </td>
-            <td>
-                Ajustado
-            </td>
         </tr>
     </thead>
     <tbody>
@@ -41,9 +38,6 @@
             </td>
             <td>
                 {{$inventario_item->qtd_ajuste}}
-            </td>
-            <td>
-                {{($inventario_item->ajustado) ? 'Sim' : 'Não'}}
             </td>
         </tr>
         @endforeach

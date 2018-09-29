@@ -37,7 +37,7 @@
                     @endforeach
                     @endif
                 <li class="list-group-item">
-                    @component('components.input-checkbox', [
+                    @component('components.input-simple-checkbox', [
                         'checked' => $checked,
                         'dataWidth' => $dataWidth,
                         'dataOn' => $dataOn,
@@ -46,7 +46,7 @@
                         'dataOnStyle' => $dataOnStyle,
                         'dataOffStyle' => $dataOffStyle,
                         'label' => $item->$label,
-                        'field' => $field,
+                        'field' => $field, 
                         'value' => $item->$value,
                         'inputValue' => $inputValue
                     ]) 

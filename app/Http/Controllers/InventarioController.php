@@ -91,7 +91,13 @@ class InventarioController extends Controller
                 if ($inventario->save()) {
                     $estoque = Estoque::find($inventario->estoque_id);
                     
-                    $produtos = $estoque->produtos()->get();
+                    if ($request->produto_id) {
+                        $produtos = $estoque->produtos()->where('produtos.id', $request->produto_id)->get();
+                    } elseif ($request->grupo_produto_id) {
+                        $produtos = $estoque->produtos()->where('produtos.grupo_produto_id', $request->grupo_produto_id)->get();
+                    } else {
+                        $produtos = $estoque->produtos()->get();
+                    }
 
                     foreach ($produtos as $produto) {
                         $items[] = [
@@ -155,6 +161,11 @@ class InventarioController extends Controller
     {
         if (Auth::user()->canCadastrarInventario()) {
             
+            if ($inventario->fechado) {
+                Session::flash('error', 'Não é possível alterar um invetário já fechado!');
+                return redirect()->back();
+            }
+
             foreach ($inventario->inventario_items as $item) {
                 $items[] = $item->produto;
             }
@@ -179,7 +190,7 @@ class InventarioController extends Controller
         if (Auth::user()->canAlterarInventario()) {
             try {
                 DB::beginTransaction();
-                $inventario->fechado = $request->fechado;
+                $inventario->fechado = isset($request->fechado);
                 $inventario->data_fechamento = ($inventario->fechado) ? (new \DateTime)->format('Y-m-d H:n:s') : null;
 
                 if (!$inventario->save()) {

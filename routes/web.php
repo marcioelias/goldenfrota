@@ -72,6 +72,8 @@ Route::middleware(['auth:web'])->group(function() {
     Route::post('veiculo_departamento/json', 'VeiculoController@getVeiculosDepartamentoJson')->name('veiculos_departamento.json');
     Route::post('tanques/json', 'TanqueController@getTanquesJson')->name('tanques.json');
     Route::post('ultimo_abastecimento/json', 'VeiculoController@obterKmAbasteciemntoAnterior')->name('ultimo_abastecimento.json');
+    Route::post('grupo_produto/json', 'GrupoProdutoController@getGrupoProdutoJson')->name('grupo_produto.json');
+    Route::post('produto_pelo_grupo/json', 'ProdutoController@obterProdutosPeloGrupo')->name('produtos_pelo_grupo.json');
     Route::get('produtos_estoque/{estoqueId}/json', 'ProdutoController@obterProdutosPeloEstoque')->name('produto_pelo_estoque');
     Route::get('posicao_estoque_produto/{produtoId}', 'MovimentacaoProdutoController@posicaoEstoqueProduto')->name('posicao_estoque_produto');
 
@@ -100,6 +102,8 @@ Route::middleware(['auth:web'])->group(function() {
     Route::get('afericao/{abastecimento}', 'AfericaoController@create')->name('afericao.create');
     Route::post('afericao', 'AfericaoController@store')->name('afericao.store');
 });
+
+Route::get('teste/{estoque}', 'GrupoProdutoController@getGrupoProdutoJson');
 
 /* Route::get('relatorios/abastecimentos/imprimir', 'AbastecimentoController@gerarPdfRelatorioAbastecimentos')->name('imprimir_relatorio_abastecimentos'); */
 /* 

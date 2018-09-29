@@ -25,7 +25,7 @@
                         ],
                         [
                             'type' => 'text',
-                            'field' => 'estoque',
+                            'field' => 'estoque', 
                             'label' => 'Estoque',
                             'disabled' => true,
                             'inputValue' => $inventario->estoque->estoque,
@@ -36,7 +36,8 @@
                             'field' => 'data_abertura',
                             'label' => 'Data Abertura',
                             'disabled' => true,
-                            'inputValue' => $inventario->data_abertura,
+                            'dateTimeFormat' => 'DD/MM/YYYY HH:mm:ss',
+                            'inputValue' => \DateTime::createFromFormat('Y-m-d H:i:s', $inventario->data_abertura)->format('d/m/Y H:i:s'),
                             'inputSize' => 3
                         ],
                         [
@@ -48,13 +49,16 @@
                             'inputSize' => 3
                         ],
                         [
-                            'type' => 'select',
+                            'type' => 'checkbox',
                             'field' => 'fechado',
                             'label' => 'Fechado',
+                            'dataWidth' => 65,
                             'inputSize' => 1,
-                            'indexSelected' => $inventario->fechado,
-                            'items' => Array('Não', 'Sim'),
+                            'dataSize' => 'default',
+                            'disabled' => false,
+                            'inputValue' => $inventario->fechado,
                         ]
+                        
                     ]
                 ])
                 @endcomponent
@@ -87,4 +91,13 @@
             @endsection
         @endcomponent
     </div>
+    <script>
+        $('#fechado').on('change', () => {
+            if ($('#fechado').is(':checked')) {
+                $('#data_fechamento').val(new Date().toLocaleString());
+            } else {
+                $('#data_fechamento').val('');
+            }
+        });
+    </script>
 @endsection

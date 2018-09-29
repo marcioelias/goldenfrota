@@ -170,7 +170,8 @@ return [
         'valor abastecimento' => 'Valor Total',
         'eh_afericao' => 'Aferição',
         'true' => 'Verdadeiro',
-        'password' => 'Senha'
+        'password' => 'Senha',
+        'estoque_id' => 'Estoque'
     ],
 
 ];

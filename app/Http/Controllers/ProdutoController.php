@@ -269,4 +269,10 @@ class ProdutoController extends Controller
 
         return $result;
     }
+
+    public function obterProdutosPeloGrupo(Request $request) {
+        $grupoProduto = GrupoProduto::find($request->id);
+        
+        return response()->json($grupoProduto->produtos()->get());
+    }
 }

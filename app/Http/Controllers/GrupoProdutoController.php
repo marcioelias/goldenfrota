@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Estoque;
 use App\GrupoProduto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -180,5 +182,12 @@ class GrupoProdutoController extends Controller
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         } 
+    }
+
+    public function getGrupoProdutoJson(Request $request) {
+        $estoque = Estoque::find($request->id);
+        $grupos = $estoque->produtos->unique('grupo_produto_id')->pluck('grupo_produto_id');
+
+        return response()->json(GrupoProduto::whereIn('id', $grupos)->get());
     }
 }
