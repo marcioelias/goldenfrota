@@ -306,7 +306,13 @@
                 }
             },
             truncDecimal(value, n) {
+                if(value === 0) {
+                    return value;
+                }
                 x=(value.toString()+".0").split(".");
+                if(!x) {
+                    x = 0;
+                }
                 return parseFloat(x[0]+","+x[1].substr(0,n));
             },
             validarItem() {
@@ -326,14 +332,16 @@
                 } else {
                     if (!this.getEstoqueById(this.estoqueId).permite_estoque_negativo) {
                         let posicao_estoque_produto = this.getProdutoById(this.produto_id).posicao_estoque;
+                        console.log('posicao_estoque_produto: '+posicao_estoque_produto);
                         if (this.quantidade > posicao_estoque_produto) {
                             this.errors.inputQuantidade = true;
                             this.errors.inputQuantidadeMsg = 'Quantidade informada execede saldo em estoque ('+this.truncDecimal(posicao_estoque_produto, 3)+').';
                             return false;
                         }
+                    } else {
+                        this.errors.inputQuantidade = false;
+                        this.errors.inputQuantidadeMsg = '';
                     }
-                    this.errors.inputQuantidade = false;
-                    this.errors.inputQuantidadeMsg = '';
                 }
 
                 if ((this.valor_unitario == '') || (this.valor_unitario <= 0)) {

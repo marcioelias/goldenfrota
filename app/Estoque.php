@@ -5,6 +5,7 @@ namespace App;
 use App\Produto;
 use App\MovimentacaoProduto;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 
 class Estoque extends Model
@@ -39,20 +40,10 @@ class Estoque extends Model
                     ->leftJoin('tipo_movimentacao_produtos', 'tipo_movimentacao_produtos.id', 'movimentacao_produtos.tipo_movimentacao_produto_id')
                     ->where('produtos.id', $produto->id)
                     ->first();
-
-        /* dd($saldo->posicao); */
-
-        return $saldo->posicao;
-        
-        
-        /* $entradas = DB::table('entrada_estoques')
-                        ->join('entrada_estoque_items', 'entrada_estoques.id', 'entrada_estoque_items.entrada_estoque_id')
-                        ->where('entrada_estoques.estoque_id', $this->id)
-                        ->where('entrada_estoque_items.produto_id', $produto->id)
-                        ->sum('entrada_estoque_items.quantidade');
-        
-        $saidas = 0; //falta implementar assim que o sistema estiver controlando as saídas do estoque;
-        
-        return $entradas - $saidas; */
+        if (isset($saldo->posicao)) {
+            return $saldo->posicao;
+        } else {
+            return 0;
+        }
     }
 }

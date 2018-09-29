@@ -251,11 +251,10 @@ class ProdutoController extends Controller
             $produtos = $estoque->produtos()->get();
             foreach ($produtos as $produto) {
                 $posicao = $estoque->saldo_produto($produto);
-                if ($posicao > 0) {
+                //if ($posicao > 0) {
                     $produto->posicao_estoque = $posicao;
-                    Log::debug($produto);
                     $result[] = $produto;
-                }
+                //}
             }
         } else {
             //Log::info('não controla estoque negativo');
