@@ -38,11 +38,13 @@ class InventarioController extends Controller
                                 ->select('inventarios.*', 'estoques.estoque')
                                 ->join('estoques', 'estoques.id', 'inventarios.estoque_id')
                                 ->where('estoques.estoque', 'like', '%'.$request->searchField.'%')
+                                ->orderBy('inventarios.id', 'desc')
                                 ->paginate();
             } else {
                 $inventarios = DB::table('inventarios')
                                 ->select('inventarios.*', 'estoques.estoque')
                                 ->join('estoques', 'estoques.id', 'inventarios.estoque_id')
+                                ->orderBy('inventarios.id', 'desc')
                                 ->paginate();
             }
 
