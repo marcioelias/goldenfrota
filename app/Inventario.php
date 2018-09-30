@@ -13,7 +13,8 @@ class Inventario extends Model
         'estoque_id',
         'data_abertura',
         'data_fechamento',
-        'fechado'
+        'fechado',
+        'obs_inventario'
     ];
 
     public function inventario_items() {

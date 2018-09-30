@@ -62,6 +62,17 @@
                     ]
                 ])
                 @endcomponent
+                @component('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'textarea',
+                            'field' => 'obs_inventario',
+                            'label' => 'Observação/Motivo',
+                            'inputValue' => $inventario->obs_inventario
+                        ]
+                    ]
+                ])
+                @endcomponent
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">

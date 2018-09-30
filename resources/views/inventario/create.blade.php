@@ -51,6 +51,16 @@
                     ]
                 ])
                 @endcomponent
+                @component('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'textarea',
+                            'field' => 'obs_inventario',
+                            'label' => 'Observação/Motivo'
+                        ]
+                    ]
+                ])
+                @endcomponent
             @endsection
         @endcomponent
     </div>

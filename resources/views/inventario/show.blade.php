@@ -16,9 +16,11 @@
             <td>
                 Qtd Contada
             </td>
+            @if($inventario->fechado)
             <td>
                 Ajuste
             </td>
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -36,6 +38,7 @@
             <td>
                 {{($inventario_item->qtd_contada > 0) ? $inventario_item->qtd_contada : ''}}
             </td>
+            @if($inventario->fechado)
             <td>
                 @if($inventario_item->qtd_contada < 0)
                     {{''}}
@@ -43,6 +46,7 @@
                     {{($inventario_item->qtd_ajuste > 0) ? '+'.$inventario_item->qtd_ajuste : $inventario_item->qtd_ajuste}}
                 @endif
             </td>
+            @endif
         </tr>
         @endforeach
     </tbody>
