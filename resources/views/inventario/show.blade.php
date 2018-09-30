@@ -37,7 +37,11 @@
                 {{($inventario_item->qtd_contada > 0) ? $inventario_item->qtd_contada : ''}}
             </td>
             <td>
-                {{$inventario_item->qtd_ajuste}}
+                @if($inventario_item->qtd_contada < 0)
+                    {{''}}
+                @else
+                    {{($inventario_item->qtd_ajuste > 0) ? '+'.$inventario_item->qtd_ajuste : $inventario_item->qtd_ajuste}}
+                @endif
             </td>
         </tr>
         @endforeach
