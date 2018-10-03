@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Tanque;
+use App\Parametro;
 use App\Fornecedor;
 use App\EntradaTanque;
 use Illuminate\Http\Request;
@@ -154,7 +155,23 @@ class EntradaTanqueController extends Controller
      */
     public function show(EntradaTanque $entradaTanque)
     {
-        //
+        if (Auth::user()->canListarEntradaTanque()) {
+            /* return response()->json($entradaTanque->with('entrada_tanque_items.tanque.combustivel')
+            ->with('fornecedor')
+            ->get()); */
+            return View('entrada_tanque.show', [
+                'entradaTanque' => EntradaTanque::with('entrada_tanque_items.tanque.combustivel')
+                                                    ->with('fornecedor')
+                                                    ->find($entradaTanque->id),
+                'titulo' => 'Movimentação de Estoque - Produtos - Sintético',
+                'parametro' => Parametro::first()
+                                                
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+
+            return redirect()->back();
+        }
     }
 
     /**
