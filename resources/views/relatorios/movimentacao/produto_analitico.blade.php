@@ -13,44 +13,48 @@
     </thead>
     <tbody>
         <tr>
-            <td>
+            <td colspan=5>
+                @foreach($estoque->produtos as $produto)
                 <table class="table table-condensed report-table">
                     <thead>
-                        <tr class="info">  
+                        <tr class="info">
+                            <td colspan=4>
+                                <strong>Produto: {{ $produto->produto_descricao.' ('.$produto->grupo_produto->grupo_produto.')' }}</strong>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>
-                                Data
-                            </td>              
-                            <td>
-                                Grupo
+                                Data/Hora 
                             </td>
                             <td>
-                                Produto
-                            </td>
-                            <td>
-                                Tipo Movimentacao
+                                Tipo de Movimentação
                             </td>
                             <td>
                                 Documento
                             </td>
-                            <td>
+                            <td align="right">
                                 Quantidade
                             </td>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($movimentacoes as $movimentacao) 
-                        @if($movimentacao->estoque_id != $estoque->id) 
-                            @continue
+                        @php
+                            $totalEntrada = 0;
+                            $totalSaida = 0;
+                        @endphp
+                        @foreach($produto->movimentacao_produto as $movimentacao) 
+                        @if($movimentacao->tipo_movimentacao_produto->eh_entrada) 
+                            @php
+                            $totalEntrada += $movimentacao->quantidade_movimentada
+                            @endphp
+                        @else
+                            @php
+                            $totalSaida += $movimentacao->quantidade_movimentada
+                            @endphp
                         @endif
-                        <tr>
+                        <tr>    
                             <td>
-                                {{ date('d/m/Y', strtotime($movimentacao->data_movimentacao)) }}
-                            </td>
-                            <td>
-                                {{ $movimentacao->produto->grupo_produto->grupo_produto }}
-                            </td>
-                            <td>
-                                {{ $movimentacao->produto->produto_descricao }}
+                                {{ date('d/m/Y H:i:s', strtotime($movimentacao->data_movimentacao)) }}
                             </td>
                             <td>
                                 {{ $movimentacao->tipo_movimentacao_produto->tipo_movimentacao_produto }}
@@ -68,13 +72,26 @@
                                     Ordem de Serviço: {{ $movimentacao->ordem_servico_id }}
                                 @endif
                             </td>
-                            <td>
-                                {{ $movimentacao->quantidade_movimentada }}
+                            <td align="right">
+                                {{ number_format($movimentacao->quantidade_movimentada, 3, ',', '.')  }}
                             </td>
                         </tr>
                         @endforeach
+                        <tr class="success">
+                            <td colspan=2 align="right">
+                                Total Entrada: {{ number_format($totalEntrada, 3, ',', '.') }}
+                            </td>
+                            <td colspan=2 align="right">
+                                Total Saída: {{ number_format($totalSaida, 3, ',', '.') }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=4></td>
+                        </tr>
                     </tbody>
+                    
                 </table>
+                @endforeach
             </td>
         </tr>
     </tbody>

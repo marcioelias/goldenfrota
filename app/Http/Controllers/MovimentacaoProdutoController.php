@@ -331,47 +331,58 @@ class MovimentacaoProdutoController extends Controller
 
     public function paramRelatorioMovimetacaoEstoque() {
         return View('relatorios.movimentacao.produto_param', [
-            'estoques' => Estoque::all(),
-            'grupo_produtos' => GrupoProduto::all()
+            'estoques' => Estoque::has('movimentacao_produtos')->where('ativo', true)->get()
         ]);
     }
 
     public function relatorioMovimentacaoEstoque(Request $request) {
         $data_inicial = $request->data_inicial;
         $data_final = $request->data_final;
+        $tipo_relatorio = $request->tipo_relatorio;
+        $tipo_movimentacao = $request->tipo_movimentacao;
         $parametros = array();
         $estoquesId = array();
-
+        
         if ($request->estoque_id == null) {
-            $estoques = Estoque::where('ativo', true)
-                            ->whereHas('movimentacao_produtos')
-                            ->orderBy('estoque', 'asc')
-                            ->get();
-            foreach ($estoques as $estoque) {
-                $estoquesId[] = $estoque->id;
-            }
-
+            $whereEstoque = 'estoques.ativo = 1';
             $parametros[] = 'Estoque: Todos';
         } else {
-            $estoques = Estoque::where('id', $request->estoque_id)
-                            ->whereHas('movimentacao_produtos')
-                            ->orderBy('estoque', 'asc')
-                            ->get();
-            
+            $whereEstoque = 'estoques.id = '.$request->estoque_id;
             $parametros[] = 'Estoque: '.Estoque::find($request->estoque_id)->estoque;
-            if ($estoques) {
-                $estoquesId[] = $request->estoque_id;
+        }
+
+        if (isset($request->produto_id) && $request->produto_id != null) {
+            $whereProduto = 'produtos.id = '.$request->produto_id;
+            $whereGrupoProduto = '1 = 1';
+            $parametros[] = 'Produto: '.Produto::find($request->produto_id)->produto_descricao;
+        } else {
+            if (isset($request->grupo_produto_id) && $request->grupo_produto_id != null) {
+                $whereGrupoProduto = 'grupo_produtos.id = '.$request->grupo_produto_id;
+                $whereProduto = '1 = 1';
+                $parametros[] = 'Grupo de Produtos: '.GrupoProduto::find($request->grupo_produto_id)->grupo_produto;
             } else {
-                $estoques = array();
+                $whereGrupoProduto = '1 = 1';
+                $whereProduto = '1 = 1';
+                $parametros[] = 'Grupo de Produtos: Todos';
             }
         }
 
-        if ($request->grupo_produto_id == null) {
-            $whereGrupoProduto = '1 = 1';
-            $parametros[] = 'Grupo de Produtos: Todos';
-        } else {
-            $whereGrupoProduto = 'grupo_produtos.id = '.$request->grupo_produto_id;
-            $parametros[] = 'Grupo de Produtos: '.GrupoProduto::find($request->grupo_produto_id)->grupo_produto;
+        switch ($tipo_movimentacao) {
+            case 1:
+                //entrada
+                $whereTipoMovimentacao = 'tipo_movimentacao_produtos.eh_entrada = 1';
+                array_push($parametros, 'Tipo de Movimentação: Entrada');
+                break;
+            case 2:
+                //saída
+                $whereTipoMovimentacao = 'tipo_movimentacao_produtos.eh_entrada = 0';
+                array_push($parametros, 'Tipo de Movimentação: Saída');
+                break;
+            default:
+                //todos
+                $whereTipoMovimentacao = '1 = 1'; //busca qualquer coisa
+                array_push($parametros, 'Tipo de Movimentação: Todos');
+                break;
         }
 
         if($data_inicial && $data_final) {
@@ -387,23 +398,54 @@ class MovimentacaoProdutoController extends Controller
             $whereData = '1 = 1'; //busca qualquer coisa
         }
 
-        $movimentacoes = MovimentacaoProduto::whereIn('estoque_id', $estoquesId)
-                                                ->whereHas('produto.grupo_produto', function($query) use ($whereGrupoProduto) {
-                                                        $query->whereRaw($whereGrupoProduto);
-                                                     }
-                                                )
-                                                ->whereRaw($whereData)
-                                                ->with('tipo_movimentacao_produto')
-                                                ->with('estoque')
-                                                ->orderBy('data_movimentacao', 'asc')
-                                                ->get();
+        $estoques = Estoque::whereHas('movimentacao_produtos')
+                                ->with(['produtos' => function($query) use ($whereProduto, $whereGrupoProduto, $whereData, $whereTipoMovimentacao) {
+                                    $query->whereRaw($whereProduto)
+                                            ->with(['grupo_produto' => function($queryGrupoProduto) use ($whereGrupoProduto) {
+                                                $queryGrupoProduto->whereRaw($whereGrupoProduto)->get();
+                                            }])
+                                            ->join('grupo_produtos', 'grupo_produtos.id', 'produtos.grupo_produto_id')
+                                            ->whereHas('grupo_produto' ,function($queryGrupoProduto) use ($whereGrupoProduto) {
+                                                $queryGrupoProduto->whereRaw($whereGrupoProduto);
+                                            })
+                                            ->with(['movimentacao_produto' => function($query) use ($whereData, $whereTipoMovimentacao) {
+                                                $query->whereRaw($whereData)
+                                                            ->with('tipo_movimentacao_produto')
+                                                            ->whereHas('tipo_movimentacao_produto', function($queryTipoMov) use ($whereTipoMovimentacao) {
+                                                                $queryTipoMov->whereRaw($whereTipoMovimentacao);
+                                                            })
+                                                            ->orderBy('data_movimentacao', 'asc')->get();                                            
+                                            }])
+                                            ->whereHas('movimentacao_produto', function($query) use ($whereData, $whereTipoMovimentacao) {
+                                                $query->whereRaw($whereData)
+                                                        ->whereHas('tipo_movimentacao_produto', function($queryTipoMov) use ($whereTipoMovimentacao) {
+                                                            $queryTipoMov->whereRaw($whereTipoMovimentacao);
+                                                        });    
+                                            })
+                                            ->orderBy('grupo_produtos.grupo_produto', 'asc')
+                                            ->orderBy('produtos.produto_descricao', 'asc')->get();
+                                }])
+                                ->whereRaw($whereEstoque)
+                                ->orderBy('estoques.estoque', 'asc')
+                                ->get();
 
-        return View('relatorios.movimentacao.produto')
-                ->withEstoques($estoques)
-                ->withMovimentacoes($movimentacoes)
-                ->withTitulo('Movimentação de Estoque - Produtos')
-                ->withParametros($parametros)
-                ->withParametro(Parametro::first());
+        if ($request->tipo_relatorio == 1) {
+            /* relatório sintetico */
+            return View('relatorios.movimentacao.produto_sintetico')
+                    ->withEstoques($estoques)
+                    ->withTitulo('Movimentação de Estoque - Produtos - Sintético')
+                    ->withParametros($parametros)
+                    ->withParametro(Parametro::first());
+        } else {
+            /* relatório analítico */
+            return View('relatorios.movimentacao.produto_analitico')
+                    ->withEstoques($estoques)
+                    ->withTitulo('Movimentação de Estoque - Produtos - Analítico')
+                    ->withParametros($parametros)
+                    ->withParametro(Parametro::first());
+        }
+        
+        
     }
 
     public function destroy(MovimentacaoProduto $movimentacaoProduto) {

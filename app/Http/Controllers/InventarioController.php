@@ -66,7 +66,7 @@ class InventarioController extends Controller
     public function create()
     {
         if (Auth::user()->canCadastrarInventario()) {
-            return View('inventario.create')->withEstoques(Estoque::all());
+            return View('inventario.create')->withEstoques(Estoque::has('produtos')->where('ativo', true)->get());
         } else {
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
