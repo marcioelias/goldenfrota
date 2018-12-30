@@ -29,7 +29,7 @@ let mix = require('laravel-mix');
             'node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css'
     ], 'public/css/other.css');  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
+mix.js('resources/js/app.js', 'public/js')
     .extract([
         'vue',
         'tether',
@@ -49,7 +49,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         jquery: ['$', 'jQuery', 'jquery'],
         tether: ['window.Tether', 'Tether']
     })
-    .sass('resources/assets/sass/app.scss', 'public/css/app.css')
+    .sass('resources/sass/app.scss', 'public/css/app.css')
     .styles([
         //'node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css',
         //'node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css',
@@ -64,13 +64,13 @@ mix.js([
         'node_modules/bootstrap-select/dist/js/i18n/defaults-pt_BR.min.js'
     ], 'public/js/other.js'); 
 
-mix.js('resources/assets/js/entradaestoque.js', 'public/js');
-mix.js('resources/assets/js/entradatanque.js', 'public/js');
-mix.js('resources/assets/js/saidaestoque.js', 'public/js');
-mix.js('resources/assets/js/inventarioestoque.js', 'public/js');
-mix.js('resources/assets/js/estoqueproduto.js', 'public/js');
-mix.js('resources/assets/js/osservico.js', 'public/js');
-mix.js('resources/assets/js/os.js', 'public/js');
+mix.js('resources/js/entradaestoque.js', 'public/js');
+mix.js('resources/js/entradatanque.js', 'public/js');
+mix.js('resources/js/saidaestoque.js', 'public/js');
+mix.js('resources/js/inventarioestoque.js', 'public/js');
+mix.js('resources/js/estoqueproduto.js', 'public/js');
+mix.js('resources/js/osservico.js', 'public/js');
+mix.js('resources/js/os.js', 'public/js');
 
 /* mix.styles([
         'node_modules/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.min.css'
