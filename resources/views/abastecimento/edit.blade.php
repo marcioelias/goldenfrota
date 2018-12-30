@@ -22,22 +22,32 @@
                             'inputSize' => 4,
                             'sideBySide' => true,
                             'dateTimeFormat' => 'DD/MM/YYYY HH:mm:ss',
-                            'inputValue' => \DateTime::createFromFormat('Y-m-d H:i:s', $abastecimento->data_hora_abastecimento)->format('d/m/Y H:i:s')
+                            'inputValue' => \DateTime::createFromFormat('Y-m-d H:i:s', $abastecimento->data_hora_abastecimento)->format('d/m/Y H:i:s'),
+                            'disabled' => ($abastecimento->eh_afericao)
                         ],
                         [
                             'type' => 'select',
                             'field' => 'cliente_id',
                             'label' => 'Cliente',
-                            'required' => true,
                             'items' => $clientes,
-                            'autofocus' => true,
                             'displayField' => 'nome_razao',
                             'liveSearch' => true,
                             'keyField' => 'id',
                             'defaultNone' => true,
-                            'inputSize' => 8,
-                            'indexSelected' => isset($cliente->id) ? $cliente->id : null
+                            'inputSize' => 7,
+                            'indexSelected' => isset($cliente->id) ? $cliente->id : null,
+                            'disabled' => ($abastecimento->eh_afericao)
                         ],
+                        [
+                            'type' => 'checkbox',
+                            'field' => 'eh_afericao',
+                            'label' => 'Aferição',
+                            'dataWidth' => 65,
+                            'inputSize' => 1,
+                            'dataSize' => 'default',
+                            'disabled' => true,
+                            'inputValue' => $abastecimento->eh_afericao
+                        ]
                     ]
                 ])
                 @endcomponent
@@ -47,30 +57,29 @@
                             'type' => 'select',
                             'field' => 'veiculo_id',
                             'label' => 'Veículo',
-                            'required' => true,
                             'items' => null,
                             'inputSize' => 6,
-                            'defaultNone' => true,
                             'displayField' => 'placa',
-                            'liveSearch' => true,
                             'keyField' => 'id',
-                            'indexSelected' => $abastecimento->veiculo_id
+                            'defaultNone' => true,
+                            'indexSelected' => $abastecimento->veiculo_id,
+                            'disabled' => ($abastecimento->eh_afericao)
                         ],
                         [
                             'type' => 'number',
                             'field' => 'km_veiculo',
                             'label' => 'KM do Veículo',
-                            'required' => true,
                             'inputSize' => 3,
-                            'inputValue' => $abastecimento->km_veiculo
+                            'inputValue' => $abastecimento->km_veiculo,
+                            'disabled' => ($abastecimento->eh_afericao)
                         ],
                         [
                             'type' => 'number',
                             'field' => 'media_atual',
                             'label' => 'Média Atual',
-                            'required' => true,
                             'inputSize' => 3,
-                            'inputValue' => $abastecimento->media_veiculo                            
+                            'inputValue' => $abastecimento->media_veiculo,
+                            'disabled' => ($abastecimento->eh_afericao)                            
                         ]
                     ]
                 ])
@@ -83,7 +92,9 @@
                             'label' => 'Quantidade',
                             'required' => true,
                             'inputSize' => 4,
-                            'inputValue' => $abastecimento->volume_abastecimento                            
+                            'disabled' => true,
+                            'inputValue' => $abastecimento->volume_abastecimento,
+                            'disabled' => ($abastecimento->eh_afericao)                           
                         ],
                         [
                             'type' => 'number',
@@ -91,7 +102,8 @@
                             'label' => 'Valor Unitário',
                             'required' => true,
                             'inputSize' => 4,
-                            'inputValue' => $abastecimento->valor_litro                           
+                            'inputValue' => $abastecimento->valor_litro,
+                            'disabled' => ($abastecimento->eh_afericao)                           
                         ],
                         [
                             'type' => 'number',
@@ -100,7 +112,8 @@
                             'required' => true,
                             'inputSize' => 4,
                             'readOnly' => true,
-                            'inputValue' => $abastecimento->valor_abastecimento                             
+                            'inputValue' => $abastecimento->valor_abastecimento,
+                            'disabled' => ($abastecimento->eh_afericao)                             
                         ],
                     ]
                 ])
@@ -118,7 +131,8 @@
                             'liveSearch' => true,
                             'keyField' => 'id',
                             'defaultNone' => true,
-                            'indexSelected' => $abastecimento->atendente_id
+                            'indexSelected' => $abastecimento->atendente_id,
+                            'disabled' => ($abastecimento->eh_afericao)
                         ]
                     ]
                 ])
@@ -140,6 +154,7 @@
                                     'displayField' => 'num_bico',
                                     'keyField' => 'id',
                                     'defaultNone' => true,
+                                    'disabled' => true,
                                     'indexSelected' => $abastecimento->bico_id
                                 ],
                                 [
@@ -148,7 +163,8 @@
                                     'label' => 'Encerrante Inicial',
                                     'required' => true,
                                     'inputSize' => 4,
-                                    'inputValue' => $abastecimento->encerrante_inicial                            
+                                    'disabled' => true,
+                                    'inputValue' => $abastecimento->encerrante_inicial                    
                                 ],
                                 [
                                     'type' => 'number',
@@ -156,7 +172,8 @@
                                     'label' => 'Encerrante Final',
                                     'required' => true,
                                     'inputSize' => 4,
-                                    'inputValue' => $abastecimento->encerrante_final                 
+                                    'disabled' => true,  
+                                    'inputValue' => $abastecimento->encerrante_final             
                                 ]
                             ]
                         ])
@@ -174,7 +191,8 @@
                                     'type' => 'textarea',
                                     'field' => 'obs_abastecimento',
                                     'label' => false,
-                                    'inputValue' => nl2br($abastecimento->obs_abastecimento)
+                                    'inputValue' => nl2br($abastecimento->obs_abastecimento),
+                                    'disabled' => ($abastecimento->eh_afericao)
                                 ]
                             ]
                         ])
@@ -187,6 +205,11 @@
     <script>
         $(document).ready(function() {
             var BuscarVeiculo = function() {
+
+                if (Number($('#cliente_id').val()) == 0) {
+                    return
+                } 
+
                 var cliente = {};
 
                 cliente.id = $('#cliente_id').val();
@@ -275,11 +298,11 @@
                 var qtdAbastecimento = $('#volume_abastecimento').val();
                 var mediaCalculada = ((kmAtual - kmAnterior) / qtdAbastecimento).toFixed(3);
 
-                console.log('kmAnterior = ' + kmAnterior);
-                console.log('kmAtual = ' + kmAtual);
-                console.log('qtdAbastecimento = ' + qtdAbastecimento);
-                console.log('kmPercorrido = ' + (kmAtual - kmAnterior));
-                console.log('mediaCalculada = ' + mediaCalculada);
+                //console.log('kmAnterior = ' + kmAnterior);
+                //console.log('kmAtual = ' + kmAtual);
+                //console.log('qtdAbastecimento = ' + qtdAbastecimento);
+                //console.log('kmPercorrido = ' + (kmAtual - kmAnterior));
+                //console.log('mediaCalculada = ' + mediaCalculada);
 
 
                 $('#media_atual').val(mediaCalculada);

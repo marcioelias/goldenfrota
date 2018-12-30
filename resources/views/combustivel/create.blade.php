@@ -35,7 +35,7 @@
                             'inputSize' => 4
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'valor',
                             'label' => 'Valor',
                             'required' => true,
@@ -48,9 +48,9 @@
             @endsection
         @endcomponent
     </div>
-    <script>
+    {{--  <script>
         jQuery(function($){
             $("#valor").mask('0.000', {reverse: true});
         });
-    </script>
+    </script>  --}}
 @endsection

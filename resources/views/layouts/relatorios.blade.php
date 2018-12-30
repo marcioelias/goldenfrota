@@ -77,6 +77,4 @@
             </div>
         </div>
     </div>
-@component('layouts.bottom_scripts')
-@endcomponent
 @endsection

@@ -6,6 +6,9 @@
     $required = isset($required) ? $required : false;
     $css = isset($css) ? $css : '';
     $rows = isset($rows) ? $rows : 5;
+    $name = isset($name) ? $name : $field;
+    $id = isset($id) ? $id : $name;
+    $readOnly = ($readOnly) ? 'readonly' : '';
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\TipoBomba;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class TipoBombaController extends Controller
@@ -15,31 +16,26 @@ class TipoBombaController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        if (isset($request->searchField)) {
-            $tipo_bombas = TipoBomba::where('tipo_bomba', 'like', '%'.$request->searchField.'%')->paginate();
+        if (Auth::user()->canListarTipoBomba()) {
+            if (isset($request->searchField)) {
+                $tipo_bombas = TipoBomba::where('tipo_bomba', 'like', '%'.$request->searchField.'%')->paginate();
+            } else {
+                $tipo_bombas = TipoBomba::paginate();
+            }
+            return View('tipo_bomba.index', [
+                'tipo_bombas' => $tipo_bombas,
+                'fields' => $this->fields
+            ]);
         } else {
-            $tipo_bombas = TipoBomba::paginate();
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
-        return View('tipo_bomba.index', [
-            'tipo_bombas' => $tipo_bombas,
-            'fields' => $this->fields
-        ]);
     }
 
     /**
@@ -49,7 +45,12 @@ class TipoBombaController extends Controller
      */
     public function create()
     {
-        return View('tipo_bomba.create');
+        if (Auth::user()->canCadastrarTipoBomba()) {
+            return View('tipo_bomba.create');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -60,32 +61,31 @@ class TipoBombaController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'tipo_bomba' => 'required|string|unique:tipo_bombas'
-        ]);
+        if (Auth::user()->canCadastrarTipoBomba()) {
+            $this->validate($request, [
+                'tipo_bomba' => 'required|string|unique:tipo_bombas'
+            ]);
 
-        try {
-            $tipo_bomba = new TipoBomba($request->all());
-            if ($tipo_bomba->save()) {
-                Session::flash('success', 'Tipo de Bomba '.$tipo_bomba->tipo_bomba.' cadastrado com sucesso.');
+            try {
+                $tipo_bomba = new TipoBomba($request->all());
+                if ($tipo_bomba->save()) {
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('models.tipo_bomba'),
+                        'name' => $tipo_bomba->tipo_bomba
+                    ]));
 
-                return redirect()->action('TipoBombaController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return redirect()->back()->withTipo_bomba($request->all());
-        } 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\TipoBomba  $tipoBomba
-     * @return \Illuminate\Http\Response
-     */
-    public function show(TipoBomba $tipoBomba)
-    {
-        //
+                    return redirect()->action('TipoBombaController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            } 
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -96,10 +96,14 @@ class TipoBombaController extends Controller
      */
     public function edit(TipoBomba $tipoBomba)
     {
-        $tipo_bomba = TipoBomba::find($tipoBomba->id);
-        return View('tipo_bomba.edit', [
-            'tipo_bomba' => $tipo_bomba
-        ]);
+        if (Auth::user()->canAlterarTipoBomba()) {
+            return View('tipo_bomba.edit', [
+                'tipo_bomba' => $tipo_bomba
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -111,24 +115,33 @@ class TipoBombaController extends Controller
      */
     public function update(Request $request, TipoBomba $tipoBomba)
     {
-        $this->validate($request, [
-            'tipo_bomba' => 'required|string|unique:tipo_bombas,id,'.$tipoBomba->id
-        ]);
-        
-        try {
-            $tipo_bomba = TipoBomba::find($tipoBomba->id);
-            $tipo_bomba->tipo_bomba = $request->tipo_bomba;
-            $tipo_bomba->ativo = $request->ativo;
+        if (Auth::user()->canAlterarTipoBomba()) {
+            $this->validate($request, [
+                'tipo_bomba' => 'required|string|unique:tipo_bombas,id,'.$tipoBomba->id
+            ]);
+            
+            try {
+                $tipo_bomba->tipo_bomba = $request->tipo_bomba;
+                $tipo_bomba->ativo = $request->ativo;
 
-            if ($tipo_bomba->save()) {
-                Session::flash('success', 'Tipo de Bomba '.$tipo_bomba->tipo_bomba.' alterado com sucesso.');
+                if ($tipo_bomba->save()) {
+                    Session::flash('success', __('messages.update_success', [
+                        'model' => __('models.tipo_bomba'),
+                        'name' => $tipo_bomba->tipo_bomba
+                    ]));
 
-                return redirect()->action('TipoBombaController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao alterar o registro. '.$e->getMessage());
-            return redirect()->back()->withTipo_bomba($request->all());
-        } 
+                    return redirect()->action('TipoBombaController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            } 
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -139,16 +152,32 @@ class TipoBombaController extends Controller
      */
     public function destroy(TipoBomba $tipoBomba)
     {
-        try {
-            $tipo_bomba = TipoBomba::find($tipoBomba->id);
-            if ($tipo_bomba->delete()) {
-                Session::flash('success', 'Tipo de Bomba '.$tipo_bomba->tipo_bomba.' removido com sucesso.');
-                
+        if (Auth::user()->canAlterarTipoBomba()) {
+            try {
+                if ($tipo_bomba->delete()) {
+                    Session::flash('success', __('messages.delete_success', [
+                        'model' => __('models.tipo_bomba'),
+                        'name' => $tipo_bomba->tipo_bomba
+                    ]));
+                    
+                    return redirect()->action('TipoBombaController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('TipoBombaController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('TipoBombaController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 }

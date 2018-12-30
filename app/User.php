@@ -2,11 +2,16 @@
 
 namespace App;
 
+use App\Afericao;
+use App\AjusteTanque;
+use App\OrdemServico;
 use Illuminate\Notifications\Notifiable;
+use Laratrust\Traits\LaratrustUserTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use LaratrustUserTrait;
     use Notifiable;
 
     /**
@@ -15,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'username', 'password',
     ];
 
     /**
@@ -26,4 +31,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function ordem_servico() {
+        return $this->hasMany(OrdemServico::class);
+    }
+
+    public function ajuste_tanque() {
+        return $this->hasMany(AjusteTanque::class);
+    }
+
+    public function afericoes() {
+        return $this->hasMany(Afericao::class);
+    }
 }

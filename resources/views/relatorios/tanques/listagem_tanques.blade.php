@@ -37,7 +37,7 @@
                 {{$tanque->capacidade}}
             </td>
             <td>
-                {{$tanque->posicao}}
+                {{ number_format($tanque->posicao, 3) }}
             </td>
         </tr>
         @endforeach

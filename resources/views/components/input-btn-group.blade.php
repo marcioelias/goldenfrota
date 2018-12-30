@@ -6,6 +6,7 @@
     $required = isset($required) ? $required : false;
     $css = isset($css) ? $css : '';
     $defaultValue = isset($defaultValue) ? $defaultValue : false;
+    $readOnly = ($readOnly) ? 'readonly' : '';
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}

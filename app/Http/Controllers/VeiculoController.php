@@ -32,16 +32,6 @@ class VeiculoController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -105,7 +95,7 @@ class VeiculoController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'grupo_veiculo_id' => 'required',
+            'grupo_veiculo_id' => 'required|integer|min:1',
             'cliente_id' => 'required',
             'placa' => 'required|formato_placa_de_veiculo',
             'marca_veiculo_id' => 'required',
@@ -439,7 +429,7 @@ class VeiculoController extends Controller
             $whereModelo = '1 = 1';
         }
 
-        dd($request);
+        //dd($request);
 
         $modeloVeiculos = Abastecimento::select('marca_veiculos.marca_veiculo', 'modelo_veiculos.id', 'modelo_veiculos.modelo_veiculo')
                             ->join('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')

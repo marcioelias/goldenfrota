@@ -5,6 +5,10 @@
     $autofocus = isset($autofocus) ? $autofocus : false;
     $required = isset($required) ? $required : false;
     $css = isset($css) ? $css : '';
+    $name = isset($name) ? $name : $field;
+    $id = isset($id) ? $id : $name;
+    $readOnly = ($readOnly) ? 'readonly' : '';
+    $maxLength = isset($maxLength) ? $maxLength : false;
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}
@@ -14,7 +18,7 @@
         @endcomponent
     @endif  
 
-    <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
+    <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }} {{$readOnly}} {{ ($maxLength) ? 'maxlength='.$maxLength : '' }}>
 
     @if ($errors->has($field))
         <span class="help-block">

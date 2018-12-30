@@ -11,6 +11,10 @@ class TipoPessoasTableSeeder extends Seeder
      */
     public function run()
     {
+        $this->command->info('Limpando tabela tipo_pessoas');
+        $this->truncateTipoPessoasTable();
+
+        $this->command->info('Criando Tipos de Pessoa');
         DB::table('tipo_pessoas')->insert([
             [
                 'tipo_pessoa' => 'Física'
@@ -19,5 +23,13 @@ class TipoPessoasTableSeeder extends Seeder
                 'tipo_pessoa' => 'Jurídica'
             ]
         ]);
+    }
+
+    public function truncateTipoPessoasTable()
+    {
+        Schema::disableForeignKeyConstraints();
+        DB::table('tipo_pessoas')->truncate();
+        \App\TipoPessoa::truncate();
+        Schema::enableForeignKeyConstraints();
     }
 }

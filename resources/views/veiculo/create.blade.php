@@ -102,7 +102,7 @@
                             'keyField' => 'id'
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'ano',
                             'label' => 'Ano',
                             'inputSize' => 2
@@ -125,13 +125,13 @@
                             'inputSize' => 3
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'hodometro',
                             'label' => 'Km',
                             'inputSize' => 3
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'media_minima',
                             'label' => 'Média Mínima',
                             'inputSize' => 3
@@ -160,7 +160,6 @@
                     dataType: 'JSON',
                     cache: false,
                     success: function (data) {
-                        console.log(data);
                         $("#departamento_id")
                             .removeAttr('disabled')
                             .find('option')

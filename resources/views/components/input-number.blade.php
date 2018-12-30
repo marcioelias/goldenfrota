@@ -8,6 +8,7 @@
     $numMin = isset($numMin) ? $numMin : '0,00';
     $numMax = isset($numMax) ? $numMax : '999999999,99';
     $numStep = isset($numStep) ? $numStep : 'any';
+    $readOnly = ($readOnly) ? 'readonly' : '';
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}
@@ -17,7 +18,7 @@
         @endcomponent
     @endif  
 
-    <input type="number" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" min="{{$numMin}}" max="{{$numMax}}" step="{{$numStep}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
+    <input type="number" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" min="{{$numMin}}" max="{{$numMax}}" step="{{$numStep}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}  {{$readOnly}}>
 
     @if ($errors->has($field))
         <span class="help-block">

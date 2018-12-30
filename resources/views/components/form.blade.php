@@ -24,7 +24,7 @@
 
         <div class="form-group">
             <div class="{{ ($btnAlign == 'Right') ? 'pull-right' : '' }}">
-                @if(is_array($formButtons))
+                @if(is_array($formButtons)) 
                     @foreach($formButtons as $formButton)
                         @if(($formButton['type'] == 'submit') || ($formButton['type'] == 'reset'))
                             <button type="{{$formButton['type']}}" class="btn btn-{{$btnColor[$formButton['type']]}}" data-toggle="tooltip" data-placement="top" title="{{ __($formButton['label']) }}" data-original-title="{{ __($formButton['label']) }}">

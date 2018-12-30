@@ -44,9 +44,11 @@
                     
                 </div>
                 <div class="col">
+                    @permission('cadastrar-'. str_replace('_', '-', $model))
                     <a href="{{ route($model.'.create') }}" class="btn btn-sm-12 btn-success" data-toggle="tooltip" data-placement="top" title="{{__('Novo')}}" data-original-title="{{__('Novo')}}">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </a>
+                    @endpermission
                 </div>
                 @if(isset($searchParms))
                     @component($searchParms)
@@ -57,7 +59,7 @@
         {{-- </div>  --}} 
     </div>
     {{--  <div class="panel-body">  --}}
-        <table class="table table-bordered table-striped table-hover">
+        <table class="table table-bordered table-striped table-condensed table-hover">
             <thead>
                 <tr>
                     @foreach($captions as $field => $caption)
@@ -75,7 +77,9 @@
                 @if ($colorLineCondition) 
                 <tr {{ ($row->$lineConditionField == $lineConditionValue) ? 'class='.$lineCondicionClass : '' }}>
                 @else
+                @if(isset($row->ativo)) 
                 <tr {{(!$row->ativo) ? 'class=danger' : ''}}>
+                @endif
                 @endif
                     @foreach($captions as $field => $caption)
                         @if(is_array($caption))
@@ -83,7 +87,11 @@
                             <td scope="row">{{ __(($row->$field == '1') ? 'Sim' : 'Não') }}</td>
                             @endif
                             @if($caption['type'] == 'datetime')
-                            <td scope="row">{{ date_format(date_create($row->$field), 'd/m/Y H:i:s') }}</td>
+                                @if($row->$field) 
+                                <td scope="row">{{ date_format(date_create($row->$field), 'd/m/Y H:i:s') }}</td>
+                                @else 
+                                <td scope="row"></td>
+                                @endif
                             @endif
                             @if($caption['type'] == 'date')
                             <td scope="row">{{ date_format(date_create($row->$field), 'd/m/Y') }}</td>
@@ -104,8 +112,13 @@
                         @if(is_array($actions))
                             @foreach($actions as $action)
                                 @if(is_array($action))
-                                    @component($action['custom_action'], ['data' => $row])
-                                    @endcomponent
+                                    @if(isset($action['custom_action']))
+                                        @component($action['custom_action'], ['data' => $row])
+                                        @endcomponent
+                                    @else 
+                                        @component('components.action', ['action' => $action['action'], 'model' => $model, 'row' => $row, 'displayField' => $displayField, 'keyField'=> $keyField, 'target' => $action['target']])
+                                        @endcomponent
+                                    @endif
                                 @else
                                     @component('components.action', ['action' => $action, 'model' => $model, 'row' => $row, 'displayField' => $displayField, 'keyField'=> $keyField])
                                     @endcomponent
@@ -133,7 +146,10 @@
     <div class="modal-content modal-default">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title"><strong></strong></h4>
+        <div class="row">
+            <div class="col-sm-1"><span class="glyphicon glyphicon-alert"></span></div>
+            <div class="col"><h4 class="modal-title"><strong></strong></h4></div>
+        </div>
       </div>
       <div class="modal-body">
         <p></p>

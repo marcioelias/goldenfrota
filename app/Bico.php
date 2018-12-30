@@ -2,9 +2,14 @@
 
 namespace App;
 
+use App\Tanque;
 use Illuminate\Database\Eloquent\Model;
 
 class Bico extends Model
 {
-    public $fillable = ['num_bico', 'tanque_id', 'bomba_id', 'encerrante', 'ativo'];
+    public $fillable = ['num_bico', 'tanque_id', 'bomba_id', 'encerrante', 'permite_insercao', 'ativo'];
+
+    public function tanque() {
+        return $this->belongsTo(Tanque::class);
+    }
 }

@@ -20,23 +20,99 @@
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
                 @auth
+                @role(['super', 'administrador'])
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        Configurações
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Combustíveis</a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-submenu">
+                                    @permission('listar-tanque')
+                                    <li><a href="{{route('tanque.index')}}">Tanques</a></li>
+                                    @endpermission
+                                    @permission('listar-bomba')
+                                    <li><a href="{{route('bomba.index')}}">Bombas</a></li>
+                                    @endpermission
+                                    @permission('listar-bico')
+                                    <li><a href="{{route('bico.index')}}">Bicos</a></li>
+                                    @endpermission
+                                    <li class="divider"></li>
+                                    @permission('listar-tipo-bomba')
+                                    <li><a href="{{route('tipo_bomba.index')}}">Tipos de Bomba</a></li>
+                                    @endpermission
+                                    @permission('listar-modelo-bomba')
+                                    <li><a href="{{route('modelo_bomba.index')}}">Modelos de Bomba</a></li>
+                                    @endpermission
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Produtos</a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-submenu">
+                                    @permission('listar-unidade')
+                                    <li><a href="{{route('unidade.index')}}">Unidades</a></li>
+                                    @endpermission
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#">Controle de Acesso</a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-submenu">
+                                    @permission('listar-user')
+                                    <li><a href="{{route('user.index')}}">Usuários</a></li>
+                                    @endpermission
+                                    @permission('listar-role')
+                                    <li><a href="{{route('role.index')}}">Perfis de Acesso</a></li>
+                                    @endpermission
+                                    @permission('listar-role-user')
+                                    <li><a href="{{route('role_user.index')}}">Associação de Usuários e Perfis de Acesso</a></li>
+                                    @endpermission
+                                </li>
+                            </ul>
+                        </li> 
+                        <li class="divider"></li> 
+                        <li><a href="{{route('parametro.create')}}">Parâmetros</a></li>
+                        @role('super')
+                        <li class="divider"></li> 
+                        <li><a href="{{route('setting.index')}}">Configurações</a></li>            
+                        @endrole
+                    </ul>    
+                </li>
+                @endrole
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         Produtos
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        @permission('listar-combustivel')
                         <li><a href="{{route('combustivel.index')}}">Combustíveis</a></li>
+                        @endpermission
+                        @permission('listar-produto')
                         <li><a href="{{route('produto.index')}}">Produtos</a></li>
+                        @endpermission
+                        @permission('listar-grupo-produto')
                         <li><a href="{{route('grupo_produto.index')}}">Grupos de Produto</a></li>
-                        <li><a href="{{route('unidade.index')}}">Unidades</a></li>
+                        @endpermission
+                        {{--  @permission('listar-tipo-movimentacao-produto')
+                        <li><a href="{{route('tipo_movimentacao_produto.index')}}">Tipo de Movimentação de Produto</a></li>
+                        @endpermission  --}}
+                        @permission('listar-estoque')
+                        <li><a href="{{route('estoque.index')}}">Estoques</a></li>
+                        @endpermission
                         <li class="divider"></li>
-                        <li><a href="{{route('tanque.index')}}">Tanques</a></li>
-                        <li><a href="{{route('bomba.index')}}">Bombas</a></li>
-                        <li><a href="{{route('bico.index')}}">Bicos</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{{route('tipo_bomba.index')}}">Tipos de Bomba</a></li>
-                        <li><a href="{{route('modelo_bomba.index')}}">Modelos de Bomba</a></li>
+                        @permission('listar-servico')
+                        <li><a href="{{route('servico.index')}}">Serviços</a></li>
+                        @endpermission
+                        @permission('listar-grupo-servico')
+                        <li><a href="{{route('grupo_servico.index')}}">Grupos de Serviço</a></li>
+                        @endpermission
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -45,11 +121,22 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        @permission('listar-veiculo')
                         <li><a href="{{route('veiculo.index')}}">Veículos</a></li>
+                        @endpermission
+                        @permission('listar-grupo-veiculo')
                         <li><a href="{{route('grupo_veiculo.index')}}">Grupos de Veículo</a></li>
+                        @endpermission
                         <li class="divider"></li>
+                        @permission('listar-marca-veiculo')
                         <li><a href="{{route('marca_veiculo.index')}}">Marcas de Veículo</a></li>
+                        @endpermission
+                        @permission('listar-modelo-veiculo')
                         <li><a href="{{route('modelo_veiculo.index')}}">Modelos de Veículo</a></li>
+                        @endpermission
+                        @permission('listar-posicao-pneu')
+                        <li><a href="{{route('posicao_pneu.index')}}">Posição de Pneu</a></li>
+                        @endpermission
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -58,11 +145,19 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        @permission('listar-atendente')
                         <li><a href="{{route('atendente.index')}}">Atendentes</a></li>
+                        @endpermission
+                        @permission('listar-cliente')
                         <li><a href="{{route('cliente.index')}}">Clientes</a></li>
-                        <li><a href="{{route('user.index')}}">Usuários</a></li>
+                        @endpermission
+                        @permission('listar-fornecedor')
+                        <li><a href="{{route('fornecedor.index')}}">Fornecedores</a></li>
+                        @endpermission
                         <li class="divider"></li>
+                        @permission('listar-departamento')
                         <li><a href="{{route('departamento.index')}}">Departamentos</a></li>
+                        @endpermission
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -71,11 +166,33 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        @permission('listar-abastecimento')
                         <li><a href="{{route('abastecimento.index')}}">Abastecimentos</a></li>
-                        {{--  <li><a href="#">Vendas de Produtos</a></li>  --}}
-                        {{--  <li class="divider"></li>  --}}
-                        {{--  <li><a href="#">Entrada de Produtos</a></li>  --}}
+                        @endpermission
+                        {{--  @permission('listar-tanque-movimentacao')
                         <li><a href="{{route('tanque_movimentacao.index')}}">Entrada de Combustíveis</a></li>
+                        @endpermission  --}}
+                        @permission('listar-entrada-tanque')
+                        <li><a href="{{route('entrada_tanque.index')}}">Entrada de Combustíveis</a></li>
+                        @endpermission
+                        @permission('listar-ajuste-tanque')
+                        <li><a href="{{route('ajuste_tanque.index')}}">Ajustes de Tanque</a></li>
+                        @endpermission
+                        <li class="divider"></li>
+                        @permission('listar-entrada-estoque')
+                        <li><a href="{{route('entrada_estoque.index')}}">Entradas no Estoque</a></li>
+                        @endpermission
+                        @permission('listar-saida-estoque')
+                        <li><a href="{{route('saida_estoque.index')}}">Saídas do Estoque</a></li>
+                        @endpermission
+                        <li class="divider"></li>
+                        @permission('listar-inventario')
+                        <li><a href="{{route('inventario.index')}}">Inventários</a></li>
+                        @endpermission
+                         <li class="divider"></li>
+                        @permission('listar-ordem-servico')
+                        <li><a href="{{route('ordem_servico.index')}}">Ordens de Serviço</a></li>
+                        @endpermission
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -84,14 +201,40 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        @permission('acesso-posicao-tanques-grafico')
                         <li><a href="{{route('relatorio_posicao_tanques')}}" target="_blank">Posição dos Tanques (Gráfico)</a></li>
+                        @endpermission
+                        @permission('acesso-media-consumo-veiculos-grafico')
                         <li><a href="{{route('relatorio_media_consumo')}}" target="_blank">Média de Consumo de Veículos (Gráfico)</a></li>
+                        @endpermission
+                        @permission('acesso-listagem-clientes')
                         <li><a href="{{route('relatorio_listagem_clientes')}}" target="_blank">Listagem de Clientes</a></li>
+                        @endpermission
+                        @permission('acesso-listagem-veiculos')
                         <li><a href="{{route('relatorio_listagem_veiculos')}}">Listagem de Veículos</a></li>
+                        @endpermission
+                        @permission('acesso-listagem-tanques')
                         <li><a href="{{route('relatorio_listagem_tanques')}}" target="_blank">Listagem de Tanques</a></li>
+                        @endpermission
+                        @permission('acesso-relatorio-abastecimentos')
                         <li><a href="{{route('param_relatorio_abastecimentos')}}">Relatório de Abastecimentos</a></li>
+                        @endpermission
+                        @permission('acesso-relatorio-abastecimentos-bico')
                         <li><a href="{{route('param_relatorio_abastecimentos_bico')}}">Relatório de Abastecimentos - Bico</a></li>
+                        @endpermission
+                        @permission('acesso-relatorio-media-consumo-modelo')
                         <li><a href="{{route('param_relatorio_media_modelo')}}">Relatório de Média de Consumo por Modelo</a></li>
+                        @endpermission
+                        <li class="divider"></li>
+                        @permission('acesso-relatorio-posicao-estoque')
+                        <li><a href="{{route('param_relatorio_posicao_estoque')}}">Relatório de Posição de Estoque</a></li>
+                        @endpermission
+                        @permission('acesso-relatorio-estoque-minimo')
+                        <li><a href="{{route('param_relatorio_estoque_minimo')}}">Relatório de Produtos Abaixo do Estoque Mínimo</a></li>
+                        @endpermission
+                        @permission('acesso-relatorio-movimentacao-estoque')
+                        <li><a href="{{route('param_relatorio_movimentacao_estoque')}}">Relatório de Movimentação de Estoque - Produtos</a></li>
+                        @endpermission
                         {{--  <li><a href="{{route('relatorio_media_consumo')}}">Listagem de Entradas de Combustíveis</a></li>
                         <li><a href="{{route('relatorio_media_consumo')}}">Listagem de Entradas de Abastecimentos</a></li>  --}}
                         {{--  <li><a href="#">Vendas de Produtos</a></li>  --}}
@@ -103,10 +246,15 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        @permission('acesso-exportar-exportar-dados-cadastrais')
                         <li><a href="{{route('exportacao')}}">Exportar Dados Cadastrais</a></li>
+                        @endpermission
+                        @permission('acesso-importar-abastecimentos')
                         <li><a href="{{route('importacao')}}">Importar Abastecimentos</a></li>
+                        @endpermission
                     </ul>
                 </li>
+                
                 @else
                 &nbsp;
                 @endauth
@@ -117,18 +265,20 @@
             </ul>
 
             <!-- Right Side Of Navbar -->
+            @auth
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
-                @guest
-                    <li><a href="{{ route('login') }}"><span class="glyphicon glyphicon-user"></span> Entrar</a></li>
+                
+                    {{--  <li><a href="{{ route('login') }}"><span class="glyphicon glyphicon-user"></span> Entrar</a></li>  --}}
                     {{--  <li><a href="{{ route('register') }}">Register</a></li>  --}}
-                @else
+                
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <span class="glyphicon glyphicon-user"></span>  {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
-
                         <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{route('user.profile')}}"><i class="glyphicon glyphicon-cog"></i> Minha Conta</a></li>
+                            <li class="divider"></li>
                             <li>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
@@ -142,8 +292,8 @@
                             </li>
                         </ul>
                     </li>
-                @endguest
             </ul>
+            @endauth
         </div>
     </div>
 </nav>

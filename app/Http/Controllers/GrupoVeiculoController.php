@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\GrupoVeiculo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class GrupoVeiculoController extends Controller
@@ -15,32 +16,27 @@ class GrupoVeiculoController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        if (isset($requet->searchField)) {
-            $grupoVeiculos = GrupoVeiculo::where('grupo_veiculo', 'like', '%'.$request->searchField.'%')->paginate();
-        } else {
-            $grupoVeiculos = GrupoVeiculo::paginate();
-        }
+        if (Auth::user()->canListarGrupoVeiculo()) {
+            if (isset($requet->searchField)) {
+                $grupoVeiculos = GrupoVeiculo::where('grupo_veiculo', 'like', '%'.$request->searchField.'%')->paginate();
+            } else {
+                $grupoVeiculos = GrupoVeiculo::paginate();
+            }
 
-        return View('grupo_veiculo.index', [
-            'grupoVeiculos' => $grupoVeiculos,
-            'fields' => $this->fields
-        ]);
+            return View('grupo_veiculo.index', [
+                'grupoVeiculos' => $grupoVeiculos,
+                'fields' => $this->fields
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -50,7 +46,12 @@ class GrupoVeiculoController extends Controller
      */
     public function create()
     {
-        return View('grupo_veiculo.create');
+        if (Auth::user()->canCadastrarGrupoVeiculo()) {
+            return View('grupo_veiculo.create');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -61,34 +62,31 @@ class GrupoVeiculoController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'grupo_veiculo' => 'required|unique:grupo_veiculos'
-        ]);
-
-        try {
-            $grupoVeiculo = new GrupoVeiculo($request->all());
-
-            if ($grupoVeiculo->save()) {
-                Session::flash('success', 'Grupo de Veículo '.$grupoVeiculo->grupo_veiculo.' cadastrado com sucesso.');
-                return redirect()->action('GrupoVeiculoController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('grupo_veiculo.create', [
-                'grupoVeiculo' => new GrupoVeiculo($request->all())
+        if (Auth::user()->canCadastrarGrupoVeiculo()) {
+            $this->validate($request, [
+                'grupo_veiculo' => 'required|unique:grupo_veiculos'
             ]);
-        }
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\GrupoVeiculo  $grupoVeiculo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(GrupoVeiculo $grupoVeiculo)
-    {
-        //
+            try {
+                $grupoVeiculo = new GrupoVeiculo($request->all());
+
+                if ($grupoVeiculo->save()) {
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('models.grupo_veiculo'),
+                        'name' => $grupoVeiculo->grupo_veiculo
+                    ]));
+                    return redirect()->action('GrupoVeiculoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -99,11 +97,14 @@ class GrupoVeiculoController extends Controller
      */
     public function edit(GrupoVeiculo $grupoVeiculo)
     {
-        $grupoVeiculo = GrupoVeiculo::find($grupoVeiculo->id);
-
-        return View('grupo_veiculo.edit', [
-            'grupoVeiculo' => $grupoVeiculo
-        ]);
+        if (Auth::user()->canAlterarGrupoVeiculo()) {
+            return View('grupo_veiculo.edit', [
+                'grupoVeiculo' => $grupoVeiculo
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -115,24 +116,31 @@ class GrupoVeiculoController extends Controller
      */
     public function update(Request $request, GrupoVeiculo $grupoVeiculo)
     {
-        $this->validate($request, [
-            'grupo_veiculo' => 'required|unique:grupo_veiculos,id,'.$grupoVeiculo->id
-        ]);
-
-        try {
-            $grupoVeiculo = GrupoVeiculo::find($grupoVeiculo->id);
-            $grupoVeiculo->grupo_veiculo = $request->grupo_veiculo;
-            $grupoVeiculo->ativo = $request->ativo;
-
-            if ($grupoVeiculo->save()) {
-                Session::flash('success', 'Grupo de Veículo '.$grupoVeiculo->grupo_veiculo.' alterado com sucesso.');
-                return redirect()->action('GrupoVeiculoController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('grupo_veiculo.update', [
-                'grupoVeiculo' => new GrupoVeiculo($request->all())
+        if (Auth::user()->canAlterarGrupoVeiculo()) {
+            $this->validate($request, [
+                'grupo_veiculo' => 'required|unique:grupo_veiculos,id,'.$grupoVeiculo->id
             ]);
+
+            try {
+                $grupoVeiculo->grupo_veiculo = $request->grupo_veiculo;
+                $grupoVeiculo->ativo = $request->ativo;
+
+                if ($grupoVeiculo->save()) {
+                    Session::flash('success', __('messages.update_success', [
+                        'model' => __('models.grupo_veiculo'),
+                        'name' => $grupoVeiculo->grupo_veiculo
+                    ]));
+                    return redirect()->action('GrupoVeiculoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
@@ -144,16 +152,31 @@ class GrupoVeiculoController extends Controller
      */
     public function destroy(GrupoVeiculo $grupoVeiculo)
     {
-        try {
-            $grupoVeiculo = GrupoVeiculo::find($grupoVeiculo->id);
-            if ($grupoVeiculo->delete()) {
-                Session::flash('success', 'Grupo de Veículo '.$grupoVeiculo->grupo_veiculo.' removido com sucesso.');
-                
+        if (Auth::user()->canExcluirGrupoVeiculo()) {
+            try {
+                if ($grupoVeiculo->delete()) {
+                    Session::flash('success', __('messages.delete_success', [
+                        'model' => __('models.grupo_veiculo'),
+                        'name' => $grupoVeiculo->grupo_veiculo
+                    ]));
+                    return redirect()->action('GrupoVeiculoController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('GrupoVeiculoController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('GrupoVeiculoController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 }

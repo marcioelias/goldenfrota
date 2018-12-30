@@ -7,16 +7,18 @@
     $indexSelected = isset($indexSelected) ? $indexSelected : false;
     $liveSearch = isset($liveSearch) ? $liveSearch : false;
     $defaultNone = isset($defaultNone) ? $defaultNone : false;
+    $vModel = isset($vModel) ? $vModel : false;
+    $readOnly = ($readOnly) ? 'readonly' : '';
 @endphp
 <div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }}">
     @if(isset($label))
         @component('components.label', ['label' => $label, 'field' => $field, 'required' => $required])
         @endcomponent
     @endif  
-    <select class="form-control selectpicker {{$css}}" {{ $liveSearch ? 'data-live-search=true' : '' }} id="{{$id}}" name="{{$name}}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
+    <select class="form-control selectpicker {{$css}}" {{ ($vModel) ? 'v-model='.$vModel : '' }} {{ $liveSearch ? 'data-live-search=true' : '' }} id="{{$id}}" name="{{$name}}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
         @if(isset($items))
             @if($defaultNone)
-                <option {{--  disabled  --}} selected value="-1" {{--  style="display:none"  --}}> Nada Selecionado </option>
+                <option {{--  disabled  --}} selected value="" {{--  style="display:none"  --}}> Nada Selecionado </option>
             @endif
             @if(is_array($items))
                 @for ($i = 0; $i < count($items); $i++)
