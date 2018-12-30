@@ -35,7 +35,8 @@
                             'keyField' => 'id',
                             'liveSearch' => true,
                             'disabled' => true,
-                            'inputSize' => 4
+                            'inputSize' => 4,
+                            'multiple' => true
                         ],
                         [
                             'type' => 'select',

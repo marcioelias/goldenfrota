@@ -34,6 +34,7 @@
                 $input['dataOnStyle'] = isset($input['dataOnStyle']) ? $input['dataOnStyle'] : null;
                 $input['dataOffStyle'] = isset($input['dataOffStyle']) ? $input['dataOffStyle'] : null;
                 $input['permission'] = isset($input['permission']) ? $input['permission'] : null;
+                $input['multiple'] = isset($input['multiple']) ? $input['multiple'] : false;
             @endphp
             @if($input['type'] == 'text')
                 @component('components.input-text', [
@@ -138,7 +139,8 @@
                     'defaultNone' => $input['defaultNone'],
                     'vModel' => $input['vModel'],
                     'readOnly' => $input['readOnly'],
-                    'permission' => $input['permission']
+                    'permission' => $input['permission'],
+                    'multiple' => $input['multiple']
                 ])
                 @endcomponent
             @endif
