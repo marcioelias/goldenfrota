@@ -1,4 +1,4 @@
-let mix = require('laravel-mix');
+const mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,67 +11,15 @@ let mix = require('laravel-mix');
  |
  */
 
-/* mix.js('resources/assets/js/app.js', 'public/js')
-    .extract(['tether',
-            'jquery',
-            'jquery-ui',
-            'jquery-smooth-scroll',
-            'jquery-browserify',
-            'jquery-mask-plugin',
-            'bootstrap-switch',
-            'bootstrap-slider'])
-    .autoload({
-        jquery: ['$', 'jQuery', 'jquery'],
-        tether: ['window.Tether', 'Tether']
-    })
-    .sass('resources/assets/sass/app.scss', 'public/css/app.css')
-    .styles(['node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css',
-            'node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css'
-    ], 'public/css/other.css');  */
+
 
 mix.js('resources/js/app.js', 'public/js')
-    .extract([
-        'vue',
-        'tether',
-        'jquery',
-        //'jquery-ui',
-        //'jquery-smooth-scroll',
-        //'jquery-browserify',
-        'jquery-mask-plugin',
-        //'bootstrap-switch',
-        'bootstrap-toggle',
-        //'bootstrap-slider',
-        'bootstrap-select',
-        'eonasdan-bootstrap-datetimepicker'
-        /* 'emodal' */
-    ])
-    .autoload({
-        jquery: ['$', 'jQuery', 'jquery'],
-        tether: ['window.Tether', 'Tether']
-    })
-    .sass('resources/sass/app.scss', 'public/css/app.css')
-    .styles([
-        //'node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css',
-        //'node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css',
-        'node_modules/bootstrap-select/dist/css/bootstrap-select.min.css',
-        //'node_modules/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.min.css',
-        'node_modules/bootstrap-toggle/css/bootstrap2-toggle.css',
-        'node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-    ], 'public/css/other.css'); 
-
-mix.js([
-        //'node_modules/ajax-bootstrap-select/dist/js/ajax-bootstrap-select.min.js',
-        'node_modules/bootstrap-select/dist/js/i18n/defaults-pt_BR.min.js'
-    ], 'public/js/other.js'); 
-
-mix.js('resources/js/entradaestoque.js', 'public/js');
-mix.js('resources/js/entradatanque.js', 'public/js');
-mix.js('resources/js/saidaestoque.js', 'public/js');
-mix.js('resources/js/inventarioestoque.js', 'public/js');
-mix.js('resources/js/estoqueproduto.js', 'public/js');
-mix.js('resources/js/osservico.js', 'public/js');
-mix.js('resources/js/os.js', 'public/js');
-
-/* mix.styles([
-        'node_modules/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.min.css'
-    ], 'public/css/custom.css'); */
+   .js('resources/js/bs4navbar.js', 'public/js')
+   .js('resources/js/entradaestoque.js', 'public/js')
+   .js('resources/js/entradatanque.js', 'public/js')
+   .js('resources/js/saidaestoque.js', 'public/js')
+   .js('resources/js/inventarioestoque.js', 'public/js')
+   .js('resources/js/estoqueproduto.js', 'public/js')
+   .js('resources/js/osservico.js', 'public/js')
+   .js('resources/js/os.js', 'public/js')
+   .sass('resources/sass/app.scss', 'public/css');

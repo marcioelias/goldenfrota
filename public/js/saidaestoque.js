@@ -1,203 +1,101 @@
-webpackJsonp([4],{
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ })
+/************************************************************************/
+/******/ ({
 
-/***/ 1:
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-
-/***/ 188:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(189);
-
-
-/***/ }),
-
-/***/ 189:
-/***/ (function(module, exports, __webpack_require__) {
-
-var saida_estoque = __webpack_require__(190);
-
-var leads = new Vue({
-    el: '#saida_estoque_produtos',
-    components: {
-        saida_estoque: saida_estoque
-    },
-    data: function data() {
-        return {
-            _estoqueId: null,
-            get estoqueId() {
-                return this._estoqueId;
-            },
-            set estoqueId(value) {
-                this._estoqueId = value;
-            }
-        };
-    }
-});
-
-/***/ }),
-
-/***/ 190:
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(191)
-/* template */
-var __vue_template__ = __webpack_require__(192)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/SaidaEstoqueItemsComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-24aa93f4", Component.options)
-  } else {
-    hotAPI.reload("data-v-24aa93f4", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ 191:
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__modal_vue__);
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modal_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal.vue */ "./resources/js/components/modal.vue");
 //
 //
 //
@@ -329,339 +227,446 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'saida_estoque',
-    components: {
-        modal: __WEBPACK_IMPORTED_MODULE_0__modal_vue___default.a
-    },
-    props: ['oldData', 'estoques', 'oldEstoqueId', 'estoqueError'],
-    data: function data() {
-        return {
-            editing: false,
-            editingIndex: false,
-            items: [],
-            quantidade: 1,
-            desconto: 0,
-            acrescimo: 0,
-            isModalVisible: false,
-            deleteIndex: false,
-            produtosDisponiveis: [],
-            produtosSelecionados: [],
-            produtosData: [],
-            loadOldDataFlag: true,
-            errors: {
-                inputProdutos: false,
-                inputProdutosMsg: '',
-                inputQuantidade: false,
-                inputQuantidadeMsg: '',
-                inputValorUnitario: false,
-                inputValorUnitariodeMsg: '',
-                inputDesconto: false,
-                inputDescontoMsg: '',
-                inputAcrescimo: false,
-                inputAcrescimoMsg: '',
-                estoqueId: false,
-                estoqueIdMsg: ''
-            },
-            _produto_id: false,
-            get produto_id() {
-                return this._produto_id;
-            },
-            set produto_id(value) {
-                this._produto_id = value;
-            },
-            _estoqueId: null,
-            get estoqueId() {
-                return this._estoqueId;
-            },
-            set estoqueId(value) {
-                this._estoqueId = value;
-            }
-        };
-    },
+  name: 'saida_estoque',
+  components: {
+    modal: _modal_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  props: ['oldData', 'estoques', 'oldEstoqueId', 'estoqueError'],
+  data: function data() {
+    return {
+      editing: false,
+      editingIndex: false,
+      items: [],
+      quantidade: 1,
+      desconto: 0,
+      acrescimo: 0,
+      isModalVisible: false,
+      deleteIndex: false,
+      produtosDisponiveis: [],
+      produtosSelecionados: [],
+      produtosData: [],
+      loadOldDataFlag: true,
+      errors: {
+        inputProdutos: false,
+        inputProdutosMsg: '',
+        inputQuantidade: false,
+        inputQuantidadeMsg: '',
+        inputValorUnitario: false,
+        inputValorUnitariodeMsg: '',
+        inputDesconto: false,
+        inputDescontoMsg: '',
+        inputAcrescimo: false,
+        inputAcrescimoMsg: '',
+        estoqueId: false,
+        estoqueIdMsg: ''
+      },
+      _produto_id: false,
 
-    watch: {
-        oldData: function oldData() {
-            this.$refs.confirmDelete;
-        },
-        estoqueId: function estoqueId() {
-            this.getProdutos();
-        }
+      get produto_id() {
+        return this._produto_id;
+      },
+
+      set produto_id(value) {
+        this._produto_id = value;
+      },
+
+      _estoqueId: null,
+
+      get estoqueId() {
+        return this._estoqueId;
+      },
+
+      set estoqueId(value) {
+        this._estoqueId = value;
+      }
+
+    };
+  },
+  watch: {
+    oldData: function oldData() {
+      this.$refs.confirmDelete;
     },
-    computed: {
-        estoque_id: {
-            get: function get() {
-                return this.estoqueId;
-            },
-            set: function set(value) {
-                this.estoqueId = value;
-            }
-        },
-        valor_total: {
-            get: function get() {
-                var total = 0;
-                for (var i = 0; i < this.items.length; i++) {
-                    total += this.items[i].quantidade * this.items[i].valor_unitario;
-                }
-                return total;
-            }
-        },
-        valorUnitario: {
-            get: function get() {
-                return this.getProdutoById(this.produto_id).valor_venda;
-            }
-        },
-        produtosDisponiveisOrdenados: function produtosDisponiveisOrdenados() {
-            function compare(a, b) {
-                if (a.produto_descricao < b.produto_descricao) return -1;
-                if (a.produto_descricao > b.produto_descricao) return 1;
-                return 0;
-            }
-
-            return this.produtosDisponiveis.sort(compare);
-        }
-    },
-    mounted: function mounted() {
-        if (this.oldEstoqueId !== null) {
-            this.estoqueId = this.oldEstoqueId.estoque_id;
-            this.getProdutos();
-        }
-        if (this.estoqueError !== null) {
-            this.errors.estoqueId = true;
-            this.errors.estoqueIdMsg = this.estoqueError.msg;
-        } else {
-            this.errors.estoqueId = false;
-            this.errors.estoqueIdMsg = '';
-        }
-    },
-    updated: function updated() {
-        $(this.$refs.inputProdutos).selectpicker('refresh');
-        $(this.$refs.estoqueId).selectpicker('refresh');
-    },
-
-    methods: {
-        getProdutos: function getProdutos() {
-            var self = this;
-            if (this.estoqueId !== null && this.estoqueId !== 'false') {
-                axios.get('/produtos_estoque/' + this.estoqueId + '/json').then(function (response) {
-                    self.produtosDisponiveis = response.data;
-                    self.produtosData = response.data;
-                    self.loadOldData();
-                });
-            }
-        },
-        loadOldData: function loadOldData() {
-            if (this.oldData !== null && this.loadOldDataFlag == true) {
-                this.loadOldDataFlag = false;
-                for (var i = 0; i < this.oldData.length; i++) {
-                    this.items.push({
-                        'id': this.oldData[i].produto_id,
-                        'produto_descricao': this.getProdutoById(this.oldData[i].produto_id).produto_descricao,
-                        'quantidade': Number(this.oldData[i].quantidade),
-                        'valor_unitario': Number(this.oldData[i].valor_unitario),
-                        'valor_desconto': Number(this.oldData[i].valor_desconto),
-                        'valor_acrescimo': Number(this.oldData[i].valor_acrescimo)
-                    });
-                    this.incluirProduto(this.oldData[i].produto_id);
-                }
-            }
-        },
-        truncDecimal: function truncDecimal(value, n) {
-            x = (value.toString() + ".0").split(".");
-            return parseFloat(x[0] + "," + x[1].substr(0, n));
-        },
-        validarItem: function validarItem() {
-            if (this.produto_id == '' || this.produto_id <= 0) {
-                this.errors.inputProdutos = true;
-                this.errors.inputProdutosMsg = 'Nenhum Produto selecionado.';
-                return false;
-            } else {
-                this.errors.inputProdutos = false;
-                this.errors.inputProdutosMsg = '';
-            }
-
-            if (this.quantidade == '' || this.quantidade <= 0) {
-                this.errors.inputQuantidade = true;
-                this.errors.inputQuantidadeMsg = 'Informe a quantidade do produto.';
-                return false;
-            } else {
-                if (!this.getEstoqueById(this.estoqueId).permite_estoque_negativo) {
-                    var posicao_estoque_produto = this.getProdutoById(this.produto_id).posicao_estoque;
-                    if (this.quantidade > posicao_estoque_produto) {
-                        this.errors.inputQuantidade = true;
-                        this.errors.inputQuantidadeMsg = 'Quantidade informada execede saldo em estoque (' + this.truncDecimal(posicao_estoque_produto, 3) + ').';
-                        return false;
-                    }
-                }
-                this.errors.inputQuantidade = false;
-                this.errors.inputQuantidadeMsg = '';
-            }
-
-            if (this.valorUnitario == '' || this.valorUnitario <= 0) {
-                this.errors.inputValorUnitario = true;
-                this.errors.inputValorUnitarioMsg = 'Informe o Valor Unitário do produto.';
-                return false;
-            } else {
-                this.errors.inputValorUnitario = false;
-                this.errors.inputValorUnitarioMsg = '';
-            }
-            return true;
-        },
-        confirmDelete: function confirmDelete(index) {
-            this.deleteIndex = index;
-        },
-        cancelDelete: function cancelDelete(index) {
-            this.deleteIndex = false;
-        },
-        addProduto: function addProduto() {
-            if (this.validarItem()) {
-                this.items.push({
-                    'id': this.produto_id,
-                    'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
-                    'quantidade': this.quantidade,
-                    'valor_unitario': this.valorUnitario,
-                    'valor_desconto': this.desconto,
-                    'valor_acrescimo': this.acrescimo
-                });
-                this.incluirProduto(this.produto_id);
-                this.limparFormulario();
-            }
-        },
-        editItem: function editItem(index) {
-            var item = this.items[index];
-            this.quantidade = item.quantidade;
-            this.valorUnitario = item.valor_unitario;
-            this.desconto = item.valor_desconto;
-            this.acrescimo = item.valor_acrescimo;
-            this.produto_id = item.id;
-            this.editing = true;
-            this.editingIndex = index;
-        },
-        updateProduto: function updateProduto() {
-            this.items[this.editingIndex] = {
-                'id': this.produto_id,
-                'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
-                'quantidade': this.quantidade,
-                'valor_unitario': this.valorUnitario,
-                'valor_desconto': this.desconto,
-                'valor_acrescimo': this.acrescimo
-            };
-
-            this.editing = false;
-            this.editingIndex = false;
-            this.limparFormulario();
-        },
-        deleteItem: function deleteItem() {
-            this.removerProduto(this.items[this.deleteIndex].id);
-            this.$delete(this.items, this.deleteIndex);
-        },
-        limparFormulario: function limparFormulario() {
-            this.produto_id = null;
-            this.produtoSelecionado = false;
-            this.quantidade = '';
-            //this.valorUnitario = '';
-            this.desconto = '';
-            this.acrescimo = '';
-            this.$refs.inputProdutos.focus();
-        },
-        totalQuantidade: function totalQuantidade() {
-            var result = 0;
-            for (var i = 0; i < this.items.length; i++) {
-                result += this.items[i].quantidade;
-            }
-            return result;
-        },
-        totalValor: function totalValor() {
-            var result = 0;
-            for (var i = 0; i < this.items.length; i++) {
-                result += this.items[i].valor_unitario;
-            }
-            return result;
-        },
-        totalDesconto: function totalDesconto() {
-            var result = 0;
-            for (var i = 0; i < this.items.length; i++) {
-                result += this.items[i].valor_desconto;
-            }
-            return result;
-        },
-        totalAcrescimo: function totalAcrescimo() {
-            var result = 0;
-            for (var i = 0; i < this.items.length; i++) {
-                result += this.items[i].valor_acrescimo;
-            }
-            return result;
-        },
-        getProdutoById: function getProdutoById(id) {
-            var result = 0;
-            for (var i = 0; i < this.produtosData.length; i++) {
-                if (this.produtosData[i].id == id) {
-                    result = this.produtosData[i];
-                    break;
-                }
-            }
-            return result;
-        },
-        getEstoqueById: function getEstoqueById(id) {
-            var result = 0;
-            for (var i = 0; i < this.estoques.length; i++) {
-                if (this.estoques[i].id == id) {
-                    result = this.estoques[i];
-                    break;
-                }
-            }
-            return result;
-        },
-        getProdutoIndexById: function getProdutoIndexById(id) {
-            var result = 0;
-            for (var i = 0; i < this.produtosData.length; i++) {
-                if (this.produtosData[i].id == id) {
-                    result = i;
-                    break;
-                }
-            }
-            return result;
-        },
-        getProdutoSelecionadoById: function getProdutoSelecionadoById(id) {
-            var result = 0;
-            for (var i = 0; i < this.produtosSelecionados.length; i++) {
-                if (this.produtosSelecionados[i].id == id) {
-                    result = this.produtosSelecionados[i];
-                    break;
-                }
-            }
-            return result;
-        },
-        getProdutoSelecionadoIndexById: function getProdutoSelecionadoIndexById(id) {
-            var result = 0;
-            for (var i = 0; i < this.produtosSelecionados.length; i++) {
-                if (this.produtosSelecionados[i].id == id) {
-                    result = i;
-                    break;
-                }
-            }
-            return result;
-        },
-        incluirProduto: function incluirProduto(id) {
-            this.produtosSelecionados.push(this.getProdutoById(id));
-            this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(id));
-        },
-        removerProduto: function removerProduto(id) {
-            this.produtosDisponiveis.push(this.getProdutoSelecionadoById(id));
-            this.$delete(this.produtosSelecionados, this.getProdutoSelecionadoIndexById(id));
-        }
+    estoqueId: function estoqueId() {
+      this.getProdutos();
     }
+  },
+  computed: {
+    estoque_id: {
+      get: function get() {
+        return this.estoqueId;
+      },
+      set: function set(value) {
+        this.estoqueId = value;
+      }
+    },
+    valor_total: {
+      get: function get() {
+        var total = 0;
+
+        for (var i = 0; i < this.items.length; i++) {
+          total += this.items[i].quantidade * this.items[i].valor_unitario;
+        }
+
+        return total;
+      }
+    },
+    valorUnitario: {
+      get: function get() {
+        return this.getProdutoById(this.produto_id).valor_venda;
+      }
+    },
+    produtosDisponiveisOrdenados: function produtosDisponiveisOrdenados() {
+      function compare(a, b) {
+        if (a.produto_descricao < b.produto_descricao) return -1;
+        if (a.produto_descricao > b.produto_descricao) return 1;
+        return 0;
+      }
+
+      return this.produtosDisponiveis.sort(compare);
+    }
+  },
+  mounted: function mounted() {
+    if (this.oldEstoqueId !== null) {
+      this.estoqueId = this.oldEstoqueId.estoque_id;
+      this.getProdutos();
+    }
+
+    if (this.estoqueError !== null) {
+      this.errors.estoqueId = true;
+      this.errors.estoqueIdMsg = this.estoqueError.msg;
+    } else {
+      this.errors.estoqueId = false;
+      this.errors.estoqueIdMsg = '';
+    }
+  },
+  updated: function updated() {
+    $(this.$refs.inputProdutos).selectpicker('refresh');
+    $(this.$refs.estoqueId).selectpicker('refresh');
+  },
+  methods: {
+    getProdutos: function getProdutos() {
+      var self = this;
+
+      if (this.estoqueId !== null && this.estoqueId !== 'false') {
+        axios.get('/produtos_estoque/' + this.estoqueId + '/json').then(function (response) {
+          self.produtosDisponiveis = response.data;
+          self.produtosData = response.data;
+          self.loadOldData();
+        });
+      }
+    },
+    loadOldData: function loadOldData() {
+      if (this.oldData !== null && this.loadOldDataFlag == true) {
+        this.loadOldDataFlag = false;
+
+        for (var i = 0; i < this.oldData.length; i++) {
+          this.items.push({
+            'id': this.oldData[i].produto_id,
+            'produto_descricao': this.getProdutoById(this.oldData[i].produto_id).produto_descricao,
+            'quantidade': Number(this.oldData[i].quantidade),
+            'valor_unitario': Number(this.oldData[i].valor_unitario),
+            'valor_desconto': Number(this.oldData[i].valor_desconto),
+            'valor_acrescimo': Number(this.oldData[i].valor_acrescimo)
+          });
+          this.incluirProduto(this.oldData[i].produto_id);
+        }
+      }
+    },
+    truncDecimal: function truncDecimal(value, n) {
+      x = (value.toString() + ".0").split(".");
+      return parseFloat(x[0] + "," + x[1].substr(0, n));
+    },
+    validarItem: function validarItem() {
+      if (this.produto_id == '' || this.produto_id <= 0) {
+        this.errors.inputProdutos = true;
+        this.errors.inputProdutosMsg = 'Nenhum Produto selecionado.';
+        return false;
+      } else {
+        this.errors.inputProdutos = false;
+        this.errors.inputProdutosMsg = '';
+      }
+
+      if (this.quantidade == '' || this.quantidade <= 0) {
+        this.errors.inputQuantidade = true;
+        this.errors.inputQuantidadeMsg = 'Informe a quantidade do produto.';
+        return false;
+      } else {
+        if (!this.getEstoqueById(this.estoqueId).permite_estoque_negativo) {
+          var posicao_estoque_produto = this.getProdutoById(this.produto_id).posicao_estoque;
+
+          if (this.quantidade > posicao_estoque_produto) {
+            this.errors.inputQuantidade = true;
+            this.errors.inputQuantidadeMsg = 'Quantidade informada execede saldo em estoque (' + this.truncDecimal(posicao_estoque_produto, 3) + ').';
+            return false;
+          }
+        }
+
+        this.errors.inputQuantidade = false;
+        this.errors.inputQuantidadeMsg = '';
+      }
+
+      if (this.valorUnitario == '' || this.valorUnitario <= 0) {
+        this.errors.inputValorUnitario = true;
+        this.errors.inputValorUnitarioMsg = 'Informe o Valor Unitário do produto.';
+        return false;
+      } else {
+        this.errors.inputValorUnitario = false;
+        this.errors.inputValorUnitarioMsg = '';
+      }
+
+      return true;
+    },
+    confirmDelete: function confirmDelete(index) {
+      this.deleteIndex = index;
+    },
+    cancelDelete: function cancelDelete(index) {
+      this.deleteIndex = false;
+    },
+    addProduto: function addProduto() {
+      if (this.validarItem()) {
+        this.items.push({
+          'id': this.produto_id,
+          'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
+          'quantidade': this.quantidade,
+          'valor_unitario': this.valorUnitario,
+          'valor_desconto': this.desconto,
+          'valor_acrescimo': this.acrescimo
+        });
+        this.incluirProduto(this.produto_id);
+        this.limparFormulario();
+      }
+    },
+    editItem: function editItem(index) {
+      var item = this.items[index];
+      this.quantidade = item.quantidade;
+      this.valorUnitario = item.valor_unitario;
+      this.desconto = item.valor_desconto;
+      this.acrescimo = item.valor_acrescimo;
+      this.produto_id = item.id;
+      this.editing = true;
+      this.editingIndex = index;
+    },
+    updateProduto: function updateProduto() {
+      this.items[this.editingIndex] = {
+        'id': this.produto_id,
+        'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
+        'quantidade': this.quantidade,
+        'valor_unitario': this.valorUnitario,
+        'valor_desconto': this.desconto,
+        'valor_acrescimo': this.acrescimo
+      };
+      this.editing = false;
+      this.editingIndex = false;
+      this.limparFormulario();
+    },
+    deleteItem: function deleteItem() {
+      this.removerProduto(this.items[this.deleteIndex].id);
+      this.$delete(this.items, this.deleteIndex);
+    },
+    limparFormulario: function limparFormulario() {
+      this.produto_id = null;
+      this.produtoSelecionado = false;
+      this.quantidade = ''; //this.valorUnitario = '';
+
+      this.desconto = '';
+      this.acrescimo = '';
+      this.$refs.inputProdutos.focus();
+    },
+    totalQuantidade: function totalQuantidade() {
+      var result = 0;
+
+      for (var i = 0; i < this.items.length; i++) {
+        result += this.items[i].quantidade;
+      }
+
+      return result;
+    },
+    totalValor: function totalValor() {
+      var result = 0;
+
+      for (var i = 0; i < this.items.length; i++) {
+        result += this.items[i].valor_unitario;
+      }
+
+      return result;
+    },
+    totalDesconto: function totalDesconto() {
+      var result = 0;
+
+      for (var i = 0; i < this.items.length; i++) {
+        result += this.items[i].valor_desconto;
+      }
+
+      return result;
+    },
+    totalAcrescimo: function totalAcrescimo() {
+      var result = 0;
+
+      for (var i = 0; i < this.items.length; i++) {
+        result += this.items[i].valor_acrescimo;
+      }
+
+      return result;
+    },
+    getProdutoById: function getProdutoById(id) {
+      var result = 0;
+
+      for (var i = 0; i < this.produtosData.length; i++) {
+        if (this.produtosData[i].id == id) {
+          result = this.produtosData[i];
+          break;
+        }
+      }
+
+      return result;
+    },
+    getEstoqueById: function getEstoqueById(id) {
+      var result = 0;
+
+      for (var i = 0; i < this.estoques.length; i++) {
+        if (this.estoques[i].id == id) {
+          result = this.estoques[i];
+          break;
+        }
+      }
+
+      return result;
+    },
+    getProdutoIndexById: function getProdutoIndexById(id) {
+      var result = 0;
+
+      for (var i = 0; i < this.produtosData.length; i++) {
+        if (this.produtosData[i].id == id) {
+          result = i;
+          break;
+        }
+      }
+
+      return result;
+    },
+    getProdutoSelecionadoById: function getProdutoSelecionadoById(id) {
+      var result = 0;
+
+      for (var i = 0; i < this.produtosSelecionados.length; i++) {
+        if (this.produtosSelecionados[i].id == id) {
+          result = this.produtosSelecionados[i];
+          break;
+        }
+      }
+
+      return result;
+    },
+    getProdutoSelecionadoIndexById: function getProdutoSelecionadoIndexById(id) {
+      var result = 0;
+
+      for (var i = 0; i < this.produtosSelecionados.length; i++) {
+        if (this.produtosSelecionados[i].id == id) {
+          result = i;
+          break;
+        }
+      }
+
+      return result;
+    },
+    incluirProduto: function incluirProduto(id) {
+      this.produtosSelecionados.push(this.getProdutoById(id));
+      this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(id));
+    },
+    removerProduto: function removerProduto(id) {
+      this.produtosDisponiveis.push(this.getProdutoSelecionadoById(id));
+      this.$delete(this.produtosSelecionados, this.getProdutoSelecionadoIndexById(id));
+    }
+  }
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 192:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modal.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'modal',
+  methods: {
+    cancel: function cancel() {
+      this.$emit(this._eventCancel);
+    },
+    confirm: function confirm() {
+      this.$emit(this._eventConfirm);
+    }
+  },
+  props: ['modalTitle', 'modalText', 'eventCancel', 'eventConfirm'],
+  computed: {
+    _eventCancel: {
+      get: function get() {
+        if (this.eventCancel == undefined) {
+          return 'cancel';
+        } else {
+          return this.eventCancel;
+        }
+      }
+    },
+    _eventConfirm: {
+      get: function get() {
+        if (this.eventConfirm == undefined) {
+          return 'confirm';
+        } else {
+          return this.eventConfirm;
+        }
+      }
+    }
+  },
+  mounted: function mounted() {//
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=template&id=4dfbe9b0&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=template&id=4dfbe9b0& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -1409,139 +1414,22 @@ var staticRenderFns = [
   }
 ]
 render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-24aa93f4", module.exports)
-  }
-}
 
-/***/ }),
-
-/***/ 4:
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(5)
-/* template */
-var __vue_template__ = __webpack_require__(6)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/modal.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-514744a6", Component.options)
-  } else {
-    hotAPI.reload("data-v-514744a6", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
 
 
 /***/ }),
 
-/***/ 5:
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal.vue?vue&type=template&id=478d961c&":
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modal.vue?vue&type=template&id=478d961c& ***!
+  \********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'modal',
-
-  methods: {
-    cancel: function cancel() {
-      this.$emit(this._eventCancel);
-    },
-    confirm: function confirm() {
-      this.$emit(this._eventConfirm);
-    }
-  },
-  props: ['modalTitle', 'modalText', 'eventCancel', 'eventConfirm'],
-  computed: {
-    _eventCancel: {
-      get: function get() {
-        if (this.eventCancel == undefined) {
-          return 'cancel';
-        } else {
-          return this.eventCancel;
-        }
-      }
-    },
-    _eventConfirm: {
-      get: function get() {
-        if (this.eventConfirm == undefined) {
-          return 'confirm';
-        } else {
-          return this.eventConfirm;
-        }
-      }
-    }
-  },
-  mounted: function mounted() {
-    //
-  }
-});
-
-/***/ }),
-
-/***/ 6:
-/***/ (function(module, exports, __webpack_require__) {
-
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -1631,14 +1519,298 @@ var render = function() {
 }
 var staticRenderFns = []
 render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-514744a6", module.exports)
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode /* vue-cli only */
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
   }
 }
 
+
+/***/ }),
+
+/***/ "./resources/js/components/SaidaEstoqueItemsComponent.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/SaidaEstoqueItemsComponent.vue ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SaidaEstoqueItemsComponent_vue_vue_type_template_id_4dfbe9b0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SaidaEstoqueItemsComponent.vue?vue&type=template&id=4dfbe9b0& */ "./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=template&id=4dfbe9b0&");
+/* harmony import */ var _SaidaEstoqueItemsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SaidaEstoqueItemsComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SaidaEstoqueItemsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SaidaEstoqueItemsComponent_vue_vue_type_template_id_4dfbe9b0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SaidaEstoqueItemsComponent_vue_vue_type_template_id_4dfbe9b0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/SaidaEstoqueItemsComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SaidaEstoqueItemsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./SaidaEstoqueItemsComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SaidaEstoqueItemsComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=template&id=4dfbe9b0&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=template&id=4dfbe9b0& ***!
+  \***********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SaidaEstoqueItemsComponent_vue_vue_type_template_id_4dfbe9b0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./SaidaEstoqueItemsComponent.vue?vue&type=template&id=4dfbe9b0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SaidaEstoqueItemsComponent.vue?vue&type=template&id=4dfbe9b0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SaidaEstoqueItemsComponent_vue_vue_type_template_id_4dfbe9b0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SaidaEstoqueItemsComponent_vue_vue_type_template_id_4dfbe9b0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/modal.vue":
+/*!*******************************************!*\
+  !*** ./resources/js/components/modal.vue ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modal_vue_vue_type_template_id_478d961c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal.vue?vue&type=template&id=478d961c& */ "./resources/js/components/modal.vue?vue&type=template&id=478d961c&");
+/* harmony import */ var _modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal.vue?vue&type=script&lang=js& */ "./resources/js/components/modal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _modal_vue_vue_type_template_id_478d961c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _modal_vue_vue_type_template_id_478d961c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/modal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/modal.vue?vue&type=script&lang=js&":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/modal.vue?vue&type=script&lang=js& ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./modal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/modal.vue?vue&type=template&id=478d961c&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/modal.vue?vue&type=template&id=478d961c& ***!
+  \**************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_modal_vue_vue_type_template_id_478d961c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./modal.vue?vue&type=template&id=478d961c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal.vue?vue&type=template&id=478d961c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_modal_vue_vue_type_template_id_478d961c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_modal_vue_vue_type_template_id_478d961c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/saidaestoque.js":
+/*!**************************************!*\
+  !*** ./resources/js/saidaestoque.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var saida_estoque = __webpack_require__(/*! ./components/SaidaEstoqueItemsComponent.vue */ "./resources/js/components/SaidaEstoqueItemsComponent.vue");
+
+var leads = new Vue({
+  el: '#saida_estoque_produtos',
+  components: {
+    saida_estoque: saida_estoque
+  },
+  data: function data() {
+    return {
+      _estoqueId: null,
+
+      get estoqueId() {
+        return this._estoqueId;
+      },
+
+      set estoqueId(value) {
+        this._estoqueId = value;
+      }
+
+    };
+  }
+});
+
+/***/ }),
+
+/***/ 4:
+/*!********************************************!*\
+  !*** multi ./resources/js/saidaestoque.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! /mnt/7EDAA7EFDAA7A1BF/Desenvolvimento/Web/golden-frota/resources/js/saidaestoque.js */"./resources/js/saidaestoque.js");
+
+
 /***/ })
 
-},[188]);
+/******/ });

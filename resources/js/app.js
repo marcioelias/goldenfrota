@@ -8,6 +8,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+Vue.prototype.$csrf_token = $('meta[name="csrf-token"]').attr('content');
 
 Vue.filter('toCurrency2', function (value) {
     if (typeof value !== "number") {
