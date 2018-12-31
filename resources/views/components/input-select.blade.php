@@ -8,23 +8,25 @@
     $liveSearch = isset($liveSearch) ? $liveSearch : false;
     $defaultNone = isset($defaultNone) ? $defaultNone : false;
     $vModel = isset($vModel) ? $vModel : false;
-    $readOnly = ($readOnly) ? 'readonly' : '';
-    $multiple = ($multiple) ? 'multiple' : '';
+    $div_css = isset($div_css) ? $div_css : '';
 @endphp
-<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }}">
+<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }} {{$div_css}}">
     @if(isset($label))
         @component('components.label', ['label' => $label, 'field' => $field, 'required' => $required])
         @endcomponent
     @endif  
-    <select class="form-control selectpicker {{$css}}" {{ ($vModel) ? 'v-model='.$vModel : '' }} {{ $multiple }} {{ $liveSearch ? 'data-live-search=true' : '' }} id="{{$id}}" name="{{$name}}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
+    <select ref="{{'ref_'.$name}}" class="form-control selectpicker {{$css}}" {{ ($vModel) ? 'v-model='.$vModel : '' }} data-style="btn-secondary" {{ $liveSearch ? 'data-live-search=true' : '' }} id="{{$id}}" name="{{$name}}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
         @if(isset($items))
             @if($defaultNone)
-                <option {{--  disabled  --}} selected value="" {{--  style="display:none"  --}}> Nada Selecionado </option>
+                <option {{--  disabled  --}} selected value="" {{--  style="display:none"  --}}> {{__('strings.NothingSelected')}} </option>
             @endif
             @if(is_array($items))
-                @for ($i = 0; $i < count($items); $i++)
-                    <option value="{{ $i }}" {{($i==$indexSelected) ? 'selected=selected' : ''}}>{{ $items[$i] }}</option>
-                @endfor
+                @foreach($items as $key => $value) 
+                    <option v-bind:value="{{ $key }}" {{($key==$indexSelected) ? 'selected=selected' : ''}}>{{ $value }}</option>
+                @endforeach
+                {{--  @for ($i = 0; $i < count($items); $i++)
+                    <option v-bind:value="{{ $i }}" {{($i==$indexSelected) ? 'selected=selected' : ''}}>{{ $items[$i] }}</option>
+                @endfor  --}}
             @else
                 @foreach($items as $item)
                     @if (($item->$keyField == $indexSelected) || ($item->$keyField == old($field)))
@@ -38,7 +40,7 @@
     </select>
 
     @if ($errors->has($field))
-        <span class="help-block">
+        <span class="invalid-feedback d-block">
             <strong>{{ $errors->first($field) }}</strong>
         </span>
     @endif

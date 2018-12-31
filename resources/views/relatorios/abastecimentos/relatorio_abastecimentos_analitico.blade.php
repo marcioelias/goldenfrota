@@ -19,7 +19,7 @@
     $clienteVolume = 0;
     $clienteValor = 0;
 @endphp
-<table class="table table-condensed report-table">
+<table class="table table-sm report-table">
     <thead>
         <td class="info" colspan=3><h4> Cliente: {{$cliente->nome_razao}} </h4></td>
     </thead>
@@ -31,14 +31,14 @@
         @endphp
         <tr>
             <td colspan=3>
-                <table class="table table-condensed report-table">
+                <table class="table table-sm report-table">
                     <thead>
                         <td class="info" colspan=7><h5>Departamento: {{$departamento->departamento}}</h5> </td>
                     </thead>
                     <tbody>
                         <tr>
                             <td>
-                                <table class="table table-condensed report-table">
+                                <table class="table table-sm report-table">
                                     <thead>
                                         <td>Veículo</td>
                                         <td>Data/Hora Abastecimento</td>
@@ -93,7 +93,7 @@
     </tbody>
 </table>
 @endforeach
-<table class="table table-condensed report-table">
+<table class="table table-sm report-table">
     <tbody>
         <tr class="default">
             <td><h5>Total Geral</h5></td>

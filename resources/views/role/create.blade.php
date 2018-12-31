@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Novo Perfil de Acesso', 
             'routeUrl' => route('role.store'), 
@@ -41,11 +41,11 @@
                     ]
                 ])
                 @endcomponent
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Permissões Associadas <button type="button" id="btnCheckAll" class="btn btn-default btn-xs btn-link">Marcar todos</button><button type="button" id="btnUnCheckAll" class="btn btn-default btn-xs btn-link hidden">Desmarcar todos</button>
+                <div class="card">
+                    <div class="card-header">
+                        Permissões Associadas <button type="button" id="btnCheckAll" class="btn btn-default btn-sm btn-link">Marcar todos</button><button type="button" id="btnUnCheckAll" class="btn btn-default btn-sm btn-link hidden">Desmarcar todos</button>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         @foreach($permissions as $permission)
                             <div class="col-sm-1 col-md-3 col-lg-3">
                                 <input type="checkbox" class="permission_checkbox" name="permissions[]" value="{{$permission->id}}">

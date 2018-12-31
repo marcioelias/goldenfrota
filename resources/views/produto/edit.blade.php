@@ -2,7 +2,7 @@
 
 @section('content')
     {{--  {{ dd($estoques) }}  --}}
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Alterar Produto', 
             'routeUrl' => route('produto.update', $produto->id), 

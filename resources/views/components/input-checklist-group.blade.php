@@ -16,11 +16,11 @@
     $checked = isset($checked) ? $checked : false;
     $indexSelected = isset($indexSelected) ? $indexSelected : old(str_replace('[]', '', $field));
 @endphp
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card">
+    <div class="card-header">
         <strong>{{$title}}</strong>
     </div>
-    <div class="panel-body" style="padding: 0px !important;">
+    <div class="card-body" style="padding: 0px !important;">
         <div style="margin-bottom: 10px; overflow-y:scroll; height:150px; -webkit-overflow-scrolling: touch;">
             <ul class="list-group">
                 @foreach($items as $item)

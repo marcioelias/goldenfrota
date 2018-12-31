@@ -5,15 +5,15 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Acesso ao Sistema - <strong>Golden</strong> Frota</div>
+                <div class="card">
+                    <div class="card-header">Acesso ao Sistema - <strong>Golden</strong> Frota</div>
 
-                    <div class="panel-body">
+                    <div class="card-body">
                         <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                             {{ csrf_field() }}
 
                             <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                                <label for="username" class="col-md-4 control-label">Usuário</label>
+                                <label for="username" class="col-md-4 col-form-label">Usuário</label>
 
                                 <div class="col-md-6">
                                     <input id="username" type="text" class="form-control" name="username" value="{{ old('username') }}" required autofocus>
@@ -27,7 +27,7 @@
                             </div>
 
                             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <label for="password" class="col-md-4 control-label">Senha</label>
+                                <label for="password" class="col-md-4 col-form-label">Senha</label>
 
                                 <div class="col-md-6">
                                     <input id="password" type="password" class="form-control" name="password" required>

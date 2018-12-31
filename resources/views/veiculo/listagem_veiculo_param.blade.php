@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Listagem de Veículos', 
             'routeUrl' => route('relatorio_listagem_veiculos'), 

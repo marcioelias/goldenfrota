@@ -1,7 +1,7 @@
 @extends('layouts.relatorios')
 
 @section('relatorio')
-<table class="table table-condensed table-bordered report-table">
+<table class="table table-sm table-bordered report-table">
     <thead>
         <tr class="info">
             <td>

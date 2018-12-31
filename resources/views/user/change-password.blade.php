@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Alterar Senha de Acesso', 
             'routeUrl' => route('user.change.password', $user->id), 

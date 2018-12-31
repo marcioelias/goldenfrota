@@ -17,21 +17,21 @@
 @endphp
 <div class="panel-sm">
     <div class="panel-sm">
-        <div class="panel-heading report-subtitle-1">
+        <div class="card-header report-subtitle-1">
             <h4> Cliente: {{$cliente->nome_razao}} </h4>
         </div>    
-        <div class="panel-body">
+        <div class="card-body">
             @foreach($cliente->departamentos as $departamento)
             @php
                 $departamentoVolume = 0;
                 $departamentoDistancia = 0;     
             @endphp
             <div class="panel-sm">
-                <div class="panel-heading report-subtitle-1">
+                <div class="card-header report-subtitle-1">
                     <h5>Departamento: {{$departamento->departamento}}</h5>
                 </div>
-                <div class="panel-body">
-                    <table class="table table-condensed report-table">
+                <div class="card-body">
+                    <table class="table table-sm report-table">
                         <thead>
                             <td>Veículo</td>
                             <td align="right">KM Inicial</td>
@@ -75,7 +75,7 @@
     </div>
 </div>
 @endforeach
-<table class="table table-condensed report-table">
+<table class="table table-sm report-table">
     <tbody>
         <tr class="default">
             <td><h5>Total Geral</h5></td>

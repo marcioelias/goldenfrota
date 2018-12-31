@@ -950,7 +950,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: { click: _vm.updateEntrada }
               },
-              [_c("span", { staticClass: "glyphicon glyphicon-ok" })]
+              [_c("i", { staticClass: "fas fa-check" })]
             )
           ])
         ])

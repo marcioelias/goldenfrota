@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Alterar Abastecimento', 
             'routeUrl' => route('abastecimento.update', $abastecimento->id), 
@@ -137,11 +137,11 @@
                     ]
                 ])
                 @endcomponent
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <strong>AUTOMAÇÃO</strong>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         @component('components.form-group', [
                             'inputs' => [
                                 [
@@ -180,11 +180,11 @@
                         @endcomponent
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <strong>OBSERVAÇÕES</strong>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         @component('components.form-group', [
                             'inputs' => [
                                 [

@@ -1363,7 +1363,7 @@ var render = function() {
                   },
                   on: { click: _vm.updateProduto }
                 },
-                [_c("span", { staticClass: "glyphicon glyphicon-ok" })]
+                [_c("i", { staticClass: "fas fa-check" })]
               )
             ])
           ])

@@ -3,7 +3,7 @@
 @section('relatorio')
 
 @foreach($estoques as $estoque)
-<table class="table table-condensed report-table">
+<table class="table table-sm report-table">
     <thead>
         <tr class="info">
             <td>
@@ -15,7 +15,7 @@
         <tr>
             <td colspan=5>
                 @foreach($estoque->produtos as $produto)
-                <table class="table table-condensed report-table">
+                <table class="table table-sm report-table">
                     <thead>
                         <tr class="info">
                             <td colspan=4>

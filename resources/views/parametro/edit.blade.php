@@ -9,7 +9,7 @@
             {{ Session::get('success') }}
         </div>
     @endif
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Parametrização', 
             'routeUrl' => route('parametro.update', $parametro->id), 
@@ -53,7 +53,7 @@
                 ])
                 @endcomponent
                 @if($parametro->logotipo)
-                <div class="panel">
+                <div class="card">
                     <div>
                         <img src="{{ asset($parametro->logotipo) }}" width="200px">
                     </div>

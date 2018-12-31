@@ -9,7 +9,7 @@
         {{ Session::get('success') }}
     </div>
 @endif
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Parametrização', 
             'routeUrl' => route('parametro.store'), 

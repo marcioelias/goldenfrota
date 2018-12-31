@@ -15,11 +15,11 @@
 @endphp
 <div class="panel-sm">
     <div class="panel-sm">
-        <div class="panel-heading report-subtitle-1">
+        <div class="card-header report-subtitle-1">
             <h4> Bico: {{$bico->num_bico}} - {{$bico->descricao_tanque}} - {{$bico->descricao}} </h4>
         </div>    
-        <div class="panel-body">
-            <table class="table table-condensed report-table">
+        <div class="card-body">
+            <table class="table table-sm report-table">
                 <thead>
                     <td>Data / Hora</td>
                     <td>Veículo</td>
@@ -75,7 +75,7 @@
     </div>
 </div>
 @endforeach
-<table class="table table-condensed report-table">
+<table class="table table-sm report-table">
     <tbody>
         <tr class="default">
             <td><h5>Total Geral</h5></td>

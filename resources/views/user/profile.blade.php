@@ -9,17 +9,17 @@
         {{ Session::get('success') }}
     </div>
 @endif
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card">
+        <div class="card-header">
                 <h3>Minha Conta</h3>
         </div>
-        <div class="panel panel-body">
+        <div class="panel card-body">
             <div class="col-md-12 col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         Dados da Conta
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="well-sm">
                             <h5><strong>Nome:</strong></h5> {{$user->name}}
                         </div> 
@@ -33,21 +33,21 @@
                 </div>
             </div>
             <div class="col-md-12 col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         Senha
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <a href="{{route('user.form.change.password')}}" class="btn btn-primary">Alterar minha Senha</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-12 col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         Perfil
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <ul class="list-group">
                             @foreach($user->roles as $role)
                                 <li class="list-group-item">{{$role->display_name}}</li>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Configurações do Sistema', 
             'routeUrl' => route('setting.update'), 
@@ -13,11 +13,11 @@
             ])
             @section('formFields')
                 @foreach ($groups as $group) 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card">
+                        <div class="card-header">
                             <strong>{{ $group->group_name }}</strong>
                         </div>
-                        <div class="panel-body">
+                        <div class="card-body">
                         @foreach ($group->settings()->get() as $setting)
                             @if ($setting->data_type == 'string') 
                                 @component('components.form-group', [

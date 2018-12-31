@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Nova Ordem de Serviço', 
             'routeUrl' => route('ordem_servico.store'), 

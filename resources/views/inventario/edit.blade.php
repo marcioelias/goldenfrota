@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Alterar Inventário', 
             'routeUrl' => route('inventario.update', $inventario->id), 
@@ -73,15 +73,15 @@
                     ]
                 ])
                 @endcomponent
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <div class="row">
                             <div class="col col-xs-1 col-sm-1 col-md-1">ID</div>
                             <div class="col col-xs-7 col-sm-7 col-md-9">Produto</div>
                             <div class="col col-xs-4 col-sm-4 col-md-2">Qtd Contada</div>
                         </div>
                     </div>
-                    <div class="panel-body" style="padding: 0px 15px !important">
+                    <div class="card-body" style="padding: 0px 15px !important">
                         @foreach($inventario->inventario_items as $key => $item)
                         <div class="row {{ ($key % 2 == 0) ? 'bg-info' : 'bg-warning' }}">
                             <div class="col col-xs-1 col-sm-1 col-md-1" style="padding-top: 3px">{{ $item->produto->id }}</div>
@@ -93,7 +93,7 @@
                                         $contado = '';
                                     }
                                 @endphp
-                                <input type="text" class="form-control input-sm" name="items[{{$item->id}}][qtd_contada]" value="{{ $contado }}" >
+                                <input type="text" class="form-control form-control-sm" name="items[{{$item->id}}][qtd_contada]" value="{{ $contado }}" >
                             </div>
                         </div>
                         @endforeach

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Alterar Cliente', 
             'routeUrl' => route('cliente.update', $cliente->id), 
@@ -79,11 +79,11 @@
                     ]
                 ])
                 @endcomponent
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <strong>CONTATOS</strong>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         @component('components.form-group', [
                             'inputs' => [
                                 [
@@ -127,11 +127,11 @@
                         @endcomponent
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <strong>ENDEREÇO</strong>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         @component('components.form-group', [
                             'inputs' => [
                                 [

@@ -2,7 +2,7 @@
 
 @section('content')
 <div id="saida_estoque_produtos">
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Nova Saída do Estoque', 
             'routeUrl' => route('saida_estoque.store'), 

@@ -81,7 +81,7 @@
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
                     <button type="button" class="btn btn-success" @click="updateEntrada" v-show="editing">
-                        <span class="glyphicon glyphicon-ok"></span>
+                        <i class="fas fa-check"></i>
                     </button>
                 </div>
             </div>

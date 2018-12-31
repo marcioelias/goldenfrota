@@ -4,7 +4,7 @@
 @if(old('fornecedores')) 
     {{--  {{ dd(old(str_replace('[]', '', 'fornecedores[]'))) }}  --}}
 @endif
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Novo Produto', 
             'routeUrl' => route('produto.store'), 

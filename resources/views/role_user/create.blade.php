@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Nova Associação de Usuaŕio Perfil de Acesso', 
             'routeUrl' => route('role_user.store'), 

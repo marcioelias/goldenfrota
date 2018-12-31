@@ -745,7 +745,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: { click: _vm.updateEstoque }
               },
-              [_c("span", { staticClass: "glyphicon glyphicon-ok" })]
+              [_c("i", { staticClass: "fas fa-check" })]
             )
           ])
         ])

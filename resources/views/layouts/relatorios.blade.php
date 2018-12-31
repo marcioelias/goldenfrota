@@ -7,8 +7,8 @@
 @section('body')
     {{--  @component('layouts.main_nav')
     @endcomponent  --}}
-    <div class="panel panel-default" style="margin-bottom: 80px">
-        <div class="panel-heading">
+    <div class="card" style="margin-bottom: 80px">
+        <div class="card-header">
             <div class="row">
                 <div class="col-sm-2 col-md-2 col-lg-2">
                     @if(isset($parametro))
@@ -50,8 +50,8 @@
             </div>
         </div>
         @if(isset($parametros) && count($parametros) > 0)
-        <div class="panel-sm panel-default">
-            <div class="panel-heading">
+        <div class="panel-sm">
+            <div class="card-header">
                 <div class="row"><span class="parametro-relatorio" style="margin: 4px">Parâmetros selecionados</span></div>
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-12">
@@ -66,7 +66,7 @@
         @yield('relatorio')
     </div>
     <div class="footer navbar-fixed-bottom">
-        <div class="panel panel-default" style="padding: 5px; margin-bottom: 0px" id="print-command-panel">
+        <div class="card" style="padding: 5px; margin-bottom: 0px" id="print-command-panel">
             <div align="right">
                 <span data-toggle="tooltip" data-placement="top" title="Imprimir" data-original-title="Imprimir">
                     <a href="javascript:window.print()" class="btn btn-success" style="margin-right: 10px" id="btn-report-print"><span class="glyphicon glyphicon-print"></span></a>

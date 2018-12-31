@@ -6,7 +6,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card">
         @component('components.form', [
             'title' => 'Relatório de Abastecimentos - Bicos', 
             'routeUrl' => route('param_relatorio_abastecimentos_bico'), 
