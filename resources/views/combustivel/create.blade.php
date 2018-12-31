@@ -7,8 +7,8 @@
             'routeUrl' => route('combustivel.store'), 
             'method' => 'POST',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -48,9 +48,4 @@
             @endsection
         @endcomponent
     </div>
-    {{--  <script>
-        jQuery(function($){
-            $("#valor").mask('0.000', {reverse: true});
-        });
-    </script>  --}}
 @endsection

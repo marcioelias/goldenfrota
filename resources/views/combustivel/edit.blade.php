@@ -7,8 +7,8 @@
             'routeUrl' => route('combustivel.update', $combustivel->id), 
             'method' => 'PUT',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -17,7 +17,7 @@
                         [
                             'type' => 'text',
                             'field' => 'descricao',
-                            'label' => 'Combustivel',
+                            'label' => 'Combustível',
                             'required' => true,
                             'autofocus' => true,
                             'inputValue' => $combustivel->descricao,
@@ -60,9 +60,4 @@
             @endsection
         @endcomponent
     </div>
-    {{--  <script>
-        jQuery(function($){
-            $("#valor").mask('0.000', {reverse: true});
-        });
-    </script>  --}}
 @endsection

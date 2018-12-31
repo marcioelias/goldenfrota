@@ -118,12 +118,13 @@ class CombustivelController extends Controller
     {
         if (Auth::user()->canAlterarCombustivel()) {
             $this->validate($request, [
-                'descricao' => 'string|required|min:5|unique:combustiveis,id,'.$combustivel->id,
-                'descricao_reduzida' => 'string|required|min:3|max:8|unique:combustiveis,id,'.$combustivel->id,
-                'valor' => 'numeric|required'
+                'descricao' => 'required|string|min:5|unique:combustiveis,id,'.$combustivel->id,
+                'descricao_reduzida' => 'required|string|min:3|max:8|unique:combustiveis,id,'.$combustivel->id,
+                'valor' => 'required|numeric'
             ]);
 
-            try {                 
+            try {            
+                dd($request->all());     
                 $combustivel->descricao = $request->descricao;
                 $combustivel->descricao_reduzida = $request->descricao_reduzida;
                 $combustivel->valor = $request->valor;

@@ -26,7 +26,7 @@
                     <input id="{{$field}}" type="{{ $inputType }}" class="form-control" name="{{$field}}" value="{{ isset($value) ? $value : old($field) }}" {{ isset($required) ? 'required' : ''  }}  {{ isset($autofocus) ? 'autofocus' : '' }} {{($disabled) ? 'disabled="disabled"' : ''}}>
                 @endif
                 @if ($errors->has($field))
-                    <span class="help-block">
+                    <span class="invalid-feedback">
                         <strong>{{ $errors->first($field) }}</strong>
                     </span>
                 @endif

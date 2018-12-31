@@ -9,28 +9,29 @@
     $dateTimeFormat = isset($dateTimeFormat) ? $dateTimeFormat : false;
     $picker_begin = isset($picker_begin) ? $picker_begin : '';
     $picker_end = isset($picker_end) ? $picker_end : '';
-    $readOnly = isset($readOnly) ? $readOnly : false;
+    $div_css = isset($div_css) ? $div_css : '';
 @endphp
-<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }}">
+
+{{--  {{dd($inputValue)}}  --}}
+<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }} {{$div_css}}">
     @if(isset($label))
         @component('components.label', ['label' => $label, 'field' => $field, 'required' => $required])
         @endcomponent
     @endif  
     
     <div class="input-group date" id="{{$id}}_picker">
-        <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }} {{ $readOnly ? 'readonly' : '' }}>
+        <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
     </div>
 
     @if ($errors->has($field))
-        <span class="help-block">
+        <span class="invalid-feedback">
             <strong>{{ $errors->first($field) }}</strong>
         </span>
     @endif
 </div>
-@push('bottom-scripts')
 <script type="text/javascript">
     $(function () {
         $('#{{$id}}_picker').datetimepicker({
@@ -52,4 +53,3 @@
         @endif
     });
 </script>
-@endpush

@@ -275,5 +275,5 @@
         @endauth
     </div>
 </nav>
-@component('layouts.session_messages')
-@endcomponent
+{{--  @component('layouts.session_messages')
+@endcomponent  --}}

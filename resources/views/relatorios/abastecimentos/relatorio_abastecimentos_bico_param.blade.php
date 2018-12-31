@@ -14,7 +14,7 @@
             'method' => 'POST',
             'formButtons' => [
                 ['type' => 'submit', 'label' => 'Gerar Relatório', 'icon' => 'stats'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')

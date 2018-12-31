@@ -1,73 +1,53 @@
-@extends('layouts.app')
+@extends('layouts.base')
 
-@section('content')
-<div class="clearfix">
-<div class="jumbotron vcenter login_form">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="card">
-                    <div class="card-header">Acesso ao Sistema - <strong>Golden</strong> Frota</div>
+@push('header-styles')
+html,body{
+    width:100%;
+    margin:0;
+    height:100%;
+}
+@endpush
+@section('body')
+<div class="container-fluid bg-dark text-white h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-md-4 mx-auto">
+            <span class="display-5"><img src="{{ asset('images/logo_login.png') }}" width="400px" alt="Golden Service - Controle de Frotas"></span>
+            <form method="POST" action="{{ route('login') }}">
+                {{ csrf_field() }}
+                <div class="form-group">
+                    <input class="form-control form-control-lg{{ $errors->has('username') ? ' is-invalid' : '' }}" placeholder="Usuário" id="text" type="username" name="username" value="{{ old('username') }}" required autofocus>
 
-                    <div class="card-body">
-                        <form class="form-horizontal" method="POST" action="{{ route('login') }}">
-                            {{ csrf_field() }}
+                    @if ($errors->has('username'))
+                        <span class="invalid-feedback">
+                            <strong>{{ $errors->first('username') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="form-group">
+                    <input class="form-control form-control-lg{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Senha" id="password" type="password" name="password" value="{{ old('password') }}" required autofocus>
 
-                            <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                                <label for="username" class="col-md-4 col-form-label">Usuário</label>
-
-                                <div class="col-md-6">
-                                    <input id="username" type="text" class="form-control" name="username" value="{{ old('username') }}" required autofocus>
-
-                                    @if ($errors->has('username'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('username') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <label for="password" class="col-md-4 col-form-label">Senha</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password" required>
-
-                                    @if ($errors->has('password'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('password') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Manter conectado
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Entrar
-                                    </button>
-
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        Esqueceu sua senha?
-                                    </a>
-                                </div>
-                            </div>
-                        </form>
+                    @if ($errors->has('password'))
+                        <span class="invalid-feedback">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                        <label class="custom-control-label" for="remember">Manter conectado</label>
                     </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <button class="btn btn-info btn-lg btn-block">Entrar</button>
+                </div>
+                <div class="row">
+                    <a class="btn btn-link text-light" href="{{ route('password.request') }}">
+                        Esqueceu sua senha?
+                    </a>
+                </div>
+            </form>  
         </div>
     </div>
-</div>
 </div>
 @endsection

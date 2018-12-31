@@ -6,7 +6,6 @@
     $required = isset($required) ? $required : false;
     $css = isset($css) ? $css : '';
     $defaultValue = isset($defaultValue) ? $defaultValue : false;
-    $readOnly = ($readOnly) ? 'readonly' : '';
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}
@@ -27,7 +26,7 @@
     </div>
 
     @if ($errors->has($field))
-        <span class="help-block">
+        <span class="invalid-feedback">
             <strong>{{ $errors->first($field) }}</strong>
         </span>
     @endif

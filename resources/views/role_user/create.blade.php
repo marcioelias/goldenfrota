@@ -7,8 +7,8 @@
             'routeUrl' => route('role_user.store'), 
             'method' => 'POST',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Save', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancel', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Save', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancel', 'icon' => 'times']
                 ]
             ])
             @section('formFields')

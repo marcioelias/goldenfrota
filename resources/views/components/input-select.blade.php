@@ -22,7 +22,7 @@
             @endif
             @if(is_array($items))
                 @foreach($items as $key => $value) 
-                    <option v-bind:value="{{ $key }}" {{($key==$indexSelected) ? 'selected=selected' : ''}}>{{ $value }}</option>
+                    <option value="{{ $key }}" {{($key==$indexSelected) ? 'selected=selected' : ''}}>{{ $value }}</option>
                 @endforeach
                 {{--  @for ($i = 0; $i < count($items); $i++)
                     <option v-bind:value="{{ $i }}" {{($i==$indexSelected) ? 'selected=selected' : ''}}>{{ $items[$i] }}</option>

@@ -7,8 +7,8 @@
             'routeUrl' => route('modelo_veiculo.update', $modeloVeiculo->id), 
             'method' => 'PUT',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
