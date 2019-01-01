@@ -4,5 +4,8 @@
 
 return [
     'os_status_fechada' => 'Fechada',
-    'os_status_aberta' => 'Aberta'
+    'os_status_aberta' => 'Aberta',
+    'New' => 'Novo',
+    'Search' => 'Buscar',
+    'NothingSelected' => 'Nada Selecionado'
 ];

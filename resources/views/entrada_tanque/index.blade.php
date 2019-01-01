@@ -7,7 +7,12 @@
         'model' => 'entrada_tanque',
         'tableTitle' => 'Entradas de Combustível',
         'displayField' => 'nr_docto',
-        'actions' => [['action' => 'show', 'target' => '_blank'], 'destroy']
-        ]);
+        'actions' => [
+            [
+                'action' => 'show', 
+                'target' => '_blank'
+            ], 
+            'destroy'
+        ]]);
     @endcomponent
 @endsection

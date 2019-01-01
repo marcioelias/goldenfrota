@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Alterar Modelo de Bomba', 
             'routeUrl' => route('modelo_bomba.update', $modelo_bomba->id), 

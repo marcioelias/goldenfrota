@@ -1,11 +1,7 @@
 @extends('layouts.base')
 
 @push('header-styles')
-html,body{
-    width:100%;
-    margin:0;
-    height:100%;
-}
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet" media="all">
 @endpush
 @section('body')
 <div class="container-fluid bg-dark text-white h-100">

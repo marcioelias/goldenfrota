@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Produtos Abaixo do Estoque Mínimo', 
             'routeUrl' => route('relatorio_estoque_minimo'), 

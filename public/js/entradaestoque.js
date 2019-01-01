@@ -617,19 +617,19 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "panel panel-default" },
+    { staticClass: "card" },
     [
       _vm._m(0),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "panel-body", staticStyle: { padding: "0 !important" } },
+        { staticClass: "card-body", staticStyle: { padding: "0 !important" } },
         [
           _c(
             "table",
             {
               staticClass:
-                "table table-condensed table-striped table-bordered table-hover",
+                "table table-sm table-striped table-bordered table-hover",
               staticStyle: { "margin-bottom": "0 !important" }
             },
             [
@@ -639,162 +639,160 @@ var render = function() {
                 "transition-group",
                 { tag: "tbody", attrs: { name: "fade" } },
                 _vm._l(_vm.items, function(item, index) {
-                  return _c("tr", { key: index }, [
-                    _c("td", { staticClass: "col-md-1 pool-right" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(item.id) +
-                          "\n                        "
-                      ),
-                      _c("input", {
-                        attrs: {
-                          type: "hidden",
-                          name: "items[" + index + "][produto_id]"
-                        },
-                        domProps: { value: item.id }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-5" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(item.produto_descricao) +
-                          "\n                    "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(_vm._f("toDecimal3")(item.quantidade)) +
-                          "\n                        "
-                      ),
-                      _c("input", {
-                        attrs: {
-                          type: "hidden",
-                          name: "items[" + index + "][quantidade]"
-                        },
-                        domProps: { value: item.quantidade }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(_vm._f("toDecimal3")(item.valor_unitario)) +
-                          "\n                        "
-                      ),
-                      _c("input", {
-                        attrs: {
-                          type: "hidden",
-                          name: "items[" + index + "][valor_unitario]"
-                        },
-                        domProps: { value: item.valor_unitario }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(_vm._f("toDecimal3")(item.valor_desconto)) +
-                          "\n                        "
-                      ),
-                      _c("input", {
-                        attrs: {
-                          type: "hidden",
-                          name: "items[" + index + "][valor_desconto]"
-                        },
-                        domProps: { value: item.valor_desconto }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(_vm._f("toDecimal3")(item.valor_acrescimo)) +
-                          "\n                        "
-                      ),
-                      _c("input", {
-                        attrs: {
-                          type: "hidden",
-                          name: "items[" + index + "][valor_acrescimo]"
-                        },
-                        domProps: { value: item.valor_acrescimo }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1 text-right" }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(_vm._f("toDecimal3")(item.valor_total_item)) +
-                          "                            \n                    "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1" }, [
-                      _c(
-                        "button",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: !_vm.editing,
-                              expression: "!editing"
-                            }
-                          ],
-                          staticClass: "btn-xs btn-warning",
-                          attrs: { type: "button" },
-                          on: {
-                            click: function($event) {
-                              _vm.editItem(index)
-                            }
-                          }
-                        },
-                        [
-                          _c("span", {
-                            staticClass: "glyphicon glyphicon-edit"
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: !_vm.editing,
-                              expression: "!editing"
-                            }
-                          ],
-                          staticClass: "btn-xs btn-danger",
+                  return _c(
+                    "tr",
+                    { key: index, staticClass: "row no-margin" },
+                    [
+                      _c("td", { staticClass: "col-md-1 float-right" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(item.id) +
+                            "\n                        "
+                        ),
+                        _c("input", {
                           attrs: {
-                            type: "button",
-                            "data-toggle": "modal",
-                            "data-target": "#confirmDelete"
+                            type: "hidden",
+                            name: "items[" + index + "][produto_id]"
                           },
-                          on: {
-                            click: function($event) {
-                              _vm.confirmDelete(index)
+                          domProps: { value: item.id }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-5" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(item.produto_descricao) +
+                            "\n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(_vm._f("toDecimal3")(item.quantidade)) +
+                            "\n                        "
+                        ),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "items[" + index + "][quantidade]"
+                          },
+                          domProps: { value: item.quantidade }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(_vm._f("toDecimal3")(item.valor_unitario)) +
+                            "\n                        "
+                        ),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "items[" + index + "][valor_unitario]"
+                          },
+                          domProps: { value: item.valor_unitario }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(_vm._f("toDecimal3")(item.valor_desconto)) +
+                            "\n                        "
+                        ),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "items[" + index + "][valor_desconto]"
+                          },
+                          domProps: { value: item.valor_desconto }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(_vm._f("toDecimal3")(item.valor_acrescimo)) +
+                            "\n                        "
+                        ),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "items[" + index + "][valor_acrescimo]"
+                          },
+                          domProps: { value: item.valor_acrescimo }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-1 text-right" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(
+                              _vm._f("toDecimal3")(item.valor_total_item)
+                            ) +
+                            "                            \n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "col-md-1" }, [
+                        _c(
+                          "button",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: !_vm.editing,
+                                expression: "!editing"
+                              }
+                            ],
+                            staticClass: "btn btn-sm btn-warning",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                _vm.editItem(index)
+                              }
                             }
-                          }
-                        },
-                        [
-                          _c("span", {
-                            staticClass: "glyphicon glyphicon-trash"
-                          })
-                        ]
-                      )
-                    ])
-                  ])
+                          },
+                          [_c("i", { staticClass: "fas fa-edit" })]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: !_vm.editing,
+                                expression: "!editing"
+                              }
+                            ],
+                            staticClass: "btn btn-sm btn-danger",
+                            attrs: {
+                              type: "button",
+                              "data-toggle": "modal",
+                              "data-target": "#confirmDelete"
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.confirmDelete(index)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-trash-alt" })]
+                        )
+                      ])
+                    ]
+                  )
                 })
               ),
               _vm._v(" "),
               this.items.length > 0
                 ? _c("tfoot", [
-                    _c("tr", { staticClass: "success" }, [
+                    _c("tr", { staticClass: "row no-margin" }, [
                       _c("td", { staticClass: "col-md-1" }, [
                         _c("strong", [_vm._v(_vm._s(this.items.length))])
                       ]),
@@ -839,7 +837,7 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("td", { staticClass: "col-md-2" })
+                      _c("td", { staticClass: "col-md-1" })
                     ])
                   ])
                 : _vm._e()
@@ -848,8 +846,8 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "panel-footer" }, [
-        _c("div", { staticClass: "row" }, [
+      _c("div", [
+        _c("div", { staticClass: "row no-margin" }, [
           _c("input", {
             directives: [
               {
@@ -898,6 +896,7 @@ var render = function() {
                   ref: "inputProdutos",
                   staticClass: "form-control selectpicker",
                   attrs: {
+                    "data-style": "btn-secondary",
                     "data-live-search": "true",
                     name: "inputProdutos",
                     id: "inputProdutos"
@@ -1247,7 +1246,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: { click: _vm.addProduto }
               },
-              [_c("span", { staticClass: "glyphicon glyphicon-plus" })]
+              [_c("i", { staticClass: "fas fa-plus" })]
             ),
             _vm._v(" "),
             _c(
@@ -1287,7 +1286,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-heading" }, [
+    return _c("div", { staticClass: "card-header" }, [
       _c("strong", [_vm._v("Produtos")])
     ])
   },
@@ -1295,8 +1294,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", { staticClass: "primary" }, [
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", { staticClass: "row m-0" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-5" }, [_vm._v("Produto")]),

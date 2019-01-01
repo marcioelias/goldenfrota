@@ -4,7 +4,7 @@
     @include('layouts.main_header')
     @yield('head')
 </head>
-<body class="bg-light">
+<body class="bg-white">
     @yield('body')
 </body>
 </html>

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
     <a class="navbar-brand" href="{{ url('/') }}">
         <img src="{{ asset('images/logo_golden.png') }}" alt="Golden Service - Controle de Frotas">
         {{--  {{ env('APP_NAME') }}  --}}

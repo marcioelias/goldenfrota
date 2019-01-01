@@ -11,8 +11,8 @@
         <p></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" id="confirm"><i class="fas fa-thumbs-up"></i> {{__('Yes')}}</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-thumbs-down"></i> {{__('No')}}</button>        
+        <button type="button" class="btn btn-danger" id="confirm"><i class="fas fa-thumbs-up"></i> Sim</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-thumbs-down"></i> Não</button>        
       </div>
     </div>
   </div>

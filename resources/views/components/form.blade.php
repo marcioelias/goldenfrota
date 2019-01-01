@@ -9,7 +9,7 @@
 @if($title != '')
     <div class="card-header"><h3>{{__($title)}}</h3></div>
 @endif
-<div class="card-body">
+<div class="card-body mb-5">
     <form class="form" {{isset($formTarget) ? 'target='.$formTarget : ''}} role="form" method="POST" action="{{$routeUrl}}" {{$fileUpload}}>
         {{ csrf_field() }}
 
@@ -22,9 +22,8 @@
         @yield('formFields')
 
         {{--  <hr>  --}}
-
-        <div class="form-group">
-            <div class="{{ ($btnAlign == 'Right') ? 'float-right' : '' }} padding-bottom-15">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+            <div class="ml-auto">
                 @if(is_array($formButtons))
                     @foreach($formButtons as $formButton)
                         @if(($formButton['type'] == 'submit') || ($formButton['type'] == 'reset'))
@@ -55,6 +54,11 @@
                     </button>
                 @endif
             </div>
-        </div>
+        </nav>
+        {{--  <div class="form-group">
+            <div class="{{ ($btnAlign == 'Right') ? 'float-right' : '' }} padding-bottom-15">
+                
+            </div>
+        </div>  --}}
     </form>
 </div>

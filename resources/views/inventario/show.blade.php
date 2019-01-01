@@ -1,25 +1,25 @@
 @extends('layouts.relatorios')
 
 @section('relatorio')
-<table class="table table-sm table-bordered report-table">
-    <thead>
-        <tr class="info">
-            <td>
+<table class="table table-sm table-bordered table-striped table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>
                 Id
-            </td>
-            <td>
+            </th>
+            <th>
                 Produto
-            </td>
-            <td>
+            </th>
+            <th>
                 Qtd Em Estoque
-            </td>
-            <td>
+            </th>
+            <th>
                 Qtd Contada
-            </td>
+            </th>
             @if($inventario->fechado)
-            <td>
+            <th>
                 Ajuste
-            </td>
+            </th>
             @endif
         </tr>
     </thead>

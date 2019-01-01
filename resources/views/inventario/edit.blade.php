@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Alterar Inventário', 
             'routeUrl' => route('inventario.update', $inventario->id), 
@@ -83,7 +83,7 @@
                     </div>
                     <div class="card-body" style="padding: 0px 15px !important">
                         @foreach($inventario->inventario_items as $key => $item)
-                        <div class="row {{ ($key % 2 == 0) ? 'bg-info' : 'bg-warning' }}">
+                        <div class="row {{ ($key % 2 == 0) ? 'bg-secondary text-light' : 'bg-light' }}">
                             <div class="col col-xs-1 col-sm-1 col-md-1" style="padding-top: 3px">{{ $item->produto->id }}</div>
                             <div class="col col-xs-7 col-sm-7 col-md-9" style="padding-top: 3px">{{ $item->produto->produto_descricao }}</div>
                             <div class="col col-xs-4 col-sm-4 col-md-2">

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Nova Entrada no Estoque', 
             'routeUrl' => route('entrada_estoque.store'), 
@@ -17,7 +17,7 @@
                         [
                             'type' => 'number',
                             'field' => 'nr_docto',
-                            'label' => 'Nr. Documento',
+                            'label' => 'Nr. Doc.',
                             'required' => true,
                             'autofocus' => true,
                             'inputSize' => 3
@@ -32,7 +32,7 @@
                         [
                             'type' => 'datetime',
                             'field' => 'data_doc',
-                            'label' => 'Data Documento',
+                            'label' => 'Data Doc.',
                             'required' => true,
                             'inputSize' => 3,
                             'inputValue' => date('d/m/Y H:i:s')

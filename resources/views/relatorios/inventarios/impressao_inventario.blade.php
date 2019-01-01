@@ -1,9 +1,9 @@
 @extends('layouts.relatorios')
 
 @section('relatorio')
-<table class="table table-sm report-table">
-    <thead>
-        <tr class="info">
+<table class="table table-sm table-bordered table-striped table-hover">
+    <thead class="thead-dark">
+        <th>
             <td>
                 Id
             </td>
@@ -22,7 +22,7 @@
             <td>
                 Ajustado
             </td>
-        </tr>
+        </th>
     </thead>
     <tbody>
         @foreach($inventario_items as $inventario_item) 

@@ -1,6 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
+    "/css/report.css": "/css/report.css",
+    "/css/login.css": "/css/login.css",
     "/js/bs4navbar.js": "/js/bs4navbar.js",
     "/js/entradaestoque.js": "/js/entradaestoque.js",
     "/js/entradatanque.js": "/js/entradatanque.js",

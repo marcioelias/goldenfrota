@@ -9,9 +9,7 @@
 
 <!-- Styles -->
 <link href="{{ asset('css/app.css') }}" rel="stylesheet" media="all">
-<style>
 @stack('header-styles')    
-</style>
 
 <!-- Scripts -->
 <script>
