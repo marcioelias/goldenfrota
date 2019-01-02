@@ -78,7 +78,7 @@
         @endcomponent
     </div>
 @push('bottom-scripts')
-    <script src="{{ asset('js/os.js') }}"></script>
+    <script src="{{ mix('js/os.js') }}"></script>
 
     <script>
         $(document).ready(function() {

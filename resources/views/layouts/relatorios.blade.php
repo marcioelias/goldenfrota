@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @push('header-styles')
-    <link href="{{ asset('css/report.css') }}" rel="stylesheet" media="all">
+    <link href="{{ mix('css/report.css') }}" rel="stylesheet" media="all">
 @endpush
 
 @section('body')

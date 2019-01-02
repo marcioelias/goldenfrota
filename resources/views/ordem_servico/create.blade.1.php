@@ -82,7 +82,7 @@
         @endcomponent
     </div>
 @push('bottom-scripts')
-    <script src="{{ asset('js/osservico.js') }}"></script>
+    <script src="{{ mix('js/osservico.js') }}"></script>
 
     <script>
         $(document).ready(function() {

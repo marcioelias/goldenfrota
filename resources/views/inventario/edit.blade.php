@@ -102,13 +102,13 @@
             @endsection
         @endcomponent
     </div>
-    <script>
-        $('#fechado').on('change', () => {
+@endsection
+@push('document-ready') 
+$('#fechado').on('change', () => {
             if ($('#fechado').is(':checked')) {
                 $('#data_fechamento').val(new Date().toLocaleString());
             } else {
                 $('#data_fechamento').val('');
             }
         });
-    </script>
-@endsection
+@endpush

@@ -12,6 +12,12 @@ const mix = require('laravel-mix');
  */
 
 
+/* Images folder */
+mix.copyDirectory('resources/images', 'public/images');
+
+/* Bootstrap toogle */
+mix.copy('node_modules/bootstrap-toggle/css/bootstrap-toggle.css', 'public/css/bootstrap-toggle.css');
+
 
 mix.js('resources/js/app.js', 'public/js')
    .js('resources/js/bs4navbar.js', 'public/js')
@@ -24,4 +30,5 @@ mix.js('resources/js/app.js', 'public/js')
    .js('resources/js/os.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css')
    .sass('resources/sass/report.scss', 'public/css')
-   .sass('resources/sass/login.scss', 'public/css');
+   .sass('resources/sass/login.scss', 'public/css')
+   .version();

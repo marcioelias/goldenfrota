@@ -32,8 +32,8 @@
         </span>
     @endif
 </div>
-<script type="text/javascript">
-    $(function () {
+@push('document-ready')
+$(function () {
         $('#{{$id}}_picker').datetimepicker({
             {{ $sideBySide ? 'sideBySide: true, ' : '' }}
             format : "{{ $dateTimeFormat ? $dateTimeFormat : 'DD/MM/YYYY HH:mm' }}",
@@ -52,4 +52,4 @@
             });
         @endif
     });
-</script>
+@endpush

@@ -1,6 +1,7 @@
 
 window._ = require('lodash');
 window.Popper = require('popper.js').default;
+window.moment = require('moment');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -13,7 +14,14 @@ try {
 
     require('bootstrap');
     require('bootstrap-select');
-} catch (e) {}
+} catch (e) {
+
+} finally {
+    require('tempusdominus-bootstrap-4');
+    require('bootstrap-toggle');
+} 
+
+
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

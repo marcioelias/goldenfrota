@@ -1201,6 +1201,7 @@ var render = function() {
               ref: "estoqueId",
               staticClass: "form-control selectpicker",
               attrs: {
+                "data-style": "btn-secondary",
                 "data-live-search": "true",
                 name: "estoqueId",
                 id: "estoqueId",
@@ -1252,14 +1253,14 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "panel panel-default" },
+      { staticClass: "card" },
       [
         _vm._m(0),
         _vm._v(" "),
         _c(
           "div",
           {
-            staticClass: "panel-body",
+            staticClass: "card-body",
             staticStyle: { padding: "0 !important" }
           },
           [
@@ -1267,7 +1268,7 @@ var render = function() {
               "table",
               {
                 staticClass:
-                  "table table-condensed table-striped table-bordered table-hover",
+                  "table table-sm table-striped table-bordered table-hover",
                 staticStyle: { "margin-bottom": "0 !important" }
               },
               [
@@ -1277,7 +1278,7 @@ var render = function() {
                   "transition-group",
                   { tag: "tbody", attrs: { name: "fade" } },
                   _vm._l(_vm.produtos, function(item, index) {
-                    return _c("tr", { key: index }, [
+                    return _c("tr", { key: index, staticClass: "row m-0" }, [
                       _c("td", { staticClass: "col-md-1 pool-right" }, [
                         _vm._v(
                           "\n                            " +
@@ -1388,7 +1389,7 @@ var render = function() {
                                 expression: "!editing"
                               }
                             ],
-                            staticClass: "btn-xs btn-warning",
+                            staticClass: "btn btn-sm btn-warning",
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
@@ -1396,11 +1397,7 @@ var render = function() {
                               }
                             }
                           },
-                          [
-                            _c("span", {
-                              staticClass: "glyphicon glyphicon-edit"
-                            })
-                          ]
+                          [_c("i", { staticClass: "fas fa-edit" })]
                         ),
                         _vm._v(" "),
                         _c(
@@ -1414,7 +1411,7 @@ var render = function() {
                                 expression: "!editing"
                               }
                             ],
-                            staticClass: "btn-xs btn-danger",
+                            staticClass: "btn btn-sm btn-danger",
                             attrs: {
                               type: "button",
                               "data-toggle": "modal",
@@ -1426,11 +1423,7 @@ var render = function() {
                               }
                             }
                           },
-                          [
-                            _c("span", {
-                              staticClass: "glyphicon glyphicon-trash"
-                            })
-                          ]
+                          [_c("i", { staticClass: "fas fa-trash-alt" })]
                         )
                       ])
                     ])
@@ -1439,7 +1432,7 @@ var render = function() {
                 _vm._v(" "),
                 this.produtos.length > 0
                   ? _c("tfoot", [
-                      _c("tr", { staticClass: "success" }, [
+                      _c("tr", { staticClass: "row m-0" }, [
                         _c("td", { staticClass: "col-md-1" }, [
                           _c("strong", [_vm._v(_vm._s(this.produtos.length))])
                         ]),
@@ -1499,8 +1492,8 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "panel-footer" }, [
-          _c("div", { staticClass: "row" }, [
+        _c("div", [
+          _c("div", { staticClass: "row m-0" }, [
             _c(
               "div",
               {
@@ -1528,6 +1521,7 @@ var render = function() {
                     ref: "inputProdutos",
                     staticClass: "form-control selectpicker",
                     attrs: {
+                      "data-style": "btn-secondary",
                       disabled:
                         _vm.estoqueId == "false" || _vm.estoqueId == null,
                       "data-live-search": "true",
@@ -1912,7 +1906,7 @@ var render = function() {
                   },
                   on: { click: _vm.addProduto }
                 },
-                [_c("span", { staticClass: "glyphicon glyphicon-plus" })]
+                [_c("i", { staticClass: "fas fa-plus" })]
               ),
               _vm._v(" "),
               _c(
@@ -1956,7 +1950,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-heading" }, [
+    return _c("div", { staticClass: "card-header" }, [
       _c("strong", [_vm._v("Produtos")])
     ])
   },
@@ -1964,8 +1958,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", { staticClass: "primary" }, [
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", { staticClass: "row m-0" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-5" }, [_vm._v("Produto")]),
@@ -2008,19 +2002,19 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "panel panel-default" },
+    { staticClass: "card" },
     [
       _vm._m(0),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "panel-body", staticStyle: { padding: "0 !important" } },
+        { staticClass: "card-body", staticStyle: { padding: "0 !important" } },
         [
           _c(
             "table",
             {
               staticClass:
-                "table table-condensed table-striped table-bordered table-hover",
+                "table table-sm table-striped table-bordered table-hover",
               staticStyle: { "margin-bottom": "0 !important" }
             },
             [
@@ -2030,7 +2024,7 @@ var render = function() {
                 "transition-group",
                 { tag: "tbody", attrs: { name: "fade" } },
                 _vm._l(_vm.servicosSelecionados, function(item, index) {
-                  return _c("tr", { key: index }, [
+                  return _c("tr", { key: index, staticClass: "row m-0" }, [
                     _c("td", { staticClass: "col-md-1 pool-right" }, [
                       _vm._v(
                         "\n                        " +
@@ -2046,7 +2040,7 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "col-md-4" }, [
+                    _c("td", { staticClass: "col-md-6" }, [
                       _vm._v(
                         "\n                        " +
                           _vm._s(item.servico) +
@@ -2126,7 +2120,7 @@ var render = function() {
                               expression: "!editing"
                             }
                           ],
-                          staticClass: "btn-xs btn-warning",
+                          staticClass: "btn btn-sm btn-warning",
                           attrs: { type: "button" },
                           on: {
                             click: function($event) {
@@ -2134,11 +2128,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _c("span", {
-                            staticClass: "glyphicon glyphicon-edit"
-                          })
-                        ]
+                        [_c("i", { staticClass: "fas fa-edit" })]
                       ),
                       _vm._v(" "),
                       _c(
@@ -2152,7 +2142,7 @@ var render = function() {
                               expression: "!editing"
                             }
                           ],
-                          staticClass: "btn-xs btn-danger",
+                          staticClass: "btn btn-sm btn-danger",
                           attrs: {
                             type: "button",
                             "data-toggle": "modal",
@@ -2164,11 +2154,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _c("span", {
-                            staticClass: "glyphicon glyphicon-trash"
-                          })
-                        ]
+                        [_c("i", { staticClass: "fas fa-trash-alt" })]
                       )
                     ])
                   ])
@@ -2180,7 +2166,7 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("div", { staticClass: "panel-footer" }, [
-        _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "row m-0" }, [
           _c(
             "div",
             {
@@ -2208,6 +2194,7 @@ var render = function() {
                   ref: "inputServicos",
                   staticClass: "form-control selectpicker",
                   attrs: {
+                    "data-style": "btn-secondary",
                     "data-live-search": "true",
                     name: "inputServicos",
                     id: "inputServicos"
@@ -2524,7 +2511,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: { click: _vm.addServico }
               },
-              [_c("span", { staticClass: "glyphicon glyphicon-plus" })]
+              [_c("i", { staticClass: "fas fa-plus" })]
             ),
             _vm._v(" "),
             _c(
@@ -2564,7 +2551,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-heading" }, [
+    return _c("div", { staticClass: "card-header" }, [
       _c("strong", [_vm._v("Servicos")])
     ])
   },
@@ -2572,8 +2559,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", { staticClass: "primary" }, [
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", { staticClass: "row m-0" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-6" }, [_vm._v("Serviço")]),

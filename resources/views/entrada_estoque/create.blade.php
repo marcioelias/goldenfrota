@@ -89,6 +89,6 @@
         @endcomponent
     </div>
 @push('bottom-scripts')
-    <script src="{{ asset('js/entradaestoque.js') }}"></script>
+    <script src="{{ mix('js/entradaestoque.js') }}"></script>
 @endpush
 @endsection

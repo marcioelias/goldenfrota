@@ -14,14 +14,14 @@
                 </span>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card">
+            <div class="card-header">
                 <strong>Produtos</strong>
             </div>
-            <div class="panel-body" style="padding: 0 !important;">
+            <div class="card-body" style="padding: 0 !important;">
                 <table class="table table-condensed table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
                     <thead>
-                        <tr class="primary">
+                        <tr class="row">
                             <th class="col-md-1">Id</th>
                             <th class="col-md-6">Produto</th>
                             <th class="col-md-1">Qtd</th>
@@ -32,7 +32,7 @@
                         </tr>
                     </thead>
                     <tbody name="fade" is="transition-group">
-                        <tr v-for="(item, index) in items" :key="index">
+                        <tr class="row" v-for="(item, index) in items" :key="index">
                             <td class="col-md-1 pool-right">
                                 {{ item.id }}
                                 <input type="hidden" :name="'items['+index+'][produto_id]'" :value="item.id">
@@ -67,7 +67,7 @@
                         </tr>
                     </tbody>
                     <tfoot v-if="this.items.length > 0">
-                        <tr class="success">
+                        <tr class="row">
                             <td class="col-md-1"><strong>{{ this.items.length }}</strong></td>
                             <td class="col-md-6"></td>
                             <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() }}</strong></td>
@@ -79,7 +79,7 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="panel-footer">
+            <div>
                 <div class="row">
                     <div v-bind:class="{'col-md-7': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
                         <select :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
@@ -124,7 +124,7 @@
                     </div>
                 </div>
             </div>
-            <modal @cancel="cancelDelete" @confirm="deleteItem" :modal-title="'Corfirmação'" :modal-text="'Confirma a remoção deste Item?'" />
+            <vue-modal @cancel="cancelDelete" @confirm="deleteItem" :modal-title="'Corfirmação'" :modal-text="'Confirma a remoção deste Item?'" />
         </div>
     </div>
 </template>
@@ -133,9 +133,8 @@
     import modal from './modal.vue';
 
     export default {
-        name: 'saida_estoque',
         components: {
-            modal
+            'vue-modal': modal
         },
         props: [
             'oldData',

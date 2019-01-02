@@ -229,9 +229,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'saida_estoque',
   components: {
-    modal: _modal_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    'vue-modal': _modal_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: ['oldData', 'estoques', 'oldEstoqueId', 'estoqueError'],
   data: function data() {
@@ -790,14 +789,14 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "panel panel-default" },
+      { staticClass: "card" },
       [
         _vm._m(0),
         _vm._v(" "),
         _c(
           "div",
           {
-            staticClass: "panel-body",
+            staticClass: "card-body",
             staticStyle: { padding: "0 !important" }
           },
           [
@@ -815,7 +814,7 @@ var render = function() {
                   "transition-group",
                   { tag: "tbody", attrs: { name: "fade" } },
                   _vm._l(_vm.items, function(item, index) {
-                    return _c("tr", { key: index }, [
+                    return _c("tr", { key: index, staticClass: "row" }, [
                       _c("td", { staticClass: "col-md-1 pool-right" }, [
                         _vm._v(
                           "\n                            " +
@@ -962,7 +961,7 @@ var render = function() {
                 _vm._v(" "),
                 this.items.length > 0
                   ? _c("tfoot", [
-                      _c("tr", { staticClass: "success" }, [
+                      _c("tr", { staticClass: "row" }, [
                         _c("td", { staticClass: "col-md-1" }, [
                           _c("strong", [_vm._v(_vm._s(this.items.length))])
                         ]),
@@ -994,7 +993,7 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "panel-footer" }, [
+        _c("div", [
           _c("div", { staticClass: "row" }, [
             _c(
               "div",
@@ -1369,7 +1368,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("modal", {
+        _c("vue-modal", {
           attrs: {
             "modal-title": "Corfirmação",
             "modal-text": "Confirma a remoção deste Item?"
@@ -1386,7 +1385,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-heading" }, [
+    return _c("div", { staticClass: "card-header" }, [
       _c("strong", [_vm._v("Produtos")])
     ])
   },
@@ -1395,7 +1394,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("thead", [
-      _c("tr", { staticClass: "primary" }, [
+      _c("tr", { staticClass: "row" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-6" }, [_vm._v("Produto")]),
@@ -1781,7 +1780,7 @@ var saida_estoque = __webpack_require__(/*! ./components/SaidaEstoqueItemsCompon
 var leads = new Vue({
   el: '#saida_estoque_produtos',
   components: {
-    saida_estoque: saida_estoque
+    'saida-estoque': saida_estoque
   },
   data: function data() {
     return {

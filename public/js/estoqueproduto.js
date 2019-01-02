@@ -456,7 +456,7 @@ var render = function() {
             "table",
             {
               staticClass:
-                "table table-condensed table-striped table-bordered table-hover",
+                "table table-sm table-striped table-bordered table-hover",
               staticStyle: { "margin-bottom": "0 !important" }
             },
             [
@@ -466,7 +466,7 @@ var render = function() {
                 "transition-group",
                 { tag: "tbody", attrs: { name: "fade" } },
                 _vm._l(_vm.estoques, function(item, index) {
-                  return _c("tr", { key: index }, [
+                  return _c("tr", { key: index, staticClass: "rom m-0" }, [
                     _c("td", { staticClass: "col-md-1 pool-right" }, [
                       _vm._v(
                         "\n                        " +
@@ -570,8 +570,8 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "panel-footer" }, [
-        _c("div", { staticClass: "row" }, [
+      _c("div", [
+        _c("div", { staticClass: "row m-0" }, [
           _c(
             "div",
             {
@@ -775,7 +775,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
+    return _c("thead", { staticClass: "thead-light" }, [
       _c("tr", { staticClass: "primary" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),

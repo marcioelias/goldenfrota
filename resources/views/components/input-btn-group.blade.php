@@ -16,11 +16,11 @@
     @endif  
 
     <div class="input-group">
-        <div id="{{$field}}" class="btn-group" data-toggle="buttons" >
+        <div id="{{$field}}" class="btn-group btn-group-toggle" data-toggle="buttons" >
             @foreach($radioButtons as $radioButton)
-            <label class="btn btn-default{{(($defaultValue) && ($defaultValue == $radioButton['value'])) ? ' active' : ''}}">
+            <buttom class="btn btn-secondary {{(($defaultValue) && ($defaultValue == $radioButton['value'])) ? ' active' : ''}}">
                 <input type="radio" name="{{$name}}" id="{{$id}}" value="{{$radioButton['value']}}" {{(($defaultValue) && ($defaultValue == $radioButton['value'])) ? ' checked' : ''}}> {{$radioButton['label']}}
-            </label>
+            </buttom>
             @endforeach
         </div>
     </div>

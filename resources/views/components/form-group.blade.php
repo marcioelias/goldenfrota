@@ -27,6 +27,14 @@
                 $input['div_css'] = isset($input['div_css']) ? $input['div_css'] : '';
                 $input['vModel'] = isset($input['vModel']) ? $input['vModel'] : false;
                 $input['readOnly'] = isset($input['readOnly']) ? $input['readOnly'] : false;
+                $input['maxLength'] = isset($input['maxLength']) ? $input['maxLength'] : false;
+                $input['dataWidth'] = isset($input['dataWidth']) ? $input['dataWidth'] : null;
+                $input['dataSize'] = isset($input['dataSize']) ? $input['dataSize'] : null;
+                $input['dataOn'] = isset($input['dataOn']) ? $input['dataOn'] : null;
+                $input['dataOff'] = isset($input['dataOff']) ? $input['dataOff'] : null;
+                $input['dataOnStyle'] = isset($input['dataOnStyle']) ? $input['dataOnStyle'] : null;
+                $input['dataOffStyle'] = isset($input['dataOffStyle']) ? $input['dataOffStyle'] : null;
+                $input['permission'] = isset($input['permission']) ? $input['permission'] : null;
             @endphp
             @if($input['type'] == 'text')
                 @component('components.input-text', [
@@ -210,6 +218,28 @@
                     'id' => $input['id'],
                     'name' => $input['name'],
                     'vModel' => $input['vModel']
+                ])
+                @endcomponent
+            @endif
+            @if($input['type'] == 'checkbox')
+                @component('components.input-checkbox', [
+                    'field' => $input['field'],
+                    'label' => $input['label'],
+                    'inputSize' => $input['inputSize'],
+                    'inputValue' => $input['inputValue'],
+                    'dataWidth' => $input['dataWidth'],
+                    'dataSize' => $input['dataSize'],
+                    'dataOn' => $input['dataOn'],
+                    'dataOff' => $input['dataOff'],
+                    'dataOnStyle' => $input['dataOnStyle'],
+                    'dataOffStyle' => $input['dataOffStyle'],
+                    'disabled' => $input['disabled'],
+                    'name' => $input['name'],
+                    'id' => $input['id'],
+                    'css' => $input['css'],
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly'],
+                    'permission' => $input['permission']
                 ])
                 @endcomponent
             @endif

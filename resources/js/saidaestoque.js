@@ -3,7 +3,7 @@ let saida_estoque = require('./components/SaidaEstoqueItemsComponent.vue');
 const leads = new Vue({
     el: '#saida_estoque_produtos',
     components:{
-        saida_estoque,
+        'saida-estoque': saida_estoque,
     },
     data() {
         return {

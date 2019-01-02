@@ -76,6 +76,6 @@
         @endcomponent
     </div>
 @push('bottom-scripts')
-    <script src="{{ asset('js/entradatanque.js') }}"></script>
+    <script src="{{ mix('js/entradatanque.js') }}"></script>
 @endpush
 @endsection

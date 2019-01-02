@@ -1,12 +1,12 @@
 <template>
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card">
+        <div class="card-header">
             <strong>Combustíveis</strong>
         </div>
-        <div class="panel-body" style="padding: 0 !important;">
-            <table class="table table-condensed table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
-                <thead>
-                    <tr class="primary">
+        <div class="card-body" style="padding: 0 !important;">
+            <table class="table table-sm table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
+                <thead class="thead-light">
+                    <tr class="row m-0">
                         <th class="col-md-1">Id</th>
                         <th class="col-md-5">Tanque</th>
                         <th class="col-md-2">Qtd</th>
@@ -15,7 +15,7 @@
                     </tr>
                 </thead>
                 <tbody name="fade" is="transition-group">
-                    <tr v-for="(item, index) in items" :key="index">
+                    <tr class="row m-0" v-for="(item, index) in items" :key="index">
                         <td class="col-md-1 pool-right">
                             {{ item.id }}
                             <input type="hidden" :name="'items['+index+'][tanque_id]'" :value="item.id">
@@ -32,17 +32,17 @@
                             <input type="hidden" :name="'items['+index+'][valor_unitario]'" :value="item.valor_unitario">    
                         </td>
                         <td class="col-md-2">
-                            <button type="button" class="btn-xs btn-warning" @click="editItem(index)" v-show="!editing">
-                                <span class="glyphicon glyphicon-edit"></span>
+                            <button type="button" class="btn btn-sm btn-warning" @click="editItem(index)" v-show="!editing">
+                                <i class="fas fa-edit"></i>
                             </button>
-                            <button type="button" class="btn-xs btn-danger" @click="confirmDelete(index)" data-toggle="modal" data-target="#confirmDelete" v-show="!editing">
-                                <span class="glyphicon glyphicon-trash"></span>
+                            <button type="button" class="btn btn-sm btn-danger" @click="confirmDelete(index)" data-toggle="modal" data-target="#confirmDelete" v-show="!editing">
+                                <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
                     </tr>
                 </tbody>
                 <tfoot v-if="this.items.length > 0">
-                    <tr class="success">
+                    <tr class="row m-0">
                         <td class="col-md-1"><strong>{{ this.items.length }}</strong></td>
                         <td class="col-md-5"></td>
                         <td class="col-md-2 text-right"><strong>{{ this.totalQuantidade() }}</strong></td>
@@ -53,10 +53,10 @@
             </table>
         </div>
         <div class="panel-footer">
-            <div class="row">
+            <div class="row m-0">
                 <input type="hidden" name="valor_total" v-model="valor_total">
                 <div v-bind:class="{'col-md-6': true, ' has-error': this.errors.inputTanques}" style="padding-right: 0 !important; padding-left: 0 !important;">
-                    <select ref="inputTanques" v-model="tanque_id" data-live-search="true" class="form-control selectpicker" name="inputTanques" id="inputTanques">
+                    <select data-style="btn-secondary" ref="inputTanques" v-model="tanque_id" data-live-search="true" class="form-control selectpicker" name="inputTanques" id="inputTanques">
                         <option selected value="false"> Nada Selecionado </option>
                         <option v-for="(tanque, index) in tanquesDisponiveisOrdenados" :value="tanque.id" :key="index">{{ tanque.tanque }}</option>
                     </select>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-success" @click="addEntrada" v-show="!editing">
-                        <span class="glyphicon glyphicon-plus"></span>
+                        <i class="fas fa-plus"></i>
                     </button>
                     <button type="button" class="btn btn-success" @click="updateEntrada" v-show="editing">
                         <i class="fas fa-check"></i>

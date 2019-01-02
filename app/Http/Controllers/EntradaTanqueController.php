@@ -103,8 +103,8 @@ class EntradaTanqueController extends Controller
                 
                 $entrada = new EntradaTanque($request->all());
 
-                $dataDoc = \DateTime::createFromFormat('d/m/Y H:i', $request->data_doc);
-                $dataEntrada = \DateTime::createFromFormat('d/m/Y H:i', $request->data_entrada);
+                $dataDoc = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_doc);
+                $dataEntrada = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_entrada);
 
                 $entrada->data_doc = $dataDoc->format('Y-m-d H:i:s');
                 $entrada->data_entrada = $dataEntrada->format('Y-m-d H:i:s');

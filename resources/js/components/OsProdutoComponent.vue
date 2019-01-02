@@ -5,7 +5,7 @@
             <input type="hidden" name="valor_total" v-model="valor_total">
             <div v-bind:class="{'col-md-7': true, ' has-error': this.errors.estoqueId}">
                 <label for="estoqueId" class="control-label">Estoque</label>
-                <select ref="estoqueId" v-model="estoqueId" data-live-search="true" class="form-control selectpicker" name="estoqueId" id="estoqueId" :disabled="produtosSelecionados.length > 0">
+                <select data-style="btn-secondary" ref="estoqueId" v-model="estoqueId" data-live-search="true" class="form-control selectpicker" name="estoqueId" id="estoqueId" :disabled="produtosSelecionados.length > 0">
                     <option selected value=""> Nada Selecionado </option>
                     <option v-for="(estoque, index) in this.estoques" :value="estoque.id" :key="index">{{ estoque.estoque }}</option>
                 </select>
@@ -14,14 +14,14 @@
                 </span>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card">
+            <div class="card-header">
                 <strong>Produtos</strong>
             </div>
-            <div class="panel-body" style="padding: 0 !important;">
-                <table class="table table-condensed table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
-                    <thead>
-                        <tr class="primary">
+            <div class="card-body" style="padding: 0 !important;">
+                <table class="table table-sm table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
+                    <thead class="thead-light">
+                        <tr class="row m-0">
                             <th class="col-md-1">Id</th>
                             <th class="col-md-5">Produto</th>
                             <th class="col-md-1">Qtd</th>
@@ -33,7 +33,7 @@
                         </tr>
                     </thead>
                     <tbody name="fade" is="transition-group">
-                        <tr v-for="(item, index) in produtos" :key="index">
+                        <tr class="row m-0" v-for="(item, index) in produtos" :key="index">
                             <td class="col-md-1 pool-right">
                                 {{ item.id }}
                                 <input type="hidden" :name="'produtos['+index+'][produto_id]'" :value="item.id">
@@ -62,17 +62,17 @@
                                 <input type="hidden" :name="'produtos['+index+'][valor_cobrado]'" :value="item.valor_cobrado">    
                             </td>    
                             <td class="col-md-1">
-                                <button type="button" class="btn-xs btn-warning" @click="editItem(index)" v-show="!editing">
-                                    <span class="glyphicon glyphicon-edit"></span>
+                                <button type="button" class="btn btn-sm btn-warning" @click="editItem(index)" v-show="!editing">
+                                    <i class="fas fa-edit"></i>
                                 </button>
-                                <button type="button" class="btn-xs btn-danger" @click="confirmDeleteProduto(index)" data-toggle="modal" data-target="#confirmDelete2" v-show="!editing">
-                                    <span class="glyphicon glyphicon-trash"></span>
+                                <button type="button" class="btn btn-sm btn-danger" @click="confirmDeleteProduto(index)" data-toggle="modal" data-target="#confirmDelete2" v-show="!editing">
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </td>
                         </tr>
                     </tbody>
                     <tfoot v-if="this.produtos.length > 0">
-                        <tr class="success">
+                        <tr class="row m-0">
                             <td class="col-md-1"><strong>{{ this.produtos.length }}</strong></td>
                             <td class="col-md-5"></td>
                             <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() | toDecimal3 }}</strong></td>
@@ -85,10 +85,10 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="panel-footer">
-                <div class="row">
+            <div>
+                <div class="row m-0">
                     <div v-bind:class="{'col-md-6': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
-                        <select :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
+                        <select data-style="btn-secondary" :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
                             <option selected value="false"> Nada Selecionado </option>
                             <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.produto_descricao }}</option>
                         </select>
@@ -128,7 +128,7 @@
                     </div>
                     <div class="col-md-1">
                         <button :disabled="((estoqueId == 'false') || (estoqueId == null))" type="button" class="btn btn-success" @click="addProduto" v-show="!editing">
-                            <span class="glyphicon glyphicon-plus"></span>
+                            <i class="fas fa-plus"></i>
                         </button>
                         <button :disabled="((estoqueId == 'false') || (estoqueId == null))" type="button" class="btn btn-success" @click="updateProduto" v-show="editing">
                             <i class="fas fa-check"></i>

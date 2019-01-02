@@ -1,14 +1,15 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/css/report.css": "/css/report.css",
-    "/css/login.css": "/css/login.css",
-    "/js/bs4navbar.js": "/js/bs4navbar.js",
-    "/js/entradaestoque.js": "/js/entradaestoque.js",
-    "/js/entradatanque.js": "/js/entradatanque.js",
-    "/js/estoqueproduto.js": "/js/estoqueproduto.js",
-    "/js/inventarioestoque.js": "/js/inventarioestoque.js",
-    "/js/os.js": "/js/os.js",
-    "/js/osservico.js": "/js/osservico.js",
-    "/js/saidaestoque.js": "/js/saidaestoque.js"
+    "/js/app.js": "/js/app.js?id=b0295b88e90fd99718fd",
+    "/css/app.css": "/css/app.css?id=c06c5ce7c542d8e1fabf",
+    "/css/report.css": "/css/report.css?id=6bee0a794420ddc88652",
+    "/css/login.css": "/css/login.css?id=108509f9aa5d5ab79fcb",
+    "/js/bs4navbar.js": "/js/bs4navbar.js?id=c7268ee5ee3357dcf1a5",
+    "/js/entradaestoque.js": "/js/entradaestoque.js?id=7154b5eda9373951dd4f",
+    "/js/entradatanque.js": "/js/entradatanque.js?id=dad81aeda0df73c81fd3",
+    "/js/estoqueproduto.js": "/js/estoqueproduto.js?id=e9ba39b385671c561e3c",
+    "/js/inventarioestoque.js": "/js/inventarioestoque.js?id=ce7b16f2871b6519b71e",
+    "/js/os.js": "/js/os.js?id=90aa1bfde0d29a2994ea",
+    "/js/osservico.js": "/js/osservico.js?id=4b27d07dcbe1e0dc35a3",
+    "/js/saidaestoque.js": "/js/saidaestoque.js?id=84d4864a82ab778b1ca3",
+    "/css/bootstrap-toggle.css": "/css/bootstrap-toggle.css?id=7f2680708eac715f58cd"
 }

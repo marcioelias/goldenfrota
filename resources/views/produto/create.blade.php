@@ -147,6 +147,6 @@
             $("#valor").mask('0.00', {reverse: true});
         });
     </script>
-    <script src="{{ asset('js/estoqueproduto.js') }}"></script>
+    <script src="{{ mix('js/estoqueproduto.js') }}"></script>
 @endpush
 @endsection

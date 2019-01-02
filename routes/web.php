@@ -12,6 +12,9 @@
 */
 
 Auth::routes();
+Route::get('/teste', function() {
+    return View('teste');
+});
 
 Route::middleware(['auth:web'])->group(function() {
 

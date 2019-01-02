@@ -12,7 +12,7 @@
             'formTarget' => '_blank',
             'method' => 'POST',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Gerar Relatório', 'icon' => 'stats'],
+                ['type' => 'submit', 'label' => 'Gerar Relatório', 'icon' => 'chart-line'],
                 ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])

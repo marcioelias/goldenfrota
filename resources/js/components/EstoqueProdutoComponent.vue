@@ -4,8 +4,8 @@
             <strong>Estoques</strong>
         </div>
         <div class="panel-body" style="padding: 0 !important;">
-            <table class="table table-condensed table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
-                <thead>
+            <table class="table table-sm table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
+                <thead class="thead-light">
                     <tr class="primary">
                         <th class="col-md-1">Id</th>
                         <th class="col-md-7">Estoque</th>
@@ -14,7 +14,7 @@
                     </tr>
                 </thead>
                 <tbody name="fade" is="transition-group">
-                    <tr v-for="(item, index) in estoques" :key="index">
+                    <tr class="rom m-0" v-for="(item, index) in estoques" :key="index">
                         <td class="col-md-1 pool-right">
                             {{ item.id }}
                             <input type="hidden" :name="'estoques['+index+'][estoque_id]'" :value="item.id">
@@ -38,8 +38,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="panel-footer">
-            <div class="row">
+        <div>
+            <div class="row m-0">
                 <div v-bind:class="{'col-md-9': true, ' has-error': this.errors.inputEstoques}" style="padding-right: 0 !important; padding-left: 0 !important;">
                     <select ref="inputEstoques" v-model="estoque_id" data-live-search="true" class="form-control selectpicker" name="inputEstoques" id="inputEstoques">
                         <option selected value="false"> Nada Selecionado </option>

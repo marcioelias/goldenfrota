@@ -533,19 +533,19 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "panel panel-default" },
+    { staticClass: "card" },
     [
       _vm._m(0),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "panel-body", staticStyle: { padding: "0 !important" } },
+        { staticClass: "card-body", staticStyle: { padding: "0 !important" } },
         [
           _c(
             "table",
             {
               staticClass:
-                "table table-condensed table-striped table-bordered table-hover",
+                "table table-sm table-striped table-bordered table-hover",
               staticStyle: { "margin-bottom": "0 !important" }
             },
             [
@@ -555,7 +555,7 @@ var render = function() {
                 "transition-group",
                 { tag: "tbody", attrs: { name: "fade" } },
                 _vm._l(_vm.items, function(item, index) {
-                  return _c("tr", { key: index }, [
+                  return _c("tr", { key: index, staticClass: "row m-0" }, [
                     _c("td", { staticClass: "col-md-1 pool-right" }, [
                       _vm._v(
                         "\n                        " +
@@ -621,7 +621,7 @@ var render = function() {
                               expression: "!editing"
                             }
                           ],
-                          staticClass: "btn-xs btn-warning",
+                          staticClass: "btn btn-sm btn-warning",
                           attrs: { type: "button" },
                           on: {
                             click: function($event) {
@@ -629,11 +629,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _c("span", {
-                            staticClass: "glyphicon glyphicon-edit"
-                          })
-                        ]
+                        [_c("i", { staticClass: "fas fa-edit" })]
                       ),
                       _vm._v(" "),
                       _c(
@@ -647,7 +643,7 @@ var render = function() {
                               expression: "!editing"
                             }
                           ],
-                          staticClass: "btn-xs btn-danger",
+                          staticClass: "btn btn-sm btn-danger",
                           attrs: {
                             type: "button",
                             "data-toggle": "modal",
@@ -659,11 +655,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _c("span", {
-                            staticClass: "glyphicon glyphicon-trash"
-                          })
-                        ]
+                        [_c("i", { staticClass: "fas fa-trash-alt" })]
                       )
                     ])
                   ])
@@ -672,7 +664,7 @@ var render = function() {
               _vm._v(" "),
               this.items.length > 0
                 ? _c("tfoot", [
-                    _c("tr", { staticClass: "success" }, [
+                    _c("tr", { staticClass: "row m-0" }, [
                       _c("td", { staticClass: "col-md-1" }, [
                         _c("strong", [_vm._v(_vm._s(this.items.length))])
                       ]),
@@ -697,7 +689,7 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("div", { staticClass: "panel-footer" }, [
-        _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "row m-0" }, [
           _c("input", {
             directives: [
               {
@@ -746,6 +738,7 @@ var render = function() {
                   ref: "inputTanques",
                   staticClass: "form-control selectpicker",
                   attrs: {
+                    "data-style": "btn-secondary",
                     "data-live-search": "true",
                     name: "inputTanques",
                     id: "inputTanques"
@@ -932,7 +925,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: { click: _vm.addEntrada }
               },
-              [_c("span", { staticClass: "glyphicon glyphicon-plus" })]
+              [_c("i", { staticClass: "fas fa-plus" })]
             ),
             _vm._v(" "),
             _c(
@@ -972,7 +965,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-heading" }, [
+    return _c("div", { staticClass: "card-header" }, [
       _c("strong", [_vm._v("Combustíveis")])
     ])
   },
@@ -980,8 +973,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", { staticClass: "primary" }, [
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", { staticClass: "row m-0" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-5" }, [_vm._v("Tanque")]),
