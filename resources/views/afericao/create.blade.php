@@ -5,6 +5,7 @@
         @component('components.form', [
             'title' => 'Nova Aferição', 
             'routeUrl' => route('afericao.store'), 
+            'cancelRoute' => 'abastecimento.index',
             'method' => 'POST',
             'formButtons' => [
                 ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],

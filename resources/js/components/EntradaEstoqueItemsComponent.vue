@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody name="fade" is="transition-group">
-                    <tr class="row no-margin" v-for="(item, index) in items" :key="index">
+                    <tr class="row m-0" v-for="(item, index) in items" :key="index">
                         <td class="col-md-1 float-right">
                             {{ item.id }}
                             <input type="hidden" :name="'items['+index+'][produto_id]'" :value="item.id">
@@ -56,7 +56,7 @@
                     </tr>
                 </tbody>
                 <tfoot v-if="this.items.length > 0">
-                    <tr class="row no-margin">
+                    <tr class="row m-0">
                         <td class="col-md-1"><strong>{{ this.items.length }}</strong></td>
                         <td class="col-md-5"></td>
                         <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() | toDecimal3 }}</strong></td>
@@ -70,7 +70,7 @@
             </table>
         </div>
         <div>
-            <div class="row no-margin">
+            <div class="row m-0">
                 <input type="hidden" name="valor_total" v-model="valor_total">
                 <div v-bind:class="{'col-md-6': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
                     <select ref="inputProdutos" data-style="btn-secondary" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">

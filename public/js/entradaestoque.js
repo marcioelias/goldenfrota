@@ -639,160 +639,154 @@ var render = function() {
                 "transition-group",
                 { tag: "tbody", attrs: { name: "fade" } },
                 _vm._l(_vm.items, function(item, index) {
-                  return _c(
-                    "tr",
-                    { key: index, staticClass: "row no-margin" },
-                    [
-                      _c("td", { staticClass: "col-md-1 float-right" }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(item.id) +
-                            "\n                        "
-                        ),
-                        _c("input", {
-                          attrs: {
-                            type: "hidden",
-                            name: "items[" + index + "][produto_id]"
-                          },
-                          domProps: { value: item.id }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-5" }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(item.produto_descricao) +
-                            "\n                    "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm._f("toDecimal3")(item.quantidade)) +
-                            "\n                        "
-                        ),
-                        _c("input", {
-                          attrs: {
-                            type: "hidden",
-                            name: "items[" + index + "][quantidade]"
-                          },
-                          domProps: { value: item.quantidade }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm._f("toDecimal3")(item.valor_unitario)) +
-                            "\n                        "
-                        ),
-                        _c("input", {
-                          attrs: {
-                            type: "hidden",
-                            name: "items[" + index + "][valor_unitario]"
-                          },
-                          domProps: { value: item.valor_unitario }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm._f("toDecimal3")(item.valor_desconto)) +
-                            "\n                        "
-                        ),
-                        _c("input", {
-                          attrs: {
-                            type: "hidden",
-                            name: "items[" + index + "][valor_desconto]"
-                          },
-                          domProps: { value: item.valor_desconto }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm._f("toDecimal3")(item.valor_acrescimo)) +
-                            "\n                        "
-                        ),
-                        _c("input", {
-                          attrs: {
-                            type: "hidden",
-                            name: "items[" + index + "][valor_acrescimo]"
-                          },
-                          domProps: { value: item.valor_acrescimo }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1 text-right" }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(
-                              _vm._f("toDecimal3")(item.valor_total_item)
-                            ) +
-                            "                            \n                    "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "col-md-1" }, [
-                        _c(
-                          "button",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: !_vm.editing,
-                                expression: "!editing"
-                              }
-                            ],
-                            staticClass: "btn btn-sm btn-warning",
-                            attrs: { type: "button" },
-                            on: {
-                              click: function($event) {
-                                _vm.editItem(index)
-                              }
+                  return _c("tr", { key: index, staticClass: "row m-0" }, [
+                    _c("td", { staticClass: "col-md-1 float-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.id) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "items[" + index + "][produto_id]"
+                        },
+                        domProps: { value: item.id }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-5" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.produto_descricao) +
+                          "\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 text-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm._f("toDecimal3")(item.quantidade)) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "items[" + index + "][quantidade]"
+                        },
+                        domProps: { value: item.quantidade }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 text-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_unitario)) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "items[" + index + "][valor_unitario]"
+                        },
+                        domProps: { value: item.valor_unitario }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 text-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_desconto)) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "items[" + index + "][valor_desconto]"
+                        },
+                        domProps: { value: item.valor_desconto }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 text-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_acrescimo)) +
+                          "\n                        "
+                      ),
+                      _c("input", {
+                        attrs: {
+                          type: "hidden",
+                          name: "items[" + index + "][valor_acrescimo]"
+                        },
+                        domProps: { value: item.valor_acrescimo }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1 text-right" }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm._f("toDecimal3")(item.valor_total_item)) +
+                          "                            \n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "col-md-1" }, [
+                      _c(
+                        "button",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.editing,
+                              expression: "!editing"
                             }
-                          },
-                          [_c("i", { staticClass: "fas fa-edit" })]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: !_vm.editing,
-                                expression: "!editing"
-                              }
-                            ],
-                            staticClass: "btn btn-sm btn-danger",
-                            attrs: {
-                              type: "button",
-                              "data-toggle": "modal",
-                              "data-target": "#confirmDelete"
-                            },
-                            on: {
-                              click: function($event) {
-                                _vm.confirmDelete(index)
-                              }
+                          ],
+                          staticClass: "btn btn-sm btn-warning",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              _vm.editItem(index)
                             }
+                          }
+                        },
+                        [_c("i", { staticClass: "fas fa-edit" })]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.editing,
+                              expression: "!editing"
+                            }
+                          ],
+                          staticClass: "btn btn-sm btn-danger",
+                          attrs: {
+                            type: "button",
+                            "data-toggle": "modal",
+                            "data-target": "#confirmDelete"
                           },
-                          [_c("i", { staticClass: "fas fa-trash-alt" })]
-                        )
-                      ])
-                    ]
-                  )
+                          on: {
+                            click: function($event) {
+                              _vm.confirmDelete(index)
+                            }
+                          }
+                        },
+                        [_c("i", { staticClass: "fas fa-trash-alt" })]
+                      )
+                    ])
+                  ])
                 })
               ),
               _vm._v(" "),
               this.items.length > 0
                 ? _c("tfoot", [
-                    _c("tr", { staticClass: "row no-margin" }, [
+                    _c("tr", { staticClass: "row m-0" }, [
                       _c("td", { staticClass: "col-md-1" }, [
                         _c("strong", [_vm._v(_vm._s(this.items.length))])
                       ]),
@@ -847,7 +841,7 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("div", [
-        _c("div", { staticClass: "row no-margin" }, [
+        _c("div", { staticClass: "row m-0" }, [
           _c("input", {
             directives: [
               {

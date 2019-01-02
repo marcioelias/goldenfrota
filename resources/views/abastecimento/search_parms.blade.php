@@ -32,8 +32,21 @@
         @component('components.label', ['label' => 'Tipo de Abastecimento', 'field' => $abast_local])
         @endcomponent
         <div class="input-group">
+            <div id="tipo_abastecimento" class="btn-group btn-group-toggle" data-toggle="buttons" >
+                <buttom class="btn btn-secondary {{$abast_local == 1 ? ' active' : ''}}">
+                    <input type="radio" name="abast_local" id="abast_local" value="1"> Local
+                </buttom>
+                <buttom class="btn btn-secondary {{$abast_local == 0 ? ' active' : ''}}">
+                    <input type="radio" name="abast_local" id="abast_externo" value="0"> Externo
+                </buttom>
+                <buttom class="btn btn-secondary {{$abast_local == -1 ? ' active' : ''}}">
+                    <input type="radio" name="abast_local" id="abast_todos" value="-1"> Todos
+                </buttom>
+            </div>
+        </div>
+        {{--  <div class="input-group">
             <div id="tipo_abastecimento" class="btn-group" data-toggle="buttons" >
-                <label class="btn btn-default{{$abast_local == 1 ? ' active' : ''}}">
+                <label class="btn btn-default {{$abast_local == 1 ? ' active' : ''}}">
                     <input type="radio" name="abast_local" id="abast_local" value="1"> Local
                 </label>
                 <label class="btn btn-default{{$abast_local == 0 ? ' active' : ''}}">
@@ -43,7 +56,7 @@
                     <input type="radio" name="abast_local" id="abast_todos" value="-1"> Todos
                 </label>
             </div>
-        </div>
+        </div>  --}}
     </div>
 </div>
 {{--  <div class="col-sm-12 col-md-4 col-lg-4">
@@ -58,8 +71,8 @@
         @endcomponent
     </div>
 </div>  --}}
-<script>
+@push('document-ready')
     $("#tipo_abastecimento :input").change(function() {
         $("#searchForm").submit();
     })
-</script>
+@endpush

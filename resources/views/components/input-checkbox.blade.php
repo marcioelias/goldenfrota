@@ -12,7 +12,7 @@
     $dataWidth = isset($dataWidth) ? $dataWidth : 55;
     $dataSize = isset($dataSize) ? $dataSize : 'mini';
     $dataOnStyle = isset($dataOnStyle) ? $dataOnStyle : 'success';
-    $dataOffStyle = isset($dataOffStyle) ? $dataOffStyle : 'default';
+    $dataOffStyle = isset($dataOffStyle) ? $dataOffStyle : 'secondary';
     $checked = isset($inputValue) ? (($inputValue) || (old($field))) : old($field);
     $permission = isset($permission) ? $permission : true;
 @endphp

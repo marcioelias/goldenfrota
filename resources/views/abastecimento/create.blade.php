@@ -167,118 +167,113 @@
             @endsection
         @endcomponent
     </div>
-    <script>
-        $(document).ready(function() {
-            //$('#valor_litro').mask('#.000', {{--  {reverse: true}  --}});
-            $('#km_veiculo').mask('#');
-
-            function CalcValorAbastecimento() {
-                var volume, valor_unitario = 0;
-                volume = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
-                valor_unitario = parseFloat($('#valor_litro').val().replace(',', '.'));
-                if ((volume > 0) && (valor_unitario > 0)) {
-                    $('#valor_abastecimento').val(volume * valor_unitario);
-                } else {
-                    $('#valor_abastecimento').val(0);
-                }
-            }
-
-            function CalcularEncerranteFinal() {
-                var encIni, encFin, qtdAbast;
-                encIni = parseFloat($('#encerrante_inicial').val().replace(',', '.'));
-                qtdAbast = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
-
-                if (qtdAbast > 0) {
-                    $('#encerrante_final').val(encIni + qtdAbast);
-                }
-
-            }
-
-            var buscarDadosBico = function() {  
-                var bico = {};
-
-                bico.id = $('#bico_id').val();
-                bico._token = $('input[name="_token"]').val();
-
-                $.ajax({
-                    url: '{{ route("bico.json") }}',
-                    type: 'POST',
-                    data: bico,
-                    dataType: 'JSON',
-                    cache: false,
-                    success: function (data) {
-                        $("#encerrante_inicial").val(data.encerrante);
-                        $("#combustivel_descricao").val(data.tanque.combustivel.descricao);
-                        $("#valor_litro").val(data.tanque.combustivel.valor);
-                        $("#volume_abastecimento").focus();
-
-
-                        $('.selectpicker').selectpicker('refresh');
-                    },
-                    error: function (data) {
-                    }
-                });
-            }
-
-            var buscarVeiculos = function() {
-                var cliente = {};
-
-                cliente.id = $('#cliente_id').val();
-                cliente._token = $('input[name="_token"]').val();
-
-                $.ajax({
-                    url: '{{ route("veiculos.json") }}',
-                    type: 'POST',
-                    data: cliente,
-                    dataType: 'JSON',
-                    cache: false,
-                    success: function (data) {
-                        $("#veiculo_id")
-                            .removeAttr('disabled')
-                            .find('option')
-                            .remove();
-
-
-                        $.each(data, function (i, item) {
-                            $('#veiculo_id').append($('<option>', { 
-                                value: item.id,
-                                text : item.placa + ' - ' + item.marca_veiculo + ' ' + item.modelo_veiculo
-                            }));
-                        });
-                        
-                        @if(old('modelo_veiculo_id'))
-                        $('#modelo_veiculo_id').selectpicker('val', {{old('modelo_veiculo_id')}});
-                        @endif
-
-                        $('.selectpicker').selectpicker('refresh');
-                    },
-                    error: function (data) {
-                    }
-                });
-            }
-            $('#volume_abastecimento').on('keyup', () => {
-                CalcValorAbastecimento(); 
-                CalcularEncerranteFinal();
-            });
-            $('#volume_abastecimento').on('blur', () => {
-                CalcValorAbastecimento();
-                CalcularEncerranteFinal();
-            });
-
-            $('#valor_litro').on('keyup', () => {
-                CalcValorAbastecimento();
-            });
-
-            $('#valor_litro').on('blur', () => {
-                CalcValorAbastecimento();
-            });
-
-            $('#cliente_id').on('changed.bs.select', buscarVeiculos);
-            $('#bico_id').on('changed.bs.select', buscarDadosBico);
-
-            if ($('#cliente_id').val()) {
-                buscarVeiculos();
-            }
-        });
-    </script>
 @endsection
+@push('document-ready')
+function CalcValorAbastecimento() {
+            var volume, valor_unitario = 0;
+            volume = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
+            valor_unitario = parseFloat($('#valor_litro').val().replace(',', '.'));
+            if ((volume > 0) && (valor_unitario > 0)) {
+                $('#valor_abastecimento').val(volume * valor_unitario);
+            } else {
+                $('#valor_abastecimento').val(0);
+            }
+        }
+
+        function CalcularEncerranteFinal() {
+            var encIni, encFin, qtdAbast;
+            encIni = parseFloat($('#encerrante_inicial').val().replace(',', '.'));
+            qtdAbast = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
+
+            if (qtdAbast > 0) {
+                $('#encerrante_final').val(encIni + qtdAbast);
+            }
+
+        }
+
+        var buscarDadosBico = function() {  
+            var bico = {};
+
+            bico.id = $('#bico_id').val();
+            bico._token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url: '{{ route("bico.json") }}',
+                type: 'POST',
+                data: bico,
+                dataType: 'JSON',
+                cache: false,
+                success: function (data) {
+                    $("#encerrante_inicial").val(data.encerrante);
+                    $("#combustivel_descricao").val(data.tanque.combustivel.descricao);
+                    $("#valor_litro").val(data.tanque.combustivel.valor);
+                    $("#volume_abastecimento").focus();
+
+
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function (data) {
+                }
+            });
+        }
+
+        var buscarVeiculos = function() {
+            var cliente = {};
+
+            cliente.id = $('#cliente_id').val();
+            cliente._token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url: '{{ route("veiculos.json") }}',
+                type: 'POST',
+                data: cliente,
+                dataType: 'JSON',
+                cache: false,
+                success: function (data) {
+                    $("#veiculo_id")
+                        .removeAttr('disabled')
+                        .find('option')
+                        .remove();
+
+
+                    $.each(data, function (i, item) {
+                        $('#veiculo_id').append($('<option>', { 
+                            value: item.id,
+                            text : item.placa + ' - ' + item.marca_veiculo + ' ' + item.modelo_veiculo
+                        }));
+                    });
+                    
+                    @if(old('modelo_veiculo_id'))
+                    $('#modelo_veiculo_id').selectpicker('val', {{old('modelo_veiculo_id')}});
+                    @endif
+
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function (data) {
+                }
+            });
+        }
+        $('#volume_abastecimento').on('keyup', () => {
+            CalcValorAbastecimento(); 
+            CalcularEncerranteFinal();
+        });
+        $('#volume_abastecimento').on('blur', () => {
+            CalcValorAbastecimento();
+            CalcularEncerranteFinal();
+        });
+
+        $('#valor_litro').on('keyup', () => {
+            CalcValorAbastecimento();
+        });
+
+        $('#valor_litro').on('blur', () => {
+            CalcValorAbastecimento();
+        });
+
+        $('#cliente_id').on('changed.bs.select', buscarVeiculos);
+        $('#bico_id').on('changed.bs.select', buscarDadosBico);
+
+        if ($('#cliente_id').val()) {
+            buscarVeiculos();
+        }
+@endpush

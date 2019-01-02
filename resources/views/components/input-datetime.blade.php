@@ -19,12 +19,20 @@
         @endcomponent
     @endif  
     
-    <div class="input-group date" id="{{$id}}_picker">
+    <div class="form-group">
+        <div class="input-group date" id="{{$id}}_picker" data-target-input="nearest">
+            <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
+            <div class="input-group-append" data-target="#{{$id}}_picker" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fas fa-calendar"></i></div>
+            </div>
+        </div>
+    </div>
+    {{--  <div class="input-group date" id="{{$id}}_picker">
         <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
-    </div>
+    </div>  --}}
 
     @if ($errors->has($field))
         <span class="invalid-feedback">
