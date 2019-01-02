@@ -30,7 +30,7 @@ IMPORTANTE: Instalar o composer após a instalação do WampServer, e ao ser sol
 - Clicar com o botão direito do mouse e selecionar a opção "Git Bash Here"
 - Clonar o repositório da versão 2 (mais atual) com o seguinte comando
 ```
-    git clone -b v2 https://github.com/marcioelias/goldenfrota.git
+    git clone -b v3 https://github.com/marcioelias/goldenfrota.git
 ```
 - Acessar o diretorio goldenfrota que foi criado 
 ```
@@ -100,6 +100,10 @@ Para atualizar o sistema instalado seguindo os passos acima, basta executar pouc
 - Rodar as atualizações da base de dados
 ```
     php artisan db:migrate -seed
+```
+- Criar os usuários padrões do sistema (NÃO UTILIZAR ESSE PASSO EM ATUALIZAÇÕES, SOMENTE INSTALAÇÕES NOVAS)
+```
+    php artisan db:seed --class=LaratrustSeeder
 ```
 
 Pronto, sistema atualizado para a última versão do fonte disponível.
