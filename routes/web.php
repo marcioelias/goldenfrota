@@ -18,8 +18,8 @@ Route::get('/teste', function() {
 
 Route::middleware(['auth:web'])->group(function() {
 
-    //Route::get('/', 'HomeController@index')->name('home');
-    Route::get('/', 'DashboardController@index')->name('home');
+    Route::get('/', 'HomeController@index')->name('home');
+    /* Route::get('/', 'DashboardController@index')->name('home'); */
 
     Route::get('/perfil', 'UserController@profile')->name('user.profile');
     Route::get('/alterar_senha', 'UserController@showChangePassword')->name('user.form.change.password');
