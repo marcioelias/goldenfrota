@@ -57,7 +57,7 @@ class RolesController extends Controller
     public function create()
     {
         if (Auth::user()->canCadastrarRole()) {
-            $permissions = Permission::orderBy('name', 'asc')->get();
+            $permissions = Permission::orderBy('id', 'asc')->get();
 
             return View('role.create', [
                 'permissions' => $permissions

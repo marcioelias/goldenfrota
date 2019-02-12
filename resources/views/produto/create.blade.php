@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('content-no-app')
 @if(old('fornecedores')) 
     {{--  {{ dd(old(str_replace('[]', '', 'fornecedores[]'))) }}  --}}
 @endif
@@ -126,7 +126,7 @@
                         ])
                         @endcomponent
                     </div>
-                    <div class="col-md-8" id="estoqueProdutoComponent">
+                    <div class="col-md-8" id="estoque-produto-component">
                         {{--  @component('components.input-checklist-group', [
                             'items' => $estoques,
                             'label' => 'estoque',
@@ -135,18 +135,13 @@
                             'value' => 'id'
                         ])
                         @endcomponent  --}}  
-                        <estoque_produto :estoques-data="{{ json_encode($listaEstoques) }}" :old-data="{{ json_encode(old('estoques')) }}"></estoque_produto>                      
+                        <estoque-produto :estoques-data="{{ json_encode($listaEstoques) }}" :old-data="{{ json_encode(old('estoques')) }}"></estoque_produto>                      
                     </div>
                 </div>
             @endsection
         @endcomponent
     </div>
+@endsection
 @push('bottom-scripts')
-    <script>
-        jQuery(function($){
-            $("#valor").mask('0.00', {reverse: true});
-        });
-    </script>
     <script src="{{ mix('js/estoqueproduto.js') }}"></script>
 @endpush
-@endsection

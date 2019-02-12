@@ -18,7 +18,8 @@ Route::get('/teste', function() {
 
 Route::middleware(['auth:web'])->group(function() {
 
-    Route::get('/', 'HomeController@index')->name('home');
+    //Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/', 'DashboardController@index')->name('home');
 
     Route::get('/perfil', 'UserController@profile')->name('user.profile');
     Route::get('/alterar_senha', 'UserController@showChangePassword')->name('user.form.change.password');
@@ -104,9 +105,14 @@ Route::middleware(['auth:web'])->group(function() {
     Route::put('setting', 'SettingController@update')->name('setting.update');
     Route::get('afericao/{abastecimento}', 'AfericaoController@create')->name('afericao.create');
     Route::post('afericao', 'AfericaoController@store')->name('afericao.store');
+
+    /* dashboard */
+    Route::get('/pos_tanque_30_dias', 'TanqueMovimentacaoController@posTanque30Dias');
 });
 
-Route::get('teste/{estoque}', 'GrupoProdutoController@getGrupoProdutoJson');
+Route::get('teste', function() {
+    return View('teste');
+});
 
 /* Route::get('relatorios/abastecimentos/imprimir', 'AbastecimentoController@gerarPdfRelatorioAbastecimentos')->name('imprimir_relatorio_abastecimentos'); */
 /* 

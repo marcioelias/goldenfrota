@@ -1,8 +1,8 @@
-let estoque_produto = require('./components/EstoqueProdutoComponent.vue');
+import estoque_produto from './components/EstoqueProdutoComponent.vue';
 
-const leads = new Vue({
-    el: '#estoqueProdutoComponent',
+new Vue({
+    el: '#estoque-produto-component',
     components:{
-        estoque_produto,
+        'estoque-produto': estoque_produto,
     }
 });

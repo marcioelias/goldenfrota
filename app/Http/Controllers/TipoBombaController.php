@@ -98,7 +98,7 @@ class TipoBombaController extends Controller
     {
         if (Auth::user()->canAlterarTipoBomba()) {
             return View('tipo_bomba.edit', [
-                'tipo_bomba' => $tipo_bomba
+                'tipo_bomba' => $tipoBomba
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -121,13 +121,12 @@ class TipoBombaController extends Controller
             ]);
             
             try {
-                $tipo_bomba->tipo_bomba = $request->tipo_bomba;
-                $tipo_bomba->ativo = $request->ativo;
+                $tipoBomba->fill($request->all());
 
-                if ($tipo_bomba->save()) {
+                if ($tipoBomba->save()) {
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.tipo_bomba'),
-                        'name' => $tipo_bomba->tipo_bomba
+                        'name' => $tipoBomba->tipo_bomba
                     ]));
 
                     return redirect()->action('TipoBombaController@index');
@@ -154,10 +153,10 @@ class TipoBombaController extends Controller
     {
         if (Auth::user()->canAlterarTipoBomba()) {
             try {
-                if ($tipo_bomba->delete()) {
+                if ($tipoBomba->delete()) {
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.tipo_bomba'),
-                        'name' => $tipo_bomba->tipo_bomba
+                        'name' => $tipoBomba->tipo_bomba
                     ]));
                     
                     return redirect()->action('TipoBombaController@index');

@@ -10,7 +10,7 @@
     }
     $customMethods = isset($customMethods) ? $customMethods : [];
 @endphp
-<div class="card card-primary">
+<div class="card d-block card-primary">
     <div class="card-header">
         <div class="row">
             <div class="col">

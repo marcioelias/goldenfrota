@@ -1,37 +1,37 @@
 <template>
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card d-block">
+        <div class="card-header">
             <strong>Estoques</strong>
         </div>
-        <div class="panel-body" style="padding: 0 !important;">
+        <div class="card-body" style="padding: 0 !important;">
             <table class="table table-sm table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
                 <thead class="thead-light">
-                    <tr class="primary">
+                    <tr class="row m-0">
                         <th class="col-md-1">Id</th>
                         <th class="col-md-7">Estoque</th>
                         <th class="col-md-2">Est. Mínimo</th>
-                        <th class="col-md-1">Ações</th>
+                        <th class="col-md-2">Ações</th>
                     </tr>
                 </thead>
                 <tbody name="fade" is="transition-group">
-                    <tr class="rom m-0" v-for="(item, index) in estoques" :key="index">
+                    <tr class="row m-0" v-for="(item, index) in estoques" :key="index">
                         <td class="col-md-1 pool-right">
                             {{ item.id }}
                             <input type="hidden" :name="'estoques['+index+'][estoque_id]'" :value="item.id">
                         </td>
-                        <td class="col-md-8">
+                        <td class="col-md-7">
                             {{ item.estoque }}
                         </td>
                         <td class="col-md-2 text-right">
                             {{ item.estoque_minimo }}
                             <input type="hidden" :name="'estoques['+index+'][estoque_minimo]'" :value="item.estoque_minimo">    
                         </td>
-                        <td class="col-md-1">
-                            <button type="button" class="btn-xs btn-warning" @click="editItem(index)" v-show="!editing">
-                                <span class="glyphicon glyphicon-edit"></span>
+                        <td class="col-md-2">
+                            <button type="button" class="btn btn-sm btn-warning" @click="editItem(index)" v-show="!editing">
+                                <i class="fas fa-edit"></i>
                             </button>
-                            <button type="button" class="btn-xs btn-danger" @click="confirmDelete(index)" data-toggle="modal" data-target="#confirmDelete" v-show="!editing">
-                                <span class="glyphicon glyphicon-trash"></span>
+                            <button type="button" class="btn btn-sm btn-danger" @click="confirmDelete(index)" data-toggle="modal" data-target="#confirmDelete" v-show="!editing">
+                                <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
                     </tr>
@@ -40,7 +40,7 @@
         </div>
         <div>
             <div class="row m-0">
-                <div v-bind:class="{'col-md-9': true, ' has-error': this.errors.inputEstoques}" style="padding-right: 0 !important; padding-left: 0 !important;">
+                <div v-bind:class="{'col-md-8': true, ' has-error': this.errors.inputEstoques}" style="padding-right: 0 !important; padding-left: 0 !important;">
                     <select ref="inputEstoques" v-model="estoque_id" data-live-search="true" class="form-control selectpicker" name="inputEstoques" id="inputEstoques">
                         <option selected value="false"> Nada Selecionado </option>
                         <option v-for="(estoque, index) in estoquesDisponiveisOrdenados" :value="estoque.id" :key="index">{{ estoque.estoque }}</option>
@@ -55,9 +55,9 @@
                         <strong>{{ this.errors.inputEstoqueMinimoMsg }}</strong>
                     </span>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <button type="button" class="btn btn-success" @click="addEstoque" v-show="!editing">
-                        <span class="glyphicon glyphicon-plus"></span>
+                        <i class="fas fa-check"></i>
                     </button>
                     <button type="button" class="btn btn-success" @click="updateEstoque" v-show="editing">
                         <i class="fas fa-check"></i>

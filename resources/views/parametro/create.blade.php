@@ -33,11 +33,15 @@
                             'displayField' => 'nome_razao',
                             'liveSearch' => true,
                             'keyField' => 'id',
-                            'defaultNone' => true
+                            'defaultNone' => true,
+                            'indexSelected' => isset($parametro->cliente_id) ? $parametro->cliente_id : ''
                         ]
                     ]
                 ])
                 @endcomponent
+                @if(isset($parametro->logotipo))
+                <img src="{{ asset($parametro->logotipo) }}" width="200px">
+                @endif
                 @component('components.form-group', [
                     'inputs' => [
                         [

@@ -12,6 +12,10 @@ class EstoqueController extends Controller
     public $fields = [
         'id' => 'ID',
         'estoque' => 'Estoque',
+        'permite_estoque_negativo' => [
+            'label' => 'Estoque Negativo', 
+            'type' => 'bool'
+        ],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     ];
 

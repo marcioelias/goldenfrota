@@ -2,13 +2,12 @@
     <transition name="modal-fade">
         <div class="modal fade" id="confirmDelete" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
           <div class="modal-dialog">
-            <div class="modal-content modal-default">
+            <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <div class="row">
-                    <div class="col-sm-1"><span class="glyphicon glyphicon-alert"></span></div>
-                    <div class="col"><h4 class="modal-title"><strong>{{this.modalTitle}}</strong></h4></div>
-                </div>
+                <h4 class="modal-title"><strong>{{this.modalTitle}}</strong></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
               <div class="modal-body">
                 <p>

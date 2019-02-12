@@ -123,12 +123,8 @@ class CombustivelController extends Controller
                 'valor' => 'required|numeric'
             ]);
 
-            try {            
-                dd($request->all());     
-                $combustivel->descricao = $request->descricao;
-                $combustivel->descricao_reduzida = $request->descricao_reduzida;
-                $combustivel->valor = $request->valor;
-                $combustivel->ativo = $request->ativo;            
+            try {                 
+                $combustivel->fill($request->all());
 
                 if ($combustivel->save()) {
                     Session::flash('success', __('messages.update_success', [
@@ -164,7 +160,7 @@ class CombustivelController extends Controller
                         'model' => __('models.combustivel'),
                         'name' => $combustivel->descricao
                     ]));
-                    return redirect()->action('ClienteController@index');
+                    return redirect()->action('CombustivelController@index');
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {

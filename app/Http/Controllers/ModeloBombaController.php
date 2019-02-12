@@ -99,7 +99,7 @@ class ModeloBombaController extends Controller
     {
         if (Auth::user()->canAlterarModeloBomba()) {
             return View('modelo_bomba.edit', [
-                'modelo_bomba' => $modelo_bomba
+                'modelo_bomba' => $modeloBomba
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -123,14 +123,12 @@ class ModeloBombaController extends Controller
             ]);
 
             try {
-                $modelo_bomba->modelo_bomba = $request->modelo_bomba;
-                $modelo_bomba->num_bicos = $request->num_bicos;
-                $modelo_bomba->ativo = $request->ativo;
+                $modeloBomba->fill($request->all());
 
-                if ($modelo_bomba->save()) {
+                if ($modeloBomba->save()) {
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.modelo_bomba'),
-                        'name' => $modelo_bomba->modelo_bomba
+                        'name' => $modeloBomba->modelo_bomba
                     ]));
                     return redirect()->action('ModeloBombaController@index');
                 }
@@ -156,10 +154,10 @@ class ModeloBombaController extends Controller
     {
         if (Auth::user()->canAlterarModeloBomba()) {
             try {
-                if ($modelo_bomba->delete()) {
+                if ($modeloBomba->delete()) {
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.modelo_bomba'),
-                        'name' => $modelo_bomba->modelo_bomba
+                        'name' => $modeloBomba->modelo_bomba
                     ]));
                     return redirect()->action('ModeloBombaController@index');
                 }

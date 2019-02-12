@@ -177,7 +177,7 @@ class UserController extends Controller
             try {
                 $user = User::find($user->id);
                 if ($user->delete()) {
-                    Session::flash('success', __('delete_success', [
+                    Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.user'),
                         'name' => $user->name
                     ]));

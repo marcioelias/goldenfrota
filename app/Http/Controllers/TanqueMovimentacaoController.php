@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Tanque;
 use App\Combustivel;
 use App\TanqueMovimentacao;
+use App\PosicaoTanqueDiaria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -225,6 +228,47 @@ class TanqueMovimentacaoController extends Controller
         } else {
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();   
+        }
+    }
+
+    public function getPosicaoTanque(Tanque $tanque, \DateTime $data) {
+        $posicao = 0;
+        $posicao = DB::table('tanque_movimentacoes')
+            ->select(
+                DB::raw(
+                    'SUM(
+                        CASE entrada_combustivel
+                            WHEN 1 THEN
+                                quantidade_combustivel
+                            WHEN 0 THEN
+                            quantidade_combustivel * -1
+                        END
+                    ) as posicao'
+                )
+            )
+            ->where('created_at', '<=', $data->format('Y-m-d H:i:s'))
+            ->first();
+
+        return $posicao->posicao;
+    }   
+
+    public function posTanque30Dias($tanqueId) {
+        $dataFinal = new \DateTime();
+        $dataInicial = new \Datetime();
+        $dataInicial->sub(new \DateInterval('P30D'));
+        $posicoes = array();
+        $tanque = Tanque::find($tanqueId);
+        if ($tanque) {
+            while ($dataInicial < $dataFinal) {
+                array_push($posicoes, [
+                    'date' => $dataInicial->format('d/m/Y'),
+                    'position' => $this->getPosicaoTanque($tanque, $dataInicial)
+                ]);
+                $dataInicial->add(new \DateInterval('P1D'));
+            }
+            return response()->json($posicoes);
+        } else {
+            return response()->json();
         }
     }
 }

@@ -12,6 +12,7 @@
             'routeUrl' => route('param_relatorio_abastecimentos'), 
             'formTarget' => '_blank',
             'method' => 'POST',
+            'cancelRoute' => 'home',
             'formButtons' => [
                 ['type' => 'submit', 'label' => 'Gerar Relatório', 'icon' => 'chart-line'],
                 ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']

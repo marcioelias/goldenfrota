@@ -617,7 +617,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'modal',
   methods: {
@@ -1447,8 +1446,12 @@ var render = function() {
       },
       [
         _c("div", { staticClass: "modal-dialog" }, [
-          _c("div", { staticClass: "modal-content modal-default" }, [
+          _c("div", { staticClass: "modal-content" }, [
             _c("div", { staticClass: "modal-header" }, [
+              _c("h4", { staticClass: "modal-title" }, [
+                _c("strong", [_vm._v(_vm._s(this.modalTitle))])
+              ]),
+              _vm._v(" "),
               _c(
                 "button",
                 {
@@ -1456,23 +1459,15 @@ var render = function() {
                   attrs: {
                     type: "button",
                     "data-dismiss": "modal",
-                    "aria-hidden": "true"
+                    "aria-label": "Close"
                   }
                 },
-                [_vm._v("×")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-1" }, [
-                  _c("span", { staticClass: "glyphicon glyphicon-alert" })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col" }, [
-                  _c("h4", { staticClass: "modal-title" }, [
-                    _c("strong", [_vm._v(_vm._s(this.modalTitle))])
+                [
+                  _c("span", { attrs: { "aria-hidden": "true" } }, [
+                    _vm._v("×")
                   ])
-                ])
-              ])
+                ]
+              )
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [

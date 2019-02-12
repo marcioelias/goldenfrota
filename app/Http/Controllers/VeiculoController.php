@@ -299,7 +299,7 @@ class VeiculoController extends Controller
                 $values[] = $abastecimento->media_veiculo;
             }
 
-
+ 
             $graficos[] = Charts::create('area', 'highcharts')
                                 ->title('Veículo: '.$veiculo->placa)
                                 ->elementLabel('Média')

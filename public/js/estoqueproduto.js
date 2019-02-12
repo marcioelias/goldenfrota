@@ -389,7 +389,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'modal',
   methods: {
@@ -444,13 +443,13 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "panel panel-default" },
+    { staticClass: "card d-block" },
     [
       _vm._m(0),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "panel-body", staticStyle: { padding: "0 !important" } },
+        { staticClass: "card-body", staticStyle: { padding: "0 !important" } },
         [
           _c(
             "table",
@@ -466,7 +465,7 @@ var render = function() {
                 "transition-group",
                 { tag: "tbody", attrs: { name: "fade" } },
                 _vm._l(_vm.estoques, function(item, index) {
-                  return _c("tr", { key: index, staticClass: "rom m-0" }, [
+                  return _c("tr", { key: index, staticClass: "row m-0" }, [
                     _c("td", { staticClass: "col-md-1 pool-right" }, [
                       _vm._v(
                         "\n                        " +
@@ -482,7 +481,7 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "col-md-8" }, [
+                    _c("td", { staticClass: "col-md-7" }, [
                       _vm._v(
                         "\n                        " +
                           _vm._s(item.estoque) +
@@ -505,7 +504,7 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticClass: "col-md-1" }, [
+                    _c("td", { staticClass: "col-md-2" }, [
                       _c(
                         "button",
                         {
@@ -517,7 +516,7 @@ var render = function() {
                               expression: "!editing"
                             }
                           ],
-                          staticClass: "btn-xs btn-warning",
+                          staticClass: "btn btn-sm btn-warning",
                           attrs: { type: "button" },
                           on: {
                             click: function($event) {
@@ -525,11 +524,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _c("span", {
-                            staticClass: "glyphicon glyphicon-edit"
-                          })
-                        ]
+                        [_c("i", { staticClass: "fas fa-edit" })]
                       ),
                       _vm._v(" "),
                       _c(
@@ -543,7 +538,7 @@ var render = function() {
                               expression: "!editing"
                             }
                           ],
-                          staticClass: "btn-xs btn-danger",
+                          staticClass: "btn btn-sm btn-danger",
                           attrs: {
                             type: "button",
                             "data-toggle": "modal",
@@ -555,11 +550,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _c("span", {
-                            staticClass: "glyphicon glyphicon-trash"
-                          })
-                        ]
+                        [_c("i", { staticClass: "fas fa-trash-alt" })]
                       )
                     ])
                   ])
@@ -576,7 +567,7 @@ var render = function() {
             "div",
             {
               class: {
-                "col-md-9": true,
+                "col-md-8": true,
                 " has-error": this.errors.inputEstoques
               },
               staticStyle: {
@@ -711,7 +702,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "col-md-1" }, [
+          _c("div", { staticClass: "col-md-2" }, [
             _c(
               "button",
               {
@@ -727,7 +718,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: { click: _vm.addEstoque }
               },
-              [_c("span", { staticClass: "glyphicon glyphicon-plus" })]
+              [_c("i", { staticClass: "fas fa-check" })]
             ),
             _vm._v(" "),
             _c(
@@ -767,7 +758,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-heading" }, [
+    return _c("div", { staticClass: "card-header" }, [
       _c("strong", [_vm._v("Estoques")])
     ])
   },
@@ -776,14 +767,14 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "thead-light" }, [
-      _c("tr", { staticClass: "primary" }, [
+      _c("tr", { staticClass: "row m-0" }, [
         _c("th", { staticClass: "col-md-1" }, [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-7" }, [_vm._v("Estoque")]),
         _vm._v(" "),
         _c("th", { staticClass: "col-md-2" }, [_vm._v("Est. Mínimo")]),
         _vm._v(" "),
-        _c("th", { staticClass: "col-md-1" }, [_vm._v("Ações")])
+        _c("th", { staticClass: "col-md-2" }, [_vm._v("Ações")])
       ])
     ])
   }
@@ -823,8 +814,12 @@ var render = function() {
       },
       [
         _c("div", { staticClass: "modal-dialog" }, [
-          _c("div", { staticClass: "modal-content modal-default" }, [
+          _c("div", { staticClass: "modal-content" }, [
             _c("div", { staticClass: "modal-header" }, [
+              _c("h4", { staticClass: "modal-title" }, [
+                _c("strong", [_vm._v(_vm._s(this.modalTitle))])
+              ]),
+              _vm._v(" "),
               _c(
                 "button",
                 {
@@ -832,23 +827,15 @@ var render = function() {
                   attrs: {
                     type: "button",
                     "data-dismiss": "modal",
-                    "aria-hidden": "true"
+                    "aria-label": "Close"
                   }
                 },
-                [_vm._v("×")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-1" }, [
-                  _c("span", { staticClass: "glyphicon glyphicon-alert" })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col" }, [
-                  _c("h4", { staticClass: "modal-title" }, [
-                    _c("strong", [_vm._v(_vm._s(this.modalTitle))])
+                [
+                  _c("span", { attrs: { "aria-hidden": "true" } }, [
+                    _vm._v("×")
                   ])
-                ])
-              ])
+                ]
+              )
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
@@ -1148,15 +1135,17 @@ __webpack_require__.r(__webpack_exports__);
 /*!****************************************!*\
   !*** ./resources/js/estoqueproduto.js ***!
   \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var estoque_produto = __webpack_require__(/*! ./components/EstoqueProdutoComponent.vue */ "./resources/js/components/EstoqueProdutoComponent.vue");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_EstoqueProdutoComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/EstoqueProdutoComponent.vue */ "./resources/js/components/EstoqueProdutoComponent.vue");
 
-var leads = new Vue({
-  el: '#estoqueProdutoComponent',
+new Vue({
+  el: '#estoque-produto-component',
   components: {
-    estoque_produto: estoque_produto
+    'estoque-produto': _components_EstoqueProdutoComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
 });
 

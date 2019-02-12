@@ -13,7 +13,9 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
+    /* require('admin-lte'); */
     require('bootstrap-select');
+    require('jquery-mask-plugin');
 } catch (e) {
 
 } finally {

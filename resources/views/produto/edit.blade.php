@@ -136,19 +136,14 @@
                         ])
                         @endcomponent
                     </div>
-                    <div class="col-md-8" id="estoqueProdutoComponent">
-                        <estoque_produto :estoques-data="{{ json_encode($listaEstoques) }}" :old-data="{{ json_encode((old('estoques')) ? old('estoques') : $estoques) }}"></estoque_produto>                      
+                    <div class="col-md-8" id="estoque-produto-component">
+                        <estoque-produto :estoques-data="{{ json_encode($listaEstoques) }}" :old-data="{{ json_encode((old('estoques')) ? old('estoques') : $estoques) }}"></estoque-produto>                      
                     </div>
                 </div>
             @endsection
         @endcomponent
     </div>
+@endsection
 @push('bottom-scripts')
-    <script>
-        jQuery(function($){
-            $("#valor").mask('0.00', {reverse: true});
-        });
-    </script>
     <script src="{{ mix('js/estoqueproduto.js') }}"></script>
 @endpush
-@endsection

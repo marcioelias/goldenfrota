@@ -18,7 +18,6 @@ class TanqueController extends Controller
         'descricao_tanque' => 'Tanque',
         'descricao' => 'Combustivel',
         'capacidade' => 'Capacidade',
-        'posicao' => 'Posição Atual',
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -138,7 +137,6 @@ class TanqueController extends Controller
                 $tanque->descricao_tanque = $request->descricao_tanque;
                 $tanque->combustivel_id = $request->combustivel_id;
                 $tanque->capacidade = $request->capacidade;
-                $tanque->posicao = $request->posicao;
                 $tanque->ativo = $request->ativo;
 
                 if ($tanque->save()) {

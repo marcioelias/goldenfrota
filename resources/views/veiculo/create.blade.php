@@ -142,94 +142,92 @@
             @endsection
         @endcomponent
     </div>
-    <script>
-        $(document).ready(function() {
-            $('#placa').mask('AAA-9999', {placeholder: '___-____'});
-
-            var buscarDepartamentos = function() {
-                var departamento = {};
-
-                departamento.id = $('#cliente_id').val();
-                departamento._token = $('input[name="_token"]').val();
-
-                console.log(departamento);
-                $.ajax({
-                    url: '{{ route("departamentos.json") }}',
-                    type: 'POST',
-                    data: departamento,
-                    dataType: 'JSON',
-                    cache: false,
-                    success: function (data) {
-                        $("#departamento_id")
-                            .removeAttr('disabled')
-                            .find('option')
-                            .remove();
-
-
-                        $.each(data, function (i, item) {
-                            $('#departamento_id').append($('<option>', { 
-                                value: item.id,
-                                text : item.departamento 
-                            }));
-                        });
-                        
-                        @if(old('departamento_id'))
-                        $('#departamento_id').selectpicker('val', {{old('departamento_id')}});
-                        @endif
-
-                        $('.selectpicker').selectpicker('refresh');
-                    }
-                });
-            }
-
-            var buscarModeloVeiculos = function() {
-                var marca = {};
-
-                marca.id = $('#marca_veiculo_id').val();
-                marca._token = $('input[name="_token"]').val();
-
-                console.log(marca);
-                $.ajax({
-                    url: '{{ route("modelo_veiculos.json") }}',
-                    type: 'POST',
-                    data: marca,
-                    dataType: 'JSON',
-                    cache: false,
-                    success: function (data) {
-                        console.log(data);
-                        $("#modelo_veiculo_id")
-                            .removeAttr('disabled')
-                            .find('option')
-                            .remove();
-
-
-                        $.each(data, function (i, item) {
-                            $('#modelo_veiculo_id').append($('<option>', { 
-                                value: item.id,
-                                text : item.modelo_veiculo 
-                            }));
-                        });
-
-                        @if(old('modelo_veiculo_id'))
-                        $('#modelo_veiculo_id').selectpicker('val', {{old('modelo_veiculo_id')}});
-                        @endif
-
-                        $('.selectpicker').selectpicker('refresh');
-                    }
-                });
-            }
- 
-            $('#cliente_id').on('changed.bs.select', buscarDepartamentos);
-            $('#marca_veiculo_id').on('changed.bs.select', buscarModeloVeiculos);
-            
-            if ($('#marca_veiculo_id').val()) {
-                buscarModeloVeiculos();
-            }
-
-            if ($('#cliente_id').val()) {
-                buscarDepartamentos();
-            }
-
-        });
-    </script>
 @endsection
+
+@push('document-ready')
+    $('#placa').mask('AAA-9999', {placeholder: '___-____'});
+
+    var buscarDepartamentos = function() {
+        var departamento = {};
+
+        departamento.id = $('#cliente_id').val();
+        departamento._token = $('input[name="_token"]').val();
+
+        console.log(departamento);
+        $.ajax({
+            url: '{{ route("departamentos.json") }}',
+            type: 'POST',
+            data: departamento,
+            dataType: 'JSON',
+            cache: false,
+            success: function (data) {
+                $("#departamento_id")
+                    .removeAttr('disabled')
+                    .find('option')
+                    .remove();
+
+
+                $.each(data, function (i, item) {
+                    $('#departamento_id').append($('<option>', { 
+                        value: item.id,
+                        text : item.departamento 
+                    }));
+                });
+                
+                @if(old('departamento_id'))
+                $('#departamento_id').selectpicker('val', {{old('departamento_id')}});
+                @endif
+
+                $('.selectpicker').selectpicker('refresh');
+            }
+        });
+    }
+
+    var buscarModeloVeiculos = function() {
+        var marca = {};
+
+        marca.id = $('#marca_veiculo_id').val();
+        marca._token = $('input[name="_token"]').val();
+
+        console.log(marca);
+        $.ajax({
+            url: '{{ route("modelo_veiculos.json") }}',
+            type: 'POST',
+            data: marca,
+            dataType: 'JSON',
+            cache: false,
+            success: function (data) {
+                console.log(data);
+                $("#modelo_veiculo_id")
+                    .removeAttr('disabled')
+                    .find('option')
+                    .remove();
+
+
+                $.each(data, function (i, item) {
+                    $('#modelo_veiculo_id').append($('<option>', { 
+                        value: item.id,
+                        text : item.modelo_veiculo 
+                    }));
+                });
+
+                @if(old('modelo_veiculo_id'))
+                $('#modelo_veiculo_id').selectpicker('val', {{old('modelo_veiculo_id')}});
+                @endif
+
+                $('.selectpicker').selectpicker('refresh');
+            }
+        });
+    }
+
+    $('#cliente_id').on('changed.bs.select', buscarDepartamentos);
+    $('#marca_veiculo_id').on('changed.bs.select', buscarModeloVeiculos);
+    
+    if ($('#marca_veiculo_id').val()) {
+        buscarModeloVeiculos();
+    }
+
+    if ($('#cliente_id').val()) {
+        buscarDepartamentos();
+    }
+@endpush

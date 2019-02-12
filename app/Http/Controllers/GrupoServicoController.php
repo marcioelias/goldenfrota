@@ -69,8 +69,8 @@ class GrupoServicoController extends Controller
 
                 if ($grupoServico->save()) {
                     Session::flash('success', __('messages.create_success', [
-                        'model' => 'grupo_servico',
-                        'field' => 'grupo_servico'
+                        'model' => __('models.grupo_servico'),
+                        'name' => $grupoServico->grupo_servico
                     ]));
 
                     return redirect()->action('GrupoServicoController@index');
