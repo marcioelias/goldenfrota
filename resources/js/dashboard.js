@@ -1,13 +1,8 @@
-import LineChart from './components/charts/LineChartComponent.vue';
+import DashboardComponent from './components/DashboardComponent.vue';
 
 new Vue({
-    el: '#graphs',
+    el: '#dashboard',
     components: {
-        LineChart,
-    },
-    data() {
-        return {
-            
-        }
+        'graphs': DashboardComponent,
     }
 })

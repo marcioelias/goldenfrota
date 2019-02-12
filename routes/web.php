@@ -108,6 +108,7 @@ Route::middleware(['auth:web'])->group(function() {
 
     /* dashboard */
     Route::get('/pos_tanque_30_dias', 'TanqueMovimentacaoController@posTanque30Dias');
+    Route::get('/dashboard/mov_tanque/{tanque_id}', 'DashboardController@movTanque');
 });
 
 Route::get('teste', function() {

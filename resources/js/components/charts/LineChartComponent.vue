@@ -1,6 +1,6 @@
 <script>
-import Axios from 'axios';
-import { Line } from 'vue-chartjs';
+import Axios from "axios";
+import { Line } from "vue-chartjs";
 
 export default {
     extends: Line,
@@ -16,6 +16,6 @@ export default {
     },
     mounted() {
         this.renderChart(this.chartData, this.options);
-    } 
-}
+    }
+};
 </script>

@@ -16981,3 +16981,8 @@ select.selectpicker {
   border-radius: .2rem;
 }
 
+.chart-container {
+  width: 400px;
+  height: 800px;
+}
+

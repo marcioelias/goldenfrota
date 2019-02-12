@@ -15,7 +15,24 @@ class DashboardController extends Controller
         ]);
     }
 
-    private function movimentacaoCombustiveis() {
+    public function movTanque($tanque_id) {
+        $dataFinal = new \DateTime();
+        $dataInicial = new \Datetime();
+        $dataInicial->sub(new \DateInterval('P15D'));
+        $tanque = Tanque::find($tanque_id);
+        $grafico = array();
+        while ($dataInicial < $dataFinal) {
+            $grafico['labels'][] = $dataInicial->format('d/m/Y');
+            $grafico['datasets'][0]['label'] = $tanque->descricao_tanque.' - '.$tanque->combustivel->descricao;
+            $grafico['datasets'][0]['backgroundColor'] =  'rgba(45, 195, 21, 0.2)'; //'#CCFF66';
+            $grafico['datasets'][0]['data'][] = (new TanqueMovimentacaoController)->getPosicaoTanque($tanque, $dataInicial);
+            $dataInicial->add(new \DateInterval('P1D'));
+        }
+
+        return response()->json($grafico);
+    }
+
+    public function movimentacaoCombustiveis() {
         $tanques = Tanque::where('ativo', true)->get();
         $dataFinal = new \DateTime();
         $dataInicial = new \Datetime();
