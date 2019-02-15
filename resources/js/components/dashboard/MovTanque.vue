@@ -47,7 +47,7 @@ export default {
     }),
     async mounted() {
         this.loaded = false;
-        Axios.get("/dashboard/mov_tanque/3")
+        Axios.get("/dashboard/mov_tanque/1")
             .then(r => {
                 this.chartData = r.data;
                 this.loaded = true;
