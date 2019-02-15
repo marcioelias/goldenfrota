@@ -109,6 +109,9 @@ Route::middleware(['auth:web'])->group(function() {
     /* dashboard */
     Route::get('/pos_tanque_30_dias', 'TanqueMovimentacaoController@posTanque30Dias');
     Route::get('/dashboard/mov_tanque/{tanque_id}', 'DashboardController@movTanque');
+    Route::get('/dashboard/ultimas_entradas_comb', 'DashboardController@ultimasEntradasComb');
+    Route::get('/dashboard/total_veiculos_frota', 'DashboardController@totalVeiculosFrota');
+    Route::get('/dashboard/abastecimentos_hoje', 'DashboardController@abastecimentosHoje');
 });
 
 Route::get('teste', function() {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <line-chart v-if="loaded" :chartData="chartData" :options="options"/>
+        <line-chart v-if="loaded" :chartData="chartData" :options="options" :height="250"/>
     </div>
 </template>
 
@@ -49,21 +49,12 @@ export default {
         this.loaded = false;
         Axios.get("/dashboard/mov_tanque/3")
             .then(r => {
-                this.chartData = r.data; //this.formatDataset(r.data);
+                this.chartData = r.data;
                 this.loaded = true;
             })
             .catch(e => {
                 console.log(e);
             });
-    },
-    methods: {
-      formatDataset(data) {
-        data.datasets.forEach(ds => {
-          ds.backgroundColor = 'rgba(255, 61, 57, 0.3)';
-        });
-
-        return data;
-      }
     }
 };
 </script>
