@@ -25,12 +25,19 @@ class DashboardController extends Controller
         $dataInicial->sub(new \DateInterval('P15D'));
         $tanque = Tanque::find($tanque_id);
         $grafico = array();
-        while ($dataInicial < $dataFinal) {
+        while ($dataInicial <= $dataFinal) {
             $grafico['labels'][] = $dataInicial->format('d/m');
             $grafico['datasets'][0]['label'] = $tanque->descricao_tanque.' - '.$tanque->combustivel->descricao;
             $grafico['datasets'][0]['backgroundColor'] =  'rgba(45, 195, 21, 0.2)';
             $grafico['datasets'][0]['data'][] = (new TanqueMovimentacaoController)->getPosicaoTanque($tanque, $dataInicial);
             $dataInicial->add(new \DateInterval('P1D'));
+        }
+
+        if ($dataInicial > $dataFinal) {
+            $grafico['labels'][] = $dataFinal->format('d/m');
+            $grafico['datasets'][0]['label'] = $tanque->descricao_tanque.' - '.$tanque->combustivel->descricao;
+            $grafico['datasets'][0]['backgroundColor'] =  'rgba(45, 195, 21, 0.2)';
+            $grafico['datasets'][0]['data'][] = (new TanqueMovimentacaoController)->getPosicaoTanque($tanque, $dataFinal);
         }
 
         return response()->json($grafico);
