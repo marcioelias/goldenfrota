@@ -45,7 +45,7 @@ class DashboardController extends Controller
 
     public function ultimasEntradasComb() {
         $entradas = DB::table('movimentacao_combustiveis')
-                        ->select('movimentacao_combustiveis.*', 'tanques.descricao_tanque', 'combustiveis.descricao', 'entrada_tanques.nr_docto', 'entrada_tanques.serie')
+                        ->select('movimentacao_combustiveis.*', 'tanques.descricao_tanque', 'combustiveis.descricao', 'entrada_tanques.nr_docto', 'entrada_tanques.serie', 'entrada_tanques.data_entrada')
                         ->join('tipo_movimentacao_combustiveis', 'tipo_movimentacao_combustiveis.id', 'movimentacao_combustiveis.tipo_movimentacao_combustivel_id')
                         ->join('tanques', 'tanques.id', 'movimentacao_combustiveis.tanque_id')
                         ->join('combustiveis', 'combustiveis.id', 'tanques.combustivel_id')

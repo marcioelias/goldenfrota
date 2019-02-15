@@ -27,6 +27,7 @@
         "chart.js": "^2.7.3",
         "eonasdan-bootstrap-datetimepicker": "^4.17.47",
         "jquery-mask-plugin": "^1.14.15",
+        "moment": "^2.24.0",
         "sass": "^1.15.2",
         "tempusdominus-bootstrap-4": "^5.1.2",
         "vue-chartjs": "^3.4.0"

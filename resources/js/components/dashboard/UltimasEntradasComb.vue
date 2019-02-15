@@ -16,7 +16,7 @@
                 <tr class="row m-0" v-for="(entrada, index) in entradas" :key="index">
                     <td class="col-2 pool-right">{{ entrada.nr_docto }}</td>
                     <td class="col-2 text-right">{{ entrada.serie }}</td>
-                    <td class="col-2 text-right">{{ entrada.data }}</td>
+                    <td class="col-2 text-right">{{ entrada.data_entrada | formatDate }}</td>
                     <td
                         class="col-4 text-right"
                     >{{ entrada.descricao_tanque + ' - ' + entrada.descricao }}</td>
