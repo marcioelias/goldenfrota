@@ -202,119 +202,118 @@
             @endsection
         @endcomponent
     </div>
-    <script>
-        $(document).ready(function() {
-            var BuscarVeiculo = function() {
-
-                if (Number($('#cliente_id').val()) == 0) {
-                    return
-                } 
-
-                var cliente = {};
-
-                cliente.id = $('#cliente_id').val();
-                cliente._token = $('input[name="_token"]').val();
-
-                $.ajax({
-                    url: '{{ route("veiculos.json") }}',
-                    type: 'POST',
-                    data: cliente,
-                    dataType: 'JSON',
-                    cache: false,
-                    success: function (data) {
-                        $("#veiculo_id")
-                            .removeAttr('disabled')
-                            .find('option')
-                            .remove();
-
-
-                        $.each(data, function (i, item) {
-                            $('#veiculo_id').append($('<option>', { 
-                                value: item.id,
-                                text : item.placa + ' - ' + item.marca_veiculo + ' ' + item.modelo_veiculo
-                            }));
-                        });
-                        
-                        @if(old('veiculo_id'))
-                        $('#veiculo_id').selectpicker('val', {{old('veiculo_id')}});
-                        @else                        
-                        $('#veiculo_id').selectpicker('val', {{$abastecimento->veiculo_id}});
-                        @endif
-
-                        $('.selectpicker').selectpicker('refresh');
-
-                    },
-                    error: function (data) {
-                        console.log(data);
-                    }
-                });
-            }
-
-            var CalcularKmMedia = function() {
-                var abastecimento = {};
-
-                abastecimento.id = {{$abastecimento->id}};
-                abastecimento.veiculo_id = $('#veiculo_id').val();
-                abastecimento._token = $('input[name="_token"]').val();
-
-                //console.log(abastecimento);
-                $.ajax({
-                    url: '{{ route("ultimo_abastecimento.json") }}',
-                    type: 'POST',
-                    data: abastecimento,
-                    dataType: 'JSON',
-                    cache: false,
-                    success: function (abastecimento) {
-                        //console.log('retorno_json=' + abastecimento);
-
-                        ObterMediaKmVeiculo(abastecimento.km_veiculo);
-                    },
-                    error: function (abastecimento) {
-                        console.log(abastecimento);
-                    }
-                });
-            }
-
-            BuscarVeiculo();
-            $('#cliente_id').on('changed.bs.select', BuscarVeiculo);
-            $('#cliente_id').on('hide.bs.select', BuscarVeiculo);
-            $('#veiculo_id').on('change.bs.select', CalcularKmMedia);
-            
-
-            function CalcValorAbastecimento() {
-                var volume, valor_unitario = 0;
-                volume = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
-                valor_unitario = parseFloat($('#valor_litro').val().replace(',', '.'));
-                if ((volume > 0) && (valor_unitario > 0)) {
-                    $('#valor_abastecimento').val(volume * valor_unitario);
-                } else {
-                    $('#valor_abastecimento').val(0);
-                }
-            }
-
-            function ObterMediaKmVeiculo(kmAnterior) {
-                //var kmAnterior = BuscarUltimoAbastecimento();
-                var kmAtual = $('#km_veiculo').val();
-                var qtdAbastecimento = $('#volume_abastecimento').val();
-                var mediaCalculada = ((kmAtual - kmAnterior) / qtdAbastecimento).toFixed(3);
-
-                //console.log('kmAnterior = ' + kmAnterior);
-                //console.log('kmAtual = ' + kmAtual);
-                //console.log('qtdAbastecimento = ' + qtdAbastecimento);
-                //console.log('kmPercorrido = ' + (kmAtual - kmAnterior));
-                //console.log('mediaCalculada = ' + mediaCalculada);
-
-
-                $('#media_atual').val(mediaCalculada);
-            }
-
-            $('#volume_abastecimento').keyup(CalcValorAbastecimento);
-
-            $('#valor_litro').keyup(CalcValorAbastecimento);           
-
-            $('#km_veiculo').blur(CalcularKmMedia);
-
-            $('#volume_abastecimento').blur(CalcularKmMedia);
-        });
-    </script>
 @endsection
+
+@push('document-ready')
+    var BuscarVeiculo = function() {
+
+    if (Number($('#cliente_id').val()) == 0) {
+        return
+    } 
+
+    var cliente = {};
+
+    cliente.id = $('#cliente_id').val();
+    cliente._token = $('input[name="_token"]').val();
+
+    $.ajax({
+        url: '{{ route("veiculos.json") }}',
+        type: 'POST',
+        data: cliente,
+        dataType: 'JSON',
+        cache: false,
+        success: function (data) {
+            $("#veiculo_id")
+                .removeAttr('disabled')
+                .find('option')
+                .remove();
+
+
+            $.each(data, function (i, item) {
+                $('#veiculo_id').append($('<option>', { 
+                    value: item.id,
+                    text : item.placa + ' - ' + item.marca_veiculo + ' ' + item.modelo_veiculo
+                }));
+            });
+            
+            @if(old('veiculo_id'))
+            $('#veiculo_id').selectpicker('val', {{old('veiculo_id')}});
+            @else                        
+            $('#veiculo_id').selectpicker('val', {{$abastecimento->veiculo_id}});
+            @endif
+
+            $('.selectpicker').selectpicker('refresh');
+
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    });
+}
+
+var CalcularKmMedia = function() {
+    var abastecimento = {};
+
+    abastecimento.id = {{$abastecimento->id}};
+    abastecimento.veiculo_id = $('#veiculo_id').val();
+    abastecimento._token = $('input[name="_token"]').val();
+
+    //console.log(abastecimento);
+    $.ajax({
+        url: '{{ route("ultimo_abastecimento.json") }}',
+        type: 'POST',
+        data: abastecimento,
+        dataType: 'JSON',
+        cache: false,
+        success: function (abastecimento) {
+            //console.log('retorno_json=' + abastecimento);
+
+            ObterMediaKmVeiculo(abastecimento.km_veiculo);
+        },
+        error: function (abastecimento) {
+            console.log(abastecimento);
+        }
+    });
+}
+
+BuscarVeiculo();
+$('#cliente_id').on('changed.bs.select', BuscarVeiculo);
+$('#cliente_id').on('hide.bs.select', BuscarVeiculo);
+$('#veiculo_id').on('change.bs.select', CalcularKmMedia);
+
+
+function CalcValorAbastecimento() {
+    var volume, valor_unitario = 0;
+    volume = parseFloat($('#volume_abastecimento').val().replace(',', '.'));
+    valor_unitario = parseFloat($('#valor_litro').val().replace(',', '.'));
+    if ((volume > 0) && (valor_unitario > 0)) {
+        $('#valor_abastecimento').val(volume * valor_unitario);
+    } else {
+        $('#valor_abastecimento').val(0);
+    }
+}
+
+function ObterMediaKmVeiculo(kmAnterior) {
+    //var kmAnterior = BuscarUltimoAbastecimento();
+    var kmAtual = $('#km_veiculo').val();
+    var qtdAbastecimento = $('#volume_abastecimento').val();
+    var mediaCalculada = ((kmAtual - kmAnterior) / qtdAbastecimento).toFixed(3);
+
+    //console.log('kmAnterior = ' + kmAnterior);
+    //console.log('kmAtual = ' + kmAtual);
+    //console.log('qtdAbastecimento = ' + qtdAbastecimento);
+    //console.log('kmPercorrido = ' + (kmAtual - kmAnterior));
+    //console.log('mediaCalculada = ' + mediaCalculada);
+
+
+    $('#media_atual').val(mediaCalculada);
+}
+
+$('#volume_abastecimento').keyup(CalcValorAbastecimento);
+
+$('#valor_litro').keyup(CalcValorAbastecimento);           
+
+$('#km_veiculo').blur(CalcularKmMedia);
+
+$('#volume_abastecimento').blur(CalcularKmMedia);
+@endpush

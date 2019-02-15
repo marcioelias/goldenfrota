@@ -35,6 +35,7 @@
                             'label' => 'Data Documento',
                             'required' => true,
                             'inputSize' => 3,
+                            'dateTimeFormat' => 'DD/MM/YYYY HH:mm:ss',
                             'inputValue' => date('d/m/Y H:i:s')
                         ],
                         [
@@ -42,6 +43,7 @@
                             'field' => 'data_entrada',
                             'label' => 'Data Entrada',
                             'required' => true,
+                            'dateTimeFormat' => 'DD/MM/YYYY HH:mm:ss',
                             'inputSize' => 3,
                             'inputValue' => date('d/m/Y H:i:s')
                         ],
