@@ -255,7 +255,7 @@
             <div class="col col-sm-1 col-md-1 col-lg-1">
             </div>
             <div class="col col-sm-4 col-md-4 col-lg-4" align="center">
-                <strong>{{ $ordemServico->user->name }}</strong> 
+                <strong>{{ $ordemServico->user->name ?? 'Usuário não informado' }}</strong> 
             </div>
             <div class="col col-sm-2 col-md-2 col-lg-2">
             </div>
