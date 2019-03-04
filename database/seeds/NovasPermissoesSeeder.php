@@ -1,63 +1,53 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class NovasPermissoesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      *
-     * @return void
+     * @return  void
      */
     public function run()
     {
-        $this->command->info('Truncating User, Role and Permission tables');
-        //$this->truncateLaratrustTables();
+        $this->command->info('Sincronizando novas permissões...');
 
-        $config = config('laratrust_seeder.role_structure');
-        $userPermission = config('laratrust_seeder.permission_structure');
+        $modules = config('laratrust_seeder.role_structure.super');
         $mapPermission = collect(config('laratrust_seeder.permissions_map'));
+    
+        $role = \App\Role::where('name', 'super')->first();
 
-        foreach ($config as $key => $modules) {
-            $permissions = [];
+        $permissions = [];
 
-            // Reading role permission modules
-            foreach ($modules as $module => $value) {
+        foreach ($modules as $module => $value) {
 
-                foreach (explode(',', $value) as $p => $perm) {
+            foreach (explode(',', $value) as $p => $perm) {
 
-                    $permissionValue = $mapPermission->get($perm);
+                $permissionValue = $mapPermission->get($perm);
 
-                    $permissions[] = \App\Permission::firstOrCreate([
-                        'name' => $permissionValue . '-' . str_replace('_', '-', $module),
-                        'display_name' => ucfirst($permissionValue) . ' ' . ucfirst(str_replace('_', ' ', $module)),
-                        'description' => ucfirst($permissionValue) . ' ' . ucfirst(str_replace('_', ' ', $module)),
-                    ])->id;
+                $permissions[] = \App\Permission::firstOrCreate([
+                    'name' => $permissionValue . '-' . $module,
+                    'display_name' => ucfirst($permissionValue) . ' ' . ucfirst($module),
+                    'description' => ucfirst($permissionValue) . ' ' . ucfirst($module),
+                ])->id;
 
-                    $this->command->info('Creating Permission to '.$permissionValue.' for '. str_replace('_', ' ', $module));
-                }
+                $this->command->info('Criando permissões '.$permissionValue.' para '. $module);
             }
-
-            // Attach all permissions to the role Super
-            //$role = \App\Role::where('name', 'super')->first();
-            //$role->permissions()->sync($permissions);
         }
-    }
 
-    /**
-     * Truncates all the laratrust tables and the users table
-     *
-     * @return    void
-     */
-    public function truncateLaratrustTables()
-    {
-        Schema::disableForeignKeyConstraints();
-        DB::table('permission_role')->truncate();
-        DB::table('permission_user')->truncate();
-        DB::table('role_user')->truncate();
-        \App\User::truncate();
-        \App\Role::truncate();
-        \App\Permission::truncate();
-        Schema::enableForeignKeyConstraints();
+        // Attach all permissions to the role
+        $role->permissions()->sync($permissions);
+
+        $this->command->info("Anexando permissões ao usuário super.");
+
+        $this->command->info('Removendo permissções antigas, associadas a qualquer perfil.');
+        $oldPermissions = \App\Permission::doesntHave('roles')->get();
+        foreach ($oldPermissions as $oldPermission) {
+            $this->command->info('Removendo permissão: '.$oldPermission->name);
+            $oldPermission->delete();
+        }
     }
 }

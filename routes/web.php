@@ -57,6 +57,7 @@ Route::middleware(['auth:web'])->group(function() {
     Route::resource('/servico', 'ServicoController')->except(['show']);
     Route::resource('/ordem_servico', 'OrdemServicoController');
     Route::resource('/ajuste_tanque', 'AjusteTanqueController')->except(['show', 'edit']);
+    Route::resource('/ordem_servico_status', 'OrdemServicoStatusController')->except(['show']);
 
     Route::resource('/role_user', 'RoleUsersController')->except('show');
     Route::resource('/role', 'RolesController')->except('show');

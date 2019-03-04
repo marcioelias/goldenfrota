@@ -68,6 +68,17 @@
                             </li>
                         </ul>
                     </li>
+                    {{--  Ordem de Serviços  --}}
+                    <li>
+                        <a class="dropdown-item dropdown-toggle" href="#">Ordem de Serviços</a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-submenu">
+                                @permission('listar-ordem-servico-status')
+                                <li><a class="dropdown-item" href="{{route('ordem_servico_status.index')}}">Status de Ordem de Serviço</a></li>
+                                @endpermission
+                            </li>
+                        </ul>
+                    </li>
                     {{--  Parametros  --}}
                     <div class="dropdown-divider"></div>
                     <li><a class="dropdown-item" href="{{route('parametro.create')}}">Parâmetros</a></li>
