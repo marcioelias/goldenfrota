@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Tanque;
 use App\Veiculo;
+use App\OrdemServico;
 use App\Abastecimento;
 use Illuminate\Http\Request;
 use App\MovimentacaoCombustivel;
@@ -70,6 +71,30 @@ class DashboardController extends Controller
         $abastecimentos['abastecimentos_hoje'] = Abastecimento::whereDate('data_hora_abastecimento', $data->format('Y-m-d'))->count();
 
         return response()->json($abastecimentos);
+    }
+
+    public function osEmAberto() {
+        $oss = OrdemServico::with('user')
+        ->with('veiculo')
+        ->whereHas('ordem_servico_status', function($query) {
+            $query->where('em_aberto', true);
+        })
+        ->orderBy('created_at', 'asc')
+        ->take(5)
+        ->get();
+
+        $result = array();
+        foreach ($oss as $os) {
+            $daysAgo = (new \Datetime())->diff((new \DateTime($os->created_at)))->format("%a");
+            $result[] = [
+                'id' => $os->id,
+                'veiculo' => $os->veiculo->placa,
+                'usuario' => $os->user->name ?? '',
+                'dias_em_aberto' => $daysAgo
+            ];
+        }
+
+        return response()->json($result);
     }
 
     /* public function produtosAbaixoEstoqueMinimo() {

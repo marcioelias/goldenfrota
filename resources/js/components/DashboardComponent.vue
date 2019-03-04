@@ -60,6 +60,21 @@
                             </transition>
                         </div>
                     </div>
+                    <div class="card bg-light text-dark mt-3">
+                        <div class="card-header">Ordens de Serviço em Aberto
+                            <div class="float-right text-info">
+                                <a href="/ordem_servico">
+                                    <i class="fas fa-link"></i>
+                                    Acessar
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <transition name="fade" mode="in-out" appear>
+                                <os-em-aberto></os-em-aberto>
+                            </transition>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,12 +131,14 @@ import Axios from "axios";
 import MovTanque from "./dashboard/MovTanque";
 import UltimasEntradasComb from "./dashboard/UltimasEntradasComb";
 import CardInfo from "./dashboard/CardInfo";
+import OsEmAberto from './dashboard/OsEmAberto';
 
 export default {
     components: {
         "mov-tanque": MovTanque,
         "ultimas-entradas-comb": UltimasEntradasComb,
-        "card-info": CardInfo
+        "card-info": CardInfo,
+        "os-em-aberto": OsEmAberto
     },
     data() {
         return {

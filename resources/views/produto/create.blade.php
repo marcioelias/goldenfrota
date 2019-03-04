@@ -84,15 +84,17 @@
                             'items' => Array('Não', 'Sim'),
                         ],  
                         [
-                            'type' => 'integer',
+                            'type' => 'number',
                             'field' => 'vencimento_dias',
                             'label' => 'Vencimento em Dias',
+                            'disabled' => true,
                             'inputSize' => 4
                         ],
                         [
-                            'type' => 'integer',
+                            'type' => 'number',
                             'field' => 'vencimento_km',
                             'label' => 'Vencimento em Km',
+                            'disabled' => true,
                             'inputSize' => 4
                         ]
                     ]
@@ -142,6 +144,16 @@
         @endcomponent
     </div>
 @endsection
+@push('document-ready')
+    $('#controla_vencimento').on('changed.bs.select', (e) => {
+        $('#vencimento_dias').prop('disabled', (e.target.value == 0));
+        $('#vencimento_km').prop('disabled', (e.target.value == 0));
+        if (e.target.value == 0) {
+           $('#vencimento_dias').val(''); 
+           $('#vencimento_km').val('');
+        }
+    });
+@endpush
 @push('bottom-scripts')
     <script src="{{ mix('js/estoqueproduto.js') }}"></script>
 @endpush

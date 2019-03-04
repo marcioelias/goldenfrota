@@ -190,7 +190,8 @@
                     'numMax' => $input['numMax'],
                     'numStep' => $input['numStep'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly']
                 ])    
                 @endcomponent
             @endif

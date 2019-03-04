@@ -113,6 +113,7 @@ Route::middleware(['auth:web'])->group(function() {
     Route::get('/dashboard/ultimas_entradas_comb', 'DashboardController@ultimasEntradasComb');
     Route::get('/dashboard/total_veiculos_frota', 'DashboardController@totalVeiculosFrota');
     Route::get('/dashboard/abastecimentos_hoje', 'DashboardController@abastecimentosHoje');
+    Route::get('/dashboard/os_em_aberto', 'DashboardController@osEmAberto');
 });
 
 Route::get('teste', function() {
