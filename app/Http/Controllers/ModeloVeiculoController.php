@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\MarcaVeiculo;
 use App\ModeloVeiculo;
+use App\TipoControleVeiculo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -58,7 +59,8 @@ class ModeloVeiculoController extends Controller
     {
         if (Auth::user()->canCadastrarModeloVeiculo()) {
             return View('modelo_veiculo.create', [
-                'marcaVeiculos' => MarcaVeiculo::all()
+                'marcaVeiculos' => MarcaVeiculo::all(),
+                'tipoControleVeiculos' => TipoControleVeiculo::all(),
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -114,6 +116,7 @@ class ModeloVeiculoController extends Controller
         if (Auth::user()->canAlterarModeloVeiculo()) {
             return View('modelo_veiculo.edit', [
                 'marcaVeiculos' => MarcaVeiculo::all(),
+                'tipoControleVeiculos' => TipoControleVeiculo::all(),
                 'modeloVeiculo' => $modeloVeiculo
             ]);
         } else {
@@ -139,10 +142,7 @@ class ModeloVeiculoController extends Controller
             ]);
 
             try {
-                $modeloVeiculo->modelo_veiculo = $request->modelo_veiculo;
-                $modeloVeiculo->marca_veiculo_id = $request->marca_veiculo_id;
-                $modeloVeiculo->capacidade_tanque = $request->capacidade_tanque;
-                $modeloVeiculo->ativo = $request->ativo;
+                $modeloVeiculo->fill($request->all());
 
                 if ($modeloVeiculo->save()) {
                     Session::flash('success', __('messages.update_success', [

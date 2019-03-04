@@ -20,8 +20,7 @@
                             'label' => 'Modelo de Veículo',
                             'required' => true,
                             'autofocus' => true,
-                            'inputValue' => isset($modeloVeiculo->modelo_veiculo) ? $modeloVeiculo->modelo_veiculo: '',
-                            'inputSize' => 4
+                            'inputSize' => 6
                         ],
                         [
                             'type' => 'select',
@@ -29,19 +28,33 @@
                             'label' => 'Marca de Veículo',
                             'required' => true,
                             'items' => $marcaVeiculos,
-                            'inputSize' => 4,
+                            'inputSize' => 6,
                             'displayField' => 'marca_veiculo',
                             'keyField' => 'id',
                             'liveSearch' => true,
-                            'indexSelected' => isset($modeloVeiculo->marca_veiculo_id) ? $modeloVeiculo->marca_veiculo_id : ''
-                        ],
+                        ]
+                    ]
+                ])
+                @endcomponent
+                @component('components.form-group', [
+                    'inputs' => [
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'capacidade_tanque',
                             'label' => 'Capacidade do Tanque',
                             'required' => true,
-                            'inputSize' => 4,
-                            'inputValue' => isset($modeloVeiculo->capacidade_tanque) ? $modeloVeiculo->capacidade_tanque: ''
+                            'inputSize' => 6
+                        ],
+                        [
+                            'type' => 'select',
+                            'field' => 'tipo_controle_veiculo_id',
+                            'label' => 'Tipo de Controle',
+                            'required' => true,
+                            'items' => $tipoControleVeiculos,
+                            'inputSize' => 6,
+                            'displayField' => 'tipo_controle_veiculo',
+                            'keyField' => 'id',
+                            'liveSearch' => true,
                         ]
                     ]
                 ])

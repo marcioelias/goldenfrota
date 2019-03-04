@@ -21,7 +21,7 @@
                             'required' => true,
                             'autofocus' => true,
                             'inputValue' => $modeloVeiculo->modelo_veiculo,
-                            'inputSize' => 4
+                            'inputSize' => 6
                         ],
                         [
                             'type' => 'select',
@@ -29,19 +29,11 @@
                             'label' => 'Marca de Veículo',
                             'required' => true,
                             'items' => $marcaVeiculos,
-                            'inputSize' => 4,
+                            'inputSize' => 5,
                             'displayField' => 'marca_veiculo',
                             'keyField' => 'id',
                             'liveSearch' => true,
                             'indexSelected' => $modeloVeiculo->marca_veiculo_id
-                        ],
-                        [
-                            'type' => 'text',
-                            'field' => 'capacidade_tanque',
-                            'label' => 'Capacidade do Tanque',
-                            'required' => true,
-                            'inputSize' => 3,
-                            'inputValue' => $modeloVeiculo->capacidade_tanque
                         ],
                         [
                             'type' => 'select',
@@ -50,6 +42,31 @@
                             'inputSize' => 1,
                             'indexSelected' => $modeloVeiculo->ativo,
                             'items' => Array('Não', 'Sim'),
+                        ]
+                    ]
+                ])
+                @endcomponent
+                @component('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'number',
+                            'field' => 'capacidade_tanque',
+                            'label' => 'Capacidade do Tanque',
+                            'required' => true,
+                            'inputSize' => 6,
+                            'inputValue' => $modeloVeiculo->capacidade_tanque
+                        ],
+                        [
+                            'type' => 'select',
+                            'field' => 'tipo_controle_veiculo_id',
+                            'label' => 'Tipo de Controle',
+                            'required' => true,
+                            'items' => $tipoControleVeiculos,
+                            'inputSize' => 6,
+                            'displayField' => 'tipo_controle_veiculo',
+                            'keyField' => 'id',
+                            'liveSearch' => true,
+                            'indexSelected' => $modeloVeiculo->tipo_controle_veiculo_id
                         ]
                     ]
                 ])
