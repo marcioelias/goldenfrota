@@ -5,6 +5,7 @@ namespace App;
 use App\User;
 use App\Estoque;
 use App\Veiculo;
+use App\OrdemServicoStatus;
 use App\MovimentacaoProduto;
 use App\OrdemServicoProduto;
 use App\OrdemServicoServico;
@@ -45,5 +46,9 @@ class OrdemServico extends Model
 
     public function estoque() {
         return $this->belongsTo(Estoque::class);
+    }
+
+    public function ordem_servico_status() {
+        return $this->belongsTo(OrdemServicoStatus::class);
     }
 }

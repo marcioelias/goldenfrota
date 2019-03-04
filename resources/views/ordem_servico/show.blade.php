@@ -11,8 +11,8 @@
                         <div id="numero">{{ $ordemServico->id }}</div>
                     </div>
                     <div class="float-right" style="margin-left: 25px">
-                        <label for="#os_fechada" class="nf-label">Fechada:</label>
-                        <div id="os_fechada">{{ ($ordemServico->fechada) ? 'Sim' : 'Não' }}</div>
+                        <label for="#os_fechada" class="nf-label">status:</label>
+                        <div id="os_fechada">{{ $ordemServico->ordem_servico_status->os_status ?? 'Aberta' }}</div>
                     </div>
                     <div class="float-right" style="margin-left: 25px">
                         <label for="#data_os" class="nf-label">Data Fechamento:</label>

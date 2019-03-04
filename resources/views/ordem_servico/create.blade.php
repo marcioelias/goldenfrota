@@ -20,7 +20,7 @@
                             'label' => 'Cliente',
                             'required' => true,
                             'items' => $clientes,
-                            'inputSize' => 6,
+                            'inputSize' => 5,
                             'displayField' => 'nome_razao',
                             'keyField' => 'id',
                             'liveSearch' => true,
@@ -46,10 +46,12 @@
                         ],
                         [
                             'type' => 'select',
-                            'field' => 'fechada',
-                            'label' => 'Fechada',
-                            'inputSize' => 1,
-                            'items' => Array('Não', 'Sim'),
+                            'field' => 'ordem_servico_status_id',
+                            'label' => 'Status',
+                            'inputSize' => 2,
+                            'items' => $ordemServicoStatus,
+                            'displayField' => 'os_status',
+                            'keyField' => 'id'
                         ]
                     ]
                 ])

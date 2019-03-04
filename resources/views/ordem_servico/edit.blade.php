@@ -19,7 +19,7 @@
                             'field' => 'cliente_id_readonly',
                             'label' => 'Cliente',
                             'items' => $ordemServico->veiculo->cliente->get(),
-                            'inputSize' => 6,
+                            'inputSize' => 5,
                             'displayField' => 'nome_razao',
                             'keyField' => 'id',
                             'disabled' => true,
@@ -56,12 +56,14 @@
                         ],
                         [
                             'type' => 'select',
-                            'field' => 'fechada',
-                            'label' => 'Fechada',
-                            'inputSize' => 1,
-                            'items' => Array('Não', 'Sim'),
-                            'disabled' => ($ordemServico->fechada),
-                            'indexSelected' => $ordemServico->fechada
+                            'field' => 'ordem_servico_status_id',
+                            'label' => 'Status',
+                            'inputSize' => 2,
+                            'items' => $ordemServicoStatus,
+                            'displayField' => 'os_status',
+                            'keyField' => 'id',
+                            'disabled' => (!$ordemServico->ordem_servico_status->em_aberto),
+                            'indexSelected' => $ordemServico->ordem_servico_status_id
                         ]
                     ]
                 ])

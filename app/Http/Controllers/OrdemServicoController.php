@@ -9,6 +9,7 @@ use App\Produto;
 use App\Servico;
 use App\Parametro;
 use App\OrdemServico;
+use App\OrdemServicoStatus;
 use App\MovimentacaoProduto;
 use App\OrdemServicoProduto;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class OrdemServicoController extends Controller
         'placa' => 'Veículo',
         'name' => 'Usuário',
         'created_at' => ['label' => 'Data', 'type' => 'datetime'],
-        'fechada' => ['label' => 'Fechada', 'type' => 'bool']
+        'os_status' => 'Status'
     ];
     /**
      * Display a listing of the resource.
@@ -37,20 +38,22 @@ class OrdemServicoController extends Controller
         if (Auth::user()->canListarOrdemServico()) {
             if ($request->searchField) {
                 $ordemServicos = DB::table('ordem_servicos')
-                                ->select('ordem_servicos.*', 'clientes.nome_razao', 'veiculos.placa', 'users.name')
+                                ->select('ordem_servicos.*', 'clientes.nome_razao', 'veiculos.placa', 'users.name', 'ordem_servico_status.os_status')
                                 ->leftJoin('veiculos', 'veiculos.id', 'ordem_servicos.veiculo_id')
                                 ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
                                 ->leftJoin('users', 'users.id', 'ordem_servicos.user_id')
+                                ->leftJoin('ordem_servico_status', 'ordem_servico_status.id', 'ordem_servico_status_id')
                                 ->where('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
                                 ->orWhere('veiculos.placa', 'like', '%'.$request->searchField.'%')
                                 ->orderBy('id', 'desc')
                                 ->paginate();
             } else {
                 $ordemServicos = DB::table('ordem_servicos')
-                                ->select('ordem_servicos.*', 'clientes.nome_razao', 'veiculos.placa', 'users.name')
+                                ->select('ordem_servicos.*', 'clientes.nome_razao', 'veiculos.placa', 'users.name', 'ordem_servico_status.os_status')
                                 ->leftJoin('veiculos', 'veiculos.id', 'ordem_servicos.veiculo_id')
                                 ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
                                 ->leftJoin('users', 'users.id', 'ordem_servicos.user_id')
+                                ->leftJoin('ordem_servico_status', 'ordem_servico_status.id', 'ordem_servico_status_id')
                                 ->orderBy('id', 'desc')
                                 ->paginate();
             }
@@ -77,12 +80,14 @@ class OrdemServicoController extends Controller
             $estoques = Estoque::where('ativo', true)->orderBy('estoque', 'asc')->get();
             $servicos = Servico::where('ativo', true)->orderBy('servico', 'asc')->get();
             $produtos = Produto::where('ativo', true)->orderBy('produto_descricao', 'asc')->get();
+            $ordemServicoStatus = OrdemServicoStatus::orderBy('os_status', 'asc')->get();
 
             return View('ordem_servico.create', [
                 'clientes' => $clientes,
                 'estoques' => $estoques,
                 'servicos' => $servicos,
-                'produtos' => $produtos
+                'produtos' => $produtos,
+                'ordemServicoStatus' => $ordemServicoStatus
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -114,7 +119,8 @@ class OrdemServicoController extends Controller
 
                 $ordemServico = Auth::user()->ordem_servico()->create($request->all());
 
-                if ($ordemServico->fechada) {
+                $osStatus = OrdemServicoStatus::find($ordemServico->ordem_servico_status_id);
+                if (!$osStatus->em_aberto) {
                     $ordemServico->data_fechamento = date('Y-m-d H:i:s');
                 }
                 
@@ -178,7 +184,8 @@ class OrdemServicoController extends Controller
         if (Auth::user()->canAlterarOrdemServico()) {
 
             /* Não permite alterar OS Fechada */
-            if ($ordemServico->fechada) {
+            $osStatus = OrdemServicoStatus::find($ordemServico->ordem_servico_status_id);
+            if (!$osStatus->em_aberto) {
                 Session::flash('error', __('messages.edit_not_allowed', [
                     'model' => __('models.ordem_servico'),
                     'status' => __('strings.os_status_fechada')
@@ -192,13 +199,15 @@ class OrdemServicoController extends Controller
             $estoques = Estoque::where('ativo', true)->orderBy('estoque', 'asc')->get();
             $veiculos = $ordemServico->veiculo->get();
             $clientes = $ordemServico->veiculo->cliente->get();
+            $ordemServicoStatus = OrdemServicoStatus::orderBy('os_status', 'asc')->get();
 
             return View('ordem_servico.edit', [
                 'veiculos' => $veiculos,
                 'ordemServico' => $ordemServico,
                 'estoques' => $estoques,
                 'servicos' => $servicos,
-                'produtos' => $produtos
+                'produtos' => $produtos,
+                'ordemServicoStatus' => $ordemServicoStatus
             ]);
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -227,7 +236,8 @@ class OrdemServicoController extends Controller
 
                 $ordemServico->fill($request->all());
 
-                if ($ordemServico->fechada) {
+                $osStatus = OrdemServicoStatus::find($ordemServico->ordem_servico_status_id);
+                if (!$osStatus->em_aberto) {
                     $ordemServico->data_fechamento = date('Y-m-d H:i:s');
                 }
 
