@@ -109,7 +109,7 @@ class EntradaEstoqueController extends Controller
                     MovimentacaoProdutoController::entradaEstoque($entradaEstoque);
 
                     DB::commit();
-                    Session::flash('success', __('messages.create_success', [
+                    Session::flash('success', __('messages.create_success_f', [
                         'model' => 'entrada_estoque', 
                         'name' => $entradaEstoque->nr_docto
                     ]));
