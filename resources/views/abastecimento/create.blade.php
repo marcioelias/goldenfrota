@@ -62,15 +62,25 @@
                             'inputSize' => 8,
                             'displayField' => 'placa',
                             'liveSearch' => true,
-                            'keyField' => 'id'
+                            'keyField' => 'id',
+                            'defaultNone' => true,
                         ],
                         [
                             'type' => 'number',
                             'field' => 'km_veiculo',
                             'label' => 'KM do Veículo',
                             'required' => true,
-                            'inputSize' => 4                            
+                            'inputSize' => 4,
+                            'visible' => false                           
                         ],
+                        [
+                            'type' => 'number',
+                            'field' => 'horas_trabalhadas',
+                            'label' => 'Horas Trabalhadas',
+                            'required' => true,
+                            'inputSize' => 4,
+                            'visible' => false                           
+                        ]
                     ]
                 ])
                 @endcomponent
@@ -230,16 +240,19 @@ function CalcValorAbastecimento() {
                 dataType: 'JSON',
                 cache: false,
                 success: function (data) {
+                    //console.log(data);
                     $("#veiculo_id")
                         .removeAttr('disabled')
                         .find('option')
                         .remove();
 
+                    $('#veiculo_id').append($('<option>', {value: null, text: 'Nada selecionado'}));
 
                     $.each(data, function (i, item) {
                         $('#veiculo_id').append($('<option>', { 
                             value: item.id,
-                            text : item.placa + ' - ' + item.marca_veiculo + ' ' + item.modelo_veiculo
+                            'data-tipo-controle-veiculo': item.modelo_veiculo.tipo_controle_veiculo.id,
+                            text : item.placa + ' - ' + item.modelo_veiculo.marca_veiculo.marca_veiculo + ' ' + item.modelo_veiculo.modelo_veiculo
                         }));
                     });
                     
@@ -276,4 +289,14 @@ function CalcValorAbastecimento() {
         if ($('#cliente_id').val()) {
             buscarVeiculos();
         }
+
+        $('#veiculo_id').on('changed.bs.select', (e) => {
+            if ($('#'+e.target.id).find('option:selected').data('tipo-controle-veiculo') == 1) {
+                $('#div__km_veiculo').show();
+                $('#div__horas_trabalhadas').hide();
+            } else {
+                $('#div__km_veiculo').hide();
+                $('#div__horas_trabalhadas').show();
+            }
+        });
 @endpush

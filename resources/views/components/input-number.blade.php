@@ -9,10 +9,11 @@
     $numMax = isset($numMax) ? $numMax : '999999999,99';
     $numStep = isset($numStep) ? $numStep : 'any';
     $readOnly = $readOnly ?? false;
+    $visible = (!$visible) ? 'style=display:none' : '';
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}
-<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}}">
+<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}}" {{$visible}} id="div__{{$id}}">
     @if(isset($label))
         @component('components.label', ['label' => $label, 'field' => $field, 'required' => $required])
         @endcomponent

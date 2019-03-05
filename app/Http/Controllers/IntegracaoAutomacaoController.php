@@ -253,8 +253,7 @@ class IntegracaoAutomacaoController extends Controller
                                 $abastecimento->volume_abastecimento = $this->formataValorDecimal(trim($registro[7]), 3);
                                 $abastecimento->valor_litro = $this->formataValorDecimal(trim($registro[8]), trim($registro[9]));
                                 $abastecimento->encerrante_inicial = $this->formataValorDecimal(trim($registro[10]));
-                                $abastecimento->encerrante_final = $this->formataValorDecimal(trim($registro[11]));
-                                $abastecimento->km_veiculo = $this->formataValorDecimal(trim($registro[15]), 1);
+                                $abastecimento->encerrante_final = $this->formataValorDecimal(trim($registro[11]));                                
         
                                 /* se valor total zerado, calcula valor total */
                                 if ($abastecimento->valor_abastecimento == 0) {
@@ -266,6 +265,13 @@ class IntegracaoAutomacaoController extends Controller
                                     $abastecimento->media_veiculo = 0;
                                 } else {
                                     $abastecimento->veiculo_id = $veiculo->id;
+                                    if ( $veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1) {
+                                        /* controle de km rodados */
+                                        $abastecimento->km_veiculo = $this->formataValorDecimal(trim($registro[15]), 1);
+                                    } else {
+                                        /* controle de horas trabalhadas */
+                                        $abastecimento->horas_trabalhadas = $this->formataValorDecimal(trim($registro[15]), 1);
+                                    }
                                     $abastecimento->media_veiculo = $abastecimentoController->obterMediaVeiculo($veiculo, $abastecimento);
                                 }
         

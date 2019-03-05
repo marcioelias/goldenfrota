@@ -35,6 +35,7 @@
                 $input['dataOnStyle'] = isset($input['dataOnStyle']) ? $input['dataOnStyle'] : null;
                 $input['dataOffStyle'] = isset($input['dataOffStyle']) ? $input['dataOffStyle'] : null;
                 $input['permission'] = isset($input['permission']) ? $input['permission'] : null;
+                $input['visible'] = isset($input['visible']) ? $input['visible'] : true;
             @endphp
             @if($input['type'] == 'text')
                 @component('components.input-text', [
@@ -48,7 +49,8 @@
                     'css' => $input['css'],
                     'div_css' => $input['div_css'],
                     'vModel' => $input['vModel'],
-                    'readOnly' => $input['readOnly']
+                    'readOnly' => $input['readOnly'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -66,7 +68,8 @@
                     'id' => $input['id'],
                     'css' => $input['css'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -81,7 +84,8 @@
                     'id' => $input['id'],
                     'css' => $input['css'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -97,7 +101,8 @@
                     'css' => $input['css'],
                     'rows' => $input['rows'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -111,7 +116,8 @@
                     'id' => $input['id'],
                     'css' => $input['css'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -130,7 +136,8 @@
                     'picker_begin' => $input['picker_begin'],
                     'picker_end' => $input['picker_end'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -151,7 +158,8 @@
                     'liveSearch' => $input['liveSearch'],
                     'defaultNone' => $input['defaultNone'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -172,7 +180,8 @@
                     'liveSearch' => $input['liveSearch'],
                     'defaultNone' => $input['defaultNone'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -191,7 +200,8 @@
                     'numStep' => $input['numStep'],
                     'div_css' => $input['div_css'],
                     'vModel' => $input['vModel'],
-                    'readOnly' => $input['readOnly']
+                    'readOnly' => $input['readOnly'],
+                    'visible' => $input['visible']
                 ])    
                 @endcomponent
             @endif
@@ -208,7 +218,8 @@
                     'radioButtons' => $input['radioButtons'],
                     'defaultValue' => $input['defaultValue'],
                     'div_css' => $input['div_css'],
-                    'vModel' => $input['vModel']
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -240,7 +251,8 @@
                     'css' => $input['css'],
                     'vModel' => $input['vModel'],
                     'readOnly' => $input['readOnly'],
-                    'permission' => $input['permission']
+                    'permission' => $input['permission'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif

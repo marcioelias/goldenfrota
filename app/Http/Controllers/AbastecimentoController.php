@@ -130,7 +130,7 @@ class AbastecimentoController extends Controller
                 'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
                 'cliente_id' => 'required_if:eh_afericao,false|required_without:eh_afericao',
                 'veiculo_id' => 'required_if:eh_afericao,false|required_without:eh_afericao',
-                'km_veiculo' => 'required_if:eh_afericao,false|required_without:eh_afericao',
+                //'km_veiculo' => 'required_if:eh_afericao,false|required_without:eh_afericao',
                 'volume_abastecimento' => 'required|numeric|min:0',
                 'valor_litro' => 'required|numeric|min:0',
                 'valor_abastecimento' => 'required|numeric|min:0',
@@ -144,6 +144,7 @@ class AbastecimentoController extends Controller
                 $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
                 $abastecimento->veiculo_id = $request->veiculo_id;
                 $abastecimento->km_veiculo = $request->km_veiculo;
+                $abastecimento->horas_trabalhadas = $request->horas_trabalhadas;
                 $abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
                 $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
                 $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
@@ -280,7 +281,7 @@ class AbastecimentoController extends Controller
             $this->validate($request, [
                 'data_hora_abastecimento' => 'required|date_format:d/m/Y H:i:s',
                 'veiculo_id' => 'required',
-                'km_veiculo' => 'required|numeric|min:0',
+                //'km_veiculo' => 'required|numeric|min:0',
                 //'volume_abastecimento' => 'required|numeric|min:0',
                 'valor_litro' => 'required|numeric|min:0',
                 'valor_abastecimento' => 'required|numeric|min:0',
@@ -291,6 +292,7 @@ class AbastecimentoController extends Controller
                 $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
                 $abastecimento->veiculo_id = $request->veiculo_id;
                 $abastecimento->km_veiculo = $request->km_veiculo;
+                $abastecimento->horas_trabalhadas = $request->horas_trabalhadas;
                 //$abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
                 $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
                 $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
@@ -432,12 +434,24 @@ class AbastecimentoController extends Controller
                 return 0; 
             } else {
                 //veiculo já abasteceu antes
-                if ($abastecimentoAtual->km_veiculo > 0) {
-                    //km informada
-                    return ($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo) / $abastecimentoAtual->volume_abastecimento;
+                if ($veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1) {
+                    /* controle de km rodados */
+                    if ($abastecimentoAtual->km_veiculo > 0) {
+                        //km informada
+                        return ($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo) / $abastecimentoAtual->volume_abastecimento;
+                    } else {
+                        //km não informada
+                        return 0;
+                    }
                 } else {
-                    //km não informada
-                    return 0;
+                    /* controle de horas trabalhadas */
+                    if ($abastecimentoAtual->horas_trabalhadas > 0) {
+                        //horas trabalhadas informada
+                        return $abastecimentoAtual->volume_abastecimento / ($abastecimentoAtual->horas_trabalhadas - $abastecimento->horas_trabalhadas);
+                    } else {
+                        //horas trabalhadas não informada
+                        return 0;
+                    }
                 }
             }
         } catch (\Exception $e) {

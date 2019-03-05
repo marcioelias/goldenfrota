@@ -71,7 +71,17 @@
                             'label' => 'KM do Veículo',
                             'inputSize' => 3,
                             'inputValue' => $abastecimento->km_veiculo,
-                            'disabled' => ($abastecimento->eh_afericao)
+                            'disabled' => ($abastecimento->eh_afericao),
+                            'visible' => ($abastecimento->veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1)
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'horas_trabalhadas',
+                            'label' => 'Horas Trabalhadas',
+                            'required' => true,
+                            'inputSize' => 3,
+                            'disabled' => ($abastecimento->eh_afericao),
+                            'visible' => ($abastecimento->veiculo->modelo_veiculo->tipo_controle_veiculo_id == 2),
                         ],
                         [
                             'type' => 'number',
@@ -229,10 +239,13 @@
                 .remove();
 
 
+            $('#veiculo_id').append($('<option>', {value: null, text: 'Nada selecionado'}));
+
             $.each(data, function (i, item) {
                 $('#veiculo_id').append($('<option>', { 
                     value: item.id,
-                    text : item.placa + ' - ' + item.marca_veiculo + ' ' + item.modelo_veiculo
+                    'data-tipo-controle-veiculo': item.modelo_veiculo.tipo_controle_veiculo.id,
+                    text : item.placa + ' - ' + item.modelo_veiculo.marca_veiculo.marca_veiculo + ' ' + item.modelo_veiculo.modelo_veiculo
                 }));
             });
             
@@ -316,4 +329,14 @@ $('#valor_litro').keyup(CalcValorAbastecimento);
 $('#km_veiculo').blur(CalcularKmMedia);
 
 $('#volume_abastecimento').blur(CalcularKmMedia);
+
+$('#veiculo_id').on('changed.bs.select', (e) => {
+    if ($('#'+e.target.id).find('option:selected').data('tipo-controle-veiculo') == 1) {
+        $('#div__km_veiculo').show();
+        $('#div__horas_trabalhadas').hide();
+    } else {
+        $('#div__km_veiculo').hide();
+        $('#div__horas_trabalhadas').show();
+    }
+});
 @endpush
