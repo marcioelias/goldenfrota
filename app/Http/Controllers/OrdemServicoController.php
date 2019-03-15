@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Events\UtilizadoProdutoControleVencimento;
 use App\Http\Controllers\MovimentacaoProdutoController;
 
 class OrdemServicoController extends Controller
@@ -119,7 +120,9 @@ class OrdemServicoController extends Controller
 
                 $ordemServico = Auth::user()->ordem_servico()->create($request->all());
 
-                $osStatus = OrdemServicoStatus::find($ordemServico->ordem_servico_status_id);
+                //dd($request->all());
+
+                $osStatus = OrdemServicoStatus::find($request->ordem_servico_status_id);
                 if (!$osStatus->em_aberto) {
                     $ordemServico->data_fechamento = date('Y-m-d H:i:s');
                 }
@@ -133,6 +136,8 @@ class OrdemServicoController extends Controller
                 }
 
                 MovimentacaoProdutoController::saidaOrdemServico($ordemServico);
+
+                event(new UtilizadoProdutoControleVencimento($ordemServico));
 
                 DB::commit();
 

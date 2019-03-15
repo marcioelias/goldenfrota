@@ -68,20 +68,10 @@
                         [
                             'type' => 'number',
                             'field' => 'km_veiculo',
-                            'label' => 'KM do Veículo',
+                            'label' => ($abastecimento->veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1) ? 'KM do Veículo' : 'Horas trabalhadas',
                             'inputSize' => 3,
                             'inputValue' => $abastecimento->km_veiculo,
-                            'disabled' => ($abastecimento->eh_afericao),
-                            'visible' => ($abastecimento->veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1)
-                        ],
-                        [
-                            'type' => 'number',
-                            'field' => 'horas_trabalhadas',
-                            'label' => 'Horas Trabalhadas',
-                            'required' => true,
-                            'inputSize' => 3,
-                            'disabled' => ($abastecimento->eh_afericao),
-                            'visible' => ($abastecimento->veiculo->modelo_veiculo->tipo_controle_veiculo_id == 2),
+                            'disabled' => ($abastecimento->eh_afericao)
                         ],
                         [
                             'type' => 'number',
@@ -332,11 +322,9 @@ $('#volume_abastecimento').blur(CalcularKmMedia);
 
 $('#veiculo_id').on('changed.bs.select', (e) => {
     if ($('#'+e.target.id).find('option:selected').data('tipo-controle-veiculo') == 1) {
-        $('#div__km_veiculo').show();
-        $('#div__horas_trabalhadas').hide();
+        $('#label__km_veiculo').html('KM do Veículo');
     } else {
-        $('#div__km_veiculo').hide();
-        $('#div__horas_trabalhadas').show();
+        $('#label__km_veiculo').html('Horas trabalhadas');
     }
 });
 @endpush

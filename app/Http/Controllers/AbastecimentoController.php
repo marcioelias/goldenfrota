@@ -12,6 +12,7 @@ use App\Departamento;
 use App\Abastecimento;
 use App\TanqueMovimentacao;
 use Illuminate\Http\Request;
+use App\Events\NovoAbastecimento;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
@@ -30,12 +31,12 @@ class AbastecimentoController extends Controller
         'id' => 'ID',
         'data_hora_abastecimento' => ['label' => 'Data/Hora', 'type' => 'datetime'],
         'valor_litro' => ['label' => 'Valor Litro', 'type' => 'decimal', 'decimais' => 3],
-        'volume_abastecimento' => ['label' => 'Qtd. Abastecida', 'type' => 'decimal', 'decimais' => 2],
+        'volume_abastecimento' => ['label' => 'Qtd. Abast.', 'type' => 'decimal', 'decimais' => 2],
         'valor_abastecimento' => ['label' => 'Valor Total', 'type' => 'decimal', 'decimais' => 3], 
         'placa' => 'Veículo',
-        'km_veiculo' => ['label' => 'Kilometragem', 'type' => 'decimal', 'decimais' => 1],
+        'km_veiculo' => ['label' => 'Odômetro/Horímetro', 'type' => 'decimal', 'decimais' => 1],
         'media_veiculo' => ['label' => 'Média', 'type' => 'decimal', 'decimais' => 2],
-        'abastecimento_local' => ['label' => 'Abastecimento Local', 'type' => 'bool'],
+        'abastecimento_local' => ['label' => 'Abast. Local', 'type' => 'bool'],
         'eh_afericao' => ['label' => 'Aferição', 'type' => 'bool']
         //'ativo' => ['label' => 'Ativo', 'type' => 'bool'],
 
@@ -144,7 +145,6 @@ class AbastecimentoController extends Controller
                 $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
                 $abastecimento->veiculo_id = $request->veiculo_id;
                 $abastecimento->km_veiculo = $request->km_veiculo;
-                $abastecimento->horas_trabalhadas = $request->horas_trabalhadas;
                 $abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
                 $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
                 $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
@@ -186,6 +186,8 @@ class AbastecimentoController extends Controller
                     //Log::debug('Abastecimento Inserido: '.$abastecimento);
 
                     DB::commit();
+
+                    event(new NovoAbastecimento($abastecimento));
 
                     //Ajusta médias futuras
                     if (!$this->ajustarMediaAbastecimentosFuturos($abastecimento)) {
@@ -292,7 +294,6 @@ class AbastecimentoController extends Controller
                 $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
                 $abastecimento->veiculo_id = $request->veiculo_id;
                 $abastecimento->km_veiculo = $request->km_veiculo;
-                $abastecimento->horas_trabalhadas = $request->horas_trabalhadas;
                 //$abastecimento->volume_abastecimento = str_replace(',', '.', $request->volume_abastecimento);
                 $abastecimento->valor_litro = str_replace(',', '.', $request->valor_litro);
                 $abastecimento->valor_abastecimento = str_replace(',', '.', $request->valor_abastecimento);
@@ -445,9 +446,9 @@ class AbastecimentoController extends Controller
                     }
                 } else {
                     /* controle de horas trabalhadas */
-                    if ($abastecimentoAtual->horas_trabalhadas > 0) {
+                    if ($abastecimentoAtual->km_veiculo > 0) {
                         //horas trabalhadas informada
-                        return $abastecimentoAtual->volume_abastecimento / ($abastecimentoAtual->horas_trabalhadas - $abastecimento->horas_trabalhadas);
+                        return $abastecimentoAtual->volume_abastecimento / ($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo);
                     } else {
                         //horas trabalhadas não informada
                         return 0;

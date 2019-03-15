@@ -12,9 +12,9 @@
 */
 
 Auth::routes();
-Route::get('/teste', function() {
+/* Route::get('/teste', function() {
     return View('teste');
-});
+}); */
 
 Route::middleware(['auth:web'])->group(function() {
 
@@ -116,10 +116,10 @@ Route::middleware(['auth:web'])->group(function() {
     Route::get('/dashboard/os_em_aberto', 'DashboardController@osEmAberto');
 });
 
-Route::get('teste', function() {
+/* Route::get('teste', function() {
     return View('teste');
 });
-
+ */
 /* Route::get('relatorios/abastecimentos/imprimir', 'AbastecimentoController@gerarPdfRelatorioAbastecimentos')->name('imprimir_relatorio_abastecimentos'); */
 /* 
 Route::get('teste', 'IntegracaoAutomacaoController@configFTP')->name('teste');

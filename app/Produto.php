@@ -19,6 +19,7 @@ class Produto extends Model
         'valor_venda',
         'vencimento_dias',
         'vencimento_km',
+        'vencimento_horas_trabalhadas',
         'controla_vencimento',
         'numero_serie',
         'codigo_barras',

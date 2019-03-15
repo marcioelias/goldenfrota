@@ -32,7 +32,7 @@
                                 ])
                                 @endcomponent
                             @endif                
-                            @if ($setting->data_type == 'integer') 
+                            @if ($setting->data_type == 'integer' || $setting->data_type == 'double') 
                                 @component('components.form-group', [
                                     'inputs' => [
                                         [

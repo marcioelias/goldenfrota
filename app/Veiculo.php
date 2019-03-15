@@ -5,6 +5,7 @@ namespace App;
 use App\Cliente;
 use App\Departamento;
 use App\GrupoVeiculo;
+use App\OrdemServico;
 use App\Abastecimento;
 use App\ModeloVeiculo;
 use Illuminate\Database\Eloquent\Model;
@@ -31,5 +32,9 @@ class Veiculo extends Model
 
     public function departamento() {
         return $this->belongsTo(Departamento::class);
+    }
+
+    public function ordem_servicos() {
+        return $this->hasMany(OrdemServico::class);
     }
 }

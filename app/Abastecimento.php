@@ -22,7 +22,6 @@ class Abastecimento extends Model
         'atendente_id',
         'veiculo_id',
         'km_veiculo',
-        'horas_trabalhadas',
         'requisicao_abastecimento',
         'data_hora_abastecimento',
         'ativo',

@@ -70,16 +70,7 @@
                             'field' => 'km_veiculo',
                             'label' => 'KM do Veículo',
                             'required' => true,
-                            'inputSize' => 4,
-                            'visible' => false                           
-                        ],
-                        [
-                            'type' => 'number',
-                            'field' => 'horas_trabalhadas',
-                            'label' => 'Horas Trabalhadas',
-                            'required' => true,
-                            'inputSize' => 4,
-                            'visible' => false                           
+                            'inputSize' => 4
                         ]
                     ]
                 ])
@@ -226,7 +217,7 @@ function CalcValorAbastecimento() {
                 }
             });
         }
-
+ 
         var buscarVeiculos = function() {
             var cliente = {};
 
@@ -292,11 +283,9 @@ function CalcValorAbastecimento() {
 
         $('#veiculo_id').on('changed.bs.select', (e) => {
             if ($('#'+e.target.id).find('option:selected').data('tipo-controle-veiculo') == 1) {
-                $('#div__km_veiculo').show();
-                $('#div__horas_trabalhadas').hide();
+                $('#label__km_veiculo').html('KM do Veículo');
             } else {
-                $('#div__km_veiculo').hide();
-                $('#div__horas_trabalhadas').show();
+                $('#label__km_veiculo').html('Horas trabalhadas');
             }
         });
 @endpush

@@ -79,50 +79,58 @@
             @endsection
         @endcomponent
     </div>
+@endsection
+@push('document-ready')
+var buscarVeiculos = function() {
+    var cliente = {};
+
+    cliente.id = $('#cliente_id').val();
+    cliente._token = $('input[name="_token"]').val();
+
+    $.ajax({
+        url: '{{ route("veiculos.json") }}',
+        type: 'POST',
+        data: cliente,
+        dataType: 'JSON',
+        cache: false,
+        success: function (data) {
+            $("#veiculo_id")
+                .removeAttr('disabled')
+                .find('option')
+                .remove();
+            
+            $('#veiculo_id').append($('<option>', {value: null, text: 'Nada selecionado'}));
+
+            $.each(data, function (i, item) {
+                $('#veiculo_id').append($('<option>', { 
+                    value: item.id,
+                    'data-tipo-controle-veiculo': item.modelo_veiculo.tipo_controle_veiculo.id,
+                    text : item.placa + ' - ' + item.modelo_veiculo.marca_veiculo.marca_veiculo + ' ' + item.modelo_veiculo.modelo_veiculo
+                }));
+            });
+
+            @if(old('veiculo_id'))
+            $('#veiculo_id').selectpicker('val', {{old('veiculo_id')}});
+            @endif
+
+            $('.selectpicker').selectpicker('refresh');
+        }
+    });
+}
+
+$('#cliente_id').on('changed.bs.select', buscarVeiculos);
+
+if ($('#cliente_id').val()) {
+    buscarVeiculos();
+}
+$('#veiculo_id').on('changed.bs.select', (e) => {
+        if ($('#'+e.target.id).find('option:selected').data('tipo-controle-veiculo') == 1) {
+            $('#label__km_veiculo').html('KM do Veículo');
+        } else {
+            $('#label__km_veiculo').html('Horas trabalhadas');
+        }
+});
+@endpush
 @push('bottom-scripts')
     <script src="{{ mix('js/os.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-            var buscarVeiculos = function() {
-                var cliente = {};
-
-                cliente.id = $('#cliente_id').val();
-                cliente._token = $('input[name="_token"]').val();
-
-                $.ajax({
-                    url: '{{ route("veiculos.json") }}',
-                    type: 'POST',
-                    data: cliente,
-                    dataType: 'JSON',
-                    cache: false,
-                    success: function (data) {
-                        $("#veiculo_id")
-                            .removeAttr('disabled')
-                            .find('option')
-                            .remove();
-                        
-                        $.each(data, function (i, item) {
-                            $('#veiculo_id').append($('<option>', { 
-                                value: item.id,
-                                text : item.placa 
-                            }));
-                        });
-
-                        @if(old('veiculo_id'))
-                        $('#veiculo_id').selectpicker('val', {{old('veiculo_id')}});
-                        @endif
-
-                        $('.selectpicker').selectpicker('refresh');
-                    }
-                });
-            }
-            $('#cliente_id').on('changed.bs.select', buscarVeiculos);
-            
-            if ($('#cliente_id').val()) {
-                buscarVeiculos();
-            }
-        });
-    </script>
 @endpush
-@endsection

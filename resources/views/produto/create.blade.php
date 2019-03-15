@@ -80,22 +80,29 @@
                             'type' => 'select',
                             'field' => 'controla_vencimento',
                             'label' => 'Controla Vencimento',
-                            'inputSize' => 4,
+                            'inputSize' => 3,
                             'items' => Array('Não', 'Sim'),
                         ],  
                         [
                             'type' => 'number',
                             'field' => 'vencimento_dias',
                             'label' => 'Vencimento em Dias',
-                            'disabled' => true,
-                            'inputSize' => 4
+                            'readOnly' => true,
+                            'inputSize' => 3
                         ],
                         [
                             'type' => 'number',
                             'field' => 'vencimento_km',
                             'label' => 'Vencimento em Km',
-                            'disabled' => true,
-                            'inputSize' => 4
+                            'readOnly' => true,
+                            'inputSize' => 3
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'vencimento_horas_trabalhadas',
+                            'label' => 'Vencimento em Horas/Trabalhadas',
+                            'readOnly' => true,
+                            'inputSize' => 3
                         ]
                     ]
                 ])
@@ -146,11 +153,13 @@
 @endsection
 @push('document-ready')
     $('#controla_vencimento').on('changed.bs.select', (e) => {
-        $('#vencimento_dias').prop('disabled', (e.target.value == 0));
-        $('#vencimento_km').prop('disabled', (e.target.value == 0));
+        $('#vencimento_dias').prop('readonly', (e.target.value == 0));
+        $('#vencimento_km').prop('readonly', (e.target.value == 0));
+        $('#vencimento_horas_trabalhadas').prop('readonly', (e.target.value == 0));
         if (e.target.value == 0) {
            $('#vencimento_dias').val(''); 
            $('#vencimento_km').val('');
+           $('#vencimento_horas_trabalhadas').val('');
         }
     });
 @endpush

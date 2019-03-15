@@ -183,7 +183,7 @@ class ProdutoController extends Controller
             try {
                 DB::beginTransaction();
                 $produto->fill($request->all());
-                dd($produto);
+
                 if ($produto->save()) {
                     $produto->fornecedores()->sync($request->fornecedores);
                     $produto->estoques()->sync($request->estoques);
