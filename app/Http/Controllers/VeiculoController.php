@@ -252,6 +252,7 @@ class VeiculoController extends Controller
 
         $veiculos = Veiculo::with('modelo_veiculo.tipo_controle_veiculo')
                         ->with('modelo_veiculo.marca_veiculo')
+                        ->with('vencimento_produtos')
                         ->where('veiculos.ativo', true)
                         ->whereRaw($whereCliente)
                         ->orderBy('veiculos.placa', 'asc')
@@ -452,5 +453,9 @@ class VeiculoController extends Controller
         foreach ($modeloVeiculos as $modeloVeiculo) {
             
         }
+    }
+
+    public function apiIndex() {
+        return response()->json(Veiculo::Ativo()->get());
     }
 }

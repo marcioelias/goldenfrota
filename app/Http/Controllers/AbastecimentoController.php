@@ -426,11 +426,9 @@ class AbastecimentoController extends Controller
     public function obterMediaVeiculo(Veiculo $veiculo, Abastecimento $abastecimentoAtual) {
         try {
             $whereAbastAtual = 'data_hora_abastecimento < "'.$abastecimentoAtual->data_hora_abastecimento.'"';
-            $abastecimento = Abastecimento::where('veiculo_id', $veiculo->id)
-                            ->whereRaw($whereAbastAtual)
-                            ->orderBy('data_hora_abastecimento', 'desc')->first();
+            $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id);
             
-            if (!$abastecimento) {
+            if (!$ultimoAbastecimento) {
                 //primeiro abastecimento deste veiculo;
                 return 0; 
             } else {
@@ -439,7 +437,10 @@ class AbastecimentoController extends Controller
                     /* controle de km rodados */
                     if ($abastecimentoAtual->km_veiculo > 0) {
                         //km informada
-                        return ($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo) / $abastecimentoAtual->volume_abastecimento;
+                        if ($abastecimentoAtual->km_veiculo == $ultimoAbastecimento->km_veiculo) {
+                            throw new \Exception('Odômetro/Horímetro informado igual ao do último abastecimento');
+                        }
+                        return ($abastecimentoAtual->km_veiculo - $ultimoAbastecimento->km_veiculo) / $abastecimentoAtual->volume_abastecimento;
                     } else {
                         //km não informada
                         return 0;
@@ -448,7 +449,10 @@ class AbastecimentoController extends Controller
                     /* controle de horas trabalhadas */
                     if ($abastecimentoAtual->km_veiculo > 0) {
                         //horas trabalhadas informada
-                        return $abastecimentoAtual->volume_abastecimento / ($abastecimentoAtual->km_veiculo - $abastecimento->km_veiculo);
+                        if ($abastecimentoAtual->km_veiculo == $ultimoAbastecimento->km_veiculo) {
+                            throw new \Exception('Odômetro/Horímetro informado igual ao do último abastecimento');
+                        }
+                        return $abastecimentoAtual->volume_abastecimento / ($abastecimentoAtual->km_veiculo - $ultimoAbastecimento->km_veiculo);
                     } else {
                         //horas trabalhadas não informada
                         return 0;

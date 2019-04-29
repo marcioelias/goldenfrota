@@ -9,6 +9,7 @@ use App\Produto;
 use App\Servico;
 use App\Parametro;
 use App\OrdemServico;
+use App\VencimentoProduto;
 use App\OrdemServicoStatus;
 use App\MovimentacaoProduto;
 use App\OrdemServicoProduto;
@@ -133,6 +134,23 @@ class OrdemServicoController extends Controller
 
                 if (is_array($request->produtos)) {
                     $ordemServico->produtos()->createMany($request->produtos);
+                
+                    /* baixa produtos vencidos que foram trocados */
+                    //dd($request->produtos);
+                    foreach ($request->produtos as $produto) {
+                        if ($produto['produto_vencimento_id']) {
+                            $vencimentoProduto = VencimentoProduto::find($produto['produto_vencimento_id']);
+                            if ($vencimentoProduto) {
+                                $vencimentoProduto->proximo_vencer = false;
+                                $vencimentoProduto->vencido = false;
+                                $vencimentoProduto->troca_efetuada = true;
+                                $vencimentoProduto->ordem_servico_troca_id = $ordemServico->id;
+                                $vencimentoProduto->produto_substituto_id = $produto['produto_id'];
+
+                                $vencimentoProduto->save();
+                            }
+                        }
+                    }
                 }
 
                 MovimentacaoProdutoController::saidaOrdemServico($ordemServico);

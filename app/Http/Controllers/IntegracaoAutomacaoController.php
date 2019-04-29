@@ -10,6 +10,7 @@ use App\Abastecimento;
 use App\TanqueMovimentacao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -194,6 +195,10 @@ class IntegracaoAutomacaoController extends Controller
     > = Caracter marcador de fim de regsitro
     */
     public function ImportarAbastecimentos() {
+        if (App::environment('local')) {
+            Log::debug('Tarefa agendada: Importação de Abastecimento... [ambiente de desenvolvimento]');
+            return;
+        }
         try {
             /* Config da conta de FTP */
             $this->configFTP();

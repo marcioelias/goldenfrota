@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\ImportarAbastecimentos::class,
+        Commands\VerificarVencimentoProdutos::class
     ];
 
     /**
@@ -24,10 +25,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('inspire')
+        $schedule->command('inspire')
                   ->hourly();
-        
-        $schedule->call('\App\Http\Controllers\IntegracaoAutomacaoController@ImportarAbastecimentos')->cron('* * * * *');
+
+        $schedule->command('importar:abastecimentos')->withoutOverlapping(10)->everyMinute();
+        $schedule->command('produtos:vencimento')->withoutOverlapping(10)->everyMinute();
     }
 
     /**

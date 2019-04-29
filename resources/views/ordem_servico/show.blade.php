@@ -47,7 +47,7 @@
         </div>
         <div class="col col-sm-2 col-md-2 col-lg-2">
             <div class="card nf-panel">
-                <label for="#km_atual" class="nf-label">Km:</label>
+                <label for="#km_atual" class="nf-label">Odômetro / Horímetro:</label>
                 <div id="km_atual">{{ $ordemServico->km_veiculo }}</div>
             </div>
         </div>

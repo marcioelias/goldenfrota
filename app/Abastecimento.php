@@ -44,4 +44,10 @@ class Abastecimento extends Model
     public function bico() {
         return $this->belongsTo(Bico::class);
     }
+
+    public function scopeUltimoDoVeiculo($query, $veiculo_id) {
+        return $query->where('veiculo_id', $veiculo_id)
+            ->orderBy('id', 'desc')
+            ->first();
+    }
 }

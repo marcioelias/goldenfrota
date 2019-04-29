@@ -23,7 +23,7 @@
                     <thead class="thead-light">
                         <tr class="row m-0">
                             <th class="col-md-1">Id</th>
-                            <th class="col-md-5">Produto</th>
+                            <th class="col-md-5">Produto (Substituído)</th>
                             <th class="col-md-1">Qtd</th>
                             <th class="col-md-1">R$ Un.</th>
                             <th class="col-md-1">R$ Acrés.</th>
@@ -37,6 +37,7 @@
                             <td class="col-md-1 pool-right">
                                 {{ item.id }}
                                 <input type="hidden" :name="'produtos['+index+'][produto_id]'" :value="item.id">
+                                <input type="hidden" :name="'produtos['+index+'][produto_vencimento_id]'" :value="item.produto_vencimento_id">
                             </td>
                             <td class="col-md-5">
                                 {{ item.produto_descricao }}
@@ -87,14 +88,20 @@
             </div>
             <div>
                 <div class="row m-0">
-                    <div v-bind:class="{'col-md-6': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
+                    <div v-bind:class="{'col-md-3': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
                         <select data-style="btn-secondary" :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
-                            <option selected value="false"> Nada Selecionado </option>
+                            <option selected value="false"> Produto Novo </option>
                             <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.produto_descricao }}</option>
                         </select>
                         <span class="help-block" :v-if="this.errors.inputProdutos">
                             <strong>{{ this.errors.inputProdutosMsg }}</strong>
                         </span>
+                    </div>
+                    <div class="col-md-3 pr-0 pl-0">
+                        <select data-style="btn-secondary" :disabled="(produtosVencimento.length == 0)" ref="inputProdutosVencimento" v-model="produto_vencimento_id" data-live-search="true" class="form-control selectpicker" name="inputProdutosVencimento" id="inputProdutosVencimento">
+                            <option selected value="false"> Produto Substituído </option>
+                            <option v-for="(produtoVencimento, index) in produtosVencimento" :value="produtoVencimento.id" :key="index">{{ produtoVencimento.produto.produto_desc_red }}</option>
+                        </select>   
                     </div>
                     <div v-bind:class="{'col-md-1': true, ' has-error': this.errors.inputQuantidade}" style="padding-right: 0 !important; padding-left: 0 !important;">
                         <input :disabled="((estoqueId == 'false') || (estoqueId == null))" type="number" min="0,000" max="9999999999,999" step="any" ref="inputQuantidade" v-model.number="quantidade" class="form-control" name="inputQuantidade" id="inputQuantidade">
@@ -160,6 +167,9 @@
                 editing: false,
                 editingIndex: false,
                 produtos: [],
+                produtosVencimento: [],
+                produto_vencimento_id: null,
+                veiculo_element: null,
                 quantidade: 1,
                 valor_desconto: 0,
                 valor_acrescimo: 0,
@@ -228,6 +238,13 @@
             }
         },
         computed: {
+            veiculo_id: function() {
+                if (this.veiculo_element !== null) {
+                    return this.veiculo_element.value;
+                } else {
+                    return null;
+                }
+            },
             estoque_id: {
                 get() {
                     return this.estoqueId;
@@ -238,7 +255,6 @@
             },
             valor_total: {
                 get() {
-                    console.log('entrou no valor_total');
                     let total = 0;
                     for (var i = 0; i < this.produtos.length; i++) {
                         total += ((parseFloat(this.produtos[i].valor_produto) + parseFloat(this.produtos[i].valor_acrescimo))-parseFloat(this.produtos[i].valor_desconto))*this.produtos[i].quantidade;
@@ -247,15 +263,9 @@
                 }
             },
             produtosDisponiveisOrdenados: function() {
-                function compare(a, b) {
-                    if (a.produto_descricao < b.produto_descricao)
-                    return -1;
-                    if (a.produto_descricao > b.produto_descricao)
-                    return 1;
-                    return 0;
-                }
-
-                return this.produtosDisponiveis.sort(compare);
+                return this.produtosDisponiveis.sort((a, b) => {
+                    return (a.produto_descricao > b.produto_descricao) ? 1 : (a.produto_descricao == b.produto_descricao) ? 0 : -1;
+                });
             }
         },
         mounted() {
@@ -263,10 +273,12 @@
                 this.estoqueId = this.oldEstoqueId;
                 //this.getProdutos();
             }
+            this.veiculo_element = this.$parent.$parent.$refs.ref_veiculo_id;
         },
         updated() {
+            $(this.$refs.inputProdutosVencimento).selectpicker('refresh');
             $(this.$refs.inputProdutos).selectpicker('refresh');
-            $(this.$refs.estoqueId).selectpicker('refresh');
+            $(this.$refs.estoqueId).selectpicker('refresh');    
         },
         methods: {
             getValorTotal() {
@@ -285,6 +297,7 @@
                             self.produtosDisponiveis = response.data;
                             self.produtosData = response.data;
                             self.loadOldData();
+                            self.obterListagemProdutosVencimento();
                         });
                 }
             },
@@ -370,7 +383,8 @@
                 if (this.validarItem()) {
                     this.produtos.push({
                         'id': this.produto_id,
-                        'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
+                        'produto_vencimento_id': this.produto_vencimento_id,
+                        'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao+this.getProdutoVencimentoDesc(this.produto_vencimento_id),
                         'quantidade': Number(this.quantidade),
                         'valor_produto': Number(this.getProdutoById(this.produto_id).valor_venda),
                         'valor_desconto': Number(this.valor_desconto),
@@ -395,7 +409,8 @@
             updateProduto() {
                 this.produtos[this.editingIndex] = {
                     'id': this.produto_id,
-                    'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao,
+                    'produto_vencimento_id': this.produto_vencimento_id,
+                    'produto_descricao': this.getProdutoById(this.produto_id).produto_descricao+this.getProdutoVencimentoDesc(this.produto_vencimento_id),
                     'quantidade': Number(this.quantidade),
                     'valor_produto': Number(this.valor_unitario),
                     'valor_desconto': Number(this.valor_desconto),
@@ -409,6 +424,14 @@
                 this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(this.produto_id));
                 let VLTotal = this.getValorTotal();
                 this.$emit('updateTotalProd', VLTotal);
+            },
+            getProdutoVencimentoDesc(id) {
+                let prod = this.produtosVencimento.find(a => a.id == id);
+                if (prod != undefined) {
+                    return ' ('+prod.produto.produto_desc_red+')';
+                } else {
+                    return '';
+                }
             },
             deleteProduto() {
                 this.removerProduto(this.produtos[this.deleteIndex].id);
@@ -527,6 +550,19 @@
                                       parseFloat((isNaN(this.valor_desconto) || (this.valor_desconto == '')) ? 0 : this.valor_desconto)) *
                                       parseFloat((isNaN(this.quantidade) || (this.quantidade == '')) ? 1 : this.quantidade);
             },
+            obterListagemProdutosVencimento() {
+                console.log(this.veiculo_id);
+                if (this.veiculo_id !== null) {
+                    axios.get('/produtos_vencendo_vencidos/'+this.veiculo_id)
+                        .then(async r => {
+                            this.produtosVencimento = r.data;
+                            console.log(r.data);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+            }
         }
     }
 </script>

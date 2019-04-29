@@ -8,6 +8,7 @@ use App\GrupoVeiculo;
 use App\OrdemServico;
 use App\Abastecimento;
 use App\ModeloVeiculo;
+use App\VencimentoProduto;
 use Illuminate\Database\Eloquent\Model;
 
 class Veiculo extends Model
@@ -36,5 +37,13 @@ class Veiculo extends Model
 
     public function ordem_servicos() {
         return $this->hasMany(OrdemServico::class);
+    }
+
+    public function vencimento_produtos() {
+        return $this->hasMany(VencimentoProduto::class);
+    }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
     }
 }

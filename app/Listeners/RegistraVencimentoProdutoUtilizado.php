@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Produto;
 use App\VencimentoProduto;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -51,7 +52,7 @@ class RegistraVencimentoProdutoUtilizado
                         'produto_id' => $produto->id
                     ],
                     [
-                        'proxima_troca_dias' => $produto->vencimento_dias,
+                        'data_proxima_troca' => Carbon::now()->addDays($produto->vencimento_dias),
                         'proxima_troca_km_horas' => $fatorVencimento
                     ]
                 );

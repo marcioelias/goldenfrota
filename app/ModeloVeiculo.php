@@ -27,4 +27,8 @@ class ModeloVeiculo extends Model
     public function tipo_controle_veiculo() {
         return $this->belongsTo(TipoControleVeiculo::class);
     }
+
+    public function controlePorKmRodados() {
+        return $this->tipo_controle_veiculo_id == 1;
+    }
  }

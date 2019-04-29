@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div id="ordem_servico">
     <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Nova Ordem de Serviço', 
@@ -56,16 +57,13 @@
                     ]
                 ])
                 @endcomponent
-                <div id="ordem_servico">
-                    <ordem-servico 
-                        :servicos-data="{{ json_encode($servicos) }}" 
-                        :old-servicos-data="{{ json_encode(old('servicos')) }}"
-                        v-bind:estoques="{{ json_encode($estoques) }}" 
-                        :old-estoque-id="{{ json_encode(old('estoque_id')) }}"
-                        :old-produtos-data="{{ json_encode(old('produtos')) }}">
-                    </ordem-servico>
-                </div>
-                
+                <ordem-servico 
+                    :servicos-data="{{ json_encode($servicos) }}" 
+                    :old-servicos-data="{{ json_encode(old('servicos')) }}"
+                    v-bind:estoques="{{ json_encode($estoques) }}" 
+                    :old-estoque-id="{{ json_encode(old('estoque_id')) }}"
+                    :old-produtos-data="{{ json_encode(old('produtos')) }}">
+                </ordem-servico>
                 @component('components.form-group', [
                     'inputs' => [
                         [
@@ -79,6 +77,7 @@
             @endsection
         @endcomponent
     </div>
+</div>
 @endsection
 @push('document-ready')
 var buscarVeiculos = function() {
@@ -94,6 +93,7 @@ var buscarVeiculos = function() {
         dataType: 'JSON',
         cache: false,
         success: function (data) {
+            console.log(data);
             $("#veiculo_id")
                 .removeAttr('disabled')
                 .find('option')
