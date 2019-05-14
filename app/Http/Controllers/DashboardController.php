@@ -20,25 +20,50 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function movTanque($tanque_id) {
+    public function movTanque() {
         $dataFinal = new \DateTime();
         $dataInicial = new \Datetime();
         $dataInicial->sub(new \DateInterval('P15D'));
-        $tanque = Tanque::find($tanque_id);
+        $tanques = Tanque::Ativo()->get();
+
+        if (!$tanques) { 
+            return;
+        }
+
         $grafico = array();
-        while ($dataInicial <= $dataFinal) {
+        $colors = [
+            'rgba(45, 195, 21, 0.2)',
+            'rgba(195, 45, 21, 0.3)',
+            'rgba(45, 21, 195, 0.4)',
+            'rgba(195, 195, 21, 0.5)',
+            'rgba(195, 21, 195, 0.6)',
+            'rgba(21, 195, 195, 0.7)',
+            'rgba(195, 21, 195, 0.8)'
+        ];
+        
+        while ($dataInicial <= $dataFinal) { 
             $grafico['labels'][] = $dataInicial->format('d/m');
-            $grafico['datasets'][0]['label'] = $tanque->descricao_tanque.' - '.$tanque->combustivel->descricao;
-            $grafico['datasets'][0]['backgroundColor'] =  'rgba(45, 195, 21, 0.2)';
-            $grafico['datasets'][0]['data'][] = (new TanqueMovimentacaoController)->getPosicaoTanque($tanque, $dataInicial);
+            
+            $i = 0;
+            foreach ($tanques as $tanque) {               
+                $grafico['datasets'][$i]['label'] = $tanque->descricao_tanque.' - '.$tanque->combustivel->descricao;
+                $grafico['datasets'][$i]['backgroundColor'] = $colors[$i];
+                $grafico['datasets'][$i]['data'][] = (new TanqueMovimentacaoController)->getPosicaoTanque($tanque, $dataInicial);
+                $i++;
+            }
+            
             $dataInicial->add(new \DateInterval('P1D'));
         }
 
         if ($dataInicial > $dataFinal) {
             $grafico['labels'][] = $dataFinal->format('d/m');
-            $grafico['datasets'][0]['label'] = $tanque->descricao_tanque.' - '.$tanque->combustivel->descricao;
-            $grafico['datasets'][0]['backgroundColor'] =  'rgba(45, 195, 21, 0.2)';
-            $grafico['datasets'][0]['data'][] = (new TanqueMovimentacaoController)->getPosicaoTanque($tanque, $dataFinal);
+            $i = 0;
+            foreach ($tanques as $tanque) {               
+                $grafico['datasets'][$i]['label'] = $tanque->descricao_tanque.' - '.$tanque->combustivel->descricao;
+                $grafico['datasets'][$i]['backgroundColor'] =  $colors[$i];
+                $grafico['datasets'][$i]['data'][] = (new TanqueMovimentacaoController)->getPosicaoTanque($tanque, $dataFinal);
+                $i++;
+            }
         }
 
         return response()->json($grafico);

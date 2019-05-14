@@ -28,4 +28,8 @@ class Tanque extends Model
     public function abastecimentos(){
         return $this->hasMany(Abastecimento::class);        
     }
+
+    public function scopeAtivo($query) {
+        return $query->where('ativo', true);
+    }
 }
