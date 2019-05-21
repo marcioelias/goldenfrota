@@ -9,6 +9,7 @@ use App\Rules\cpfCnpj;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Rules\telefoneComDDD;
 
 class FornecedorController extends Controller
 {
@@ -76,7 +77,7 @@ class FornecedorController extends Controller
                 'apelido_fantasia' => 'required|string|min:5',
                 'cpf_cnpj' => ['required', new cpfCnpj],
                 'rg_ie' => 'required',
-                'fone' =>  'required|celular_com_ddd',
+                'fone' =>  ['required', new telefoneComDDD],
                 'email' => 'nullable|email',
                 'endereco' => 'required|string|min:3|max:200',
                 'numero' => 'required',
@@ -148,7 +149,7 @@ class FornecedorController extends Controller
                 'apelido_fantasia' => 'required|string|min:5',
                 'cpf_cnpj' => ['required', new cpfCnpj],
                 'rg_ie' => 'required',
-                'fone' =>  'required|celular_com_ddd',
+                'fone' =>  ['required', new telefoneComDDD],
                 'email' => 'nullable|email',
                 'endereco' => 'required|string|min:3|max:200',
                 'numero' => 'required',

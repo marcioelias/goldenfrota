@@ -88,6 +88,7 @@ return [
     'uploaded'             => 'O campo :attribute falha no upload.',
     'url'                  => 'O campo :attribute tem um formato inválido.',
     'cpfCnpj'              => 'O número informado no campo :attribute não é válido.',
+    'telefone'             => 'O campo :attribute não representa um telefone válido.',
 
     /*
     |--------------------------------------------------------------------------

@@ -7,6 +7,7 @@ use App\Cliente;
 use App\Parametro;
 use App\TipoPessoa;
 use App\Rules\cpfCnpj;
+use App\Rules\telefoneComDDD;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -32,14 +33,14 @@ class ClienteController extends Controller
     {
         if (Auth::user()->canListarCliente()) {
             if ($request->searchField) {
-                $clientes = Cliente::where('nome_razao', 'like', '%'.$request->searchField.'%')
-                                    ->orWhere('fantasia', 'like', '%'.$request->searchField.'%')
-                                    ->orWhere('cpf_cnpj', 'like', '%'.$request->searchField.'%')
-                                    ->orWhere('rg_ie', 'like', '%'.$request->searchField.'%')
-                                    ->orWhere('endereco', 'like', '%'.$request->searchField.'%')
-                                    ->orWhere('fone1', 'like', '%'.$request->searchField.'%')
-                                    ->orWhere('fone2', 'like', '%'.$request->searchField.'%')
-                                    ->paginate();
+                $clientes = Cliente::where('nome_razao', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('fantasia', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('cpf_cnpj', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('rg_ie', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('endereco', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('fone1', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('fone2', 'like', '%' . $request->searchField . '%')
+                    ->paginate();
             } else {
                 $clientes = Cliente::paginate();
             }
@@ -84,10 +85,10 @@ class ClienteController extends Controller
             $this->validate($request, [
                 'nome_razao' => 'required|string|unique:clientes',
                 'fantasia' => 'nullable|string',
-                'cpf_cnpj' => ['required', new cpfCnpj], 
-                'rg_ie' => 'required',           
-                'fone1' =>  'required|celular_com_ddd',
-                'fone2' => 'nullable|celular_com_ddd',
+                'cpf_cnpj' => ['required', new cpfCnpj],
+                'rg_ie' => 'required',
+                'fone1' =>  ['required', new telefoneComDDD],
+                'fone2' => ['nullable', new telefoneComDDD],
                 'email1' => 'nullable|email',
                 'email2' => 'nullable|email',
                 'endereco' => 'required|string|min:3|max:200',
@@ -100,7 +101,7 @@ class ClienteController extends Controller
 
             try {
                 $cliente = new Cliente($request->all());
-                
+
                 if ($cliente->save()) {
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.cliente'),
@@ -108,7 +109,6 @@ class ClienteController extends Controller
                     ]));
                     return redirect()->action('ClienteController@index');
                 }
-
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
@@ -152,12 +152,12 @@ class ClienteController extends Controller
     {
         if (Auth::user()->canAlterarCliente()) {
             $this->validate($request, [
-                'nome_razao' => 'required|string|unique:clientes,id,'.$cliente->id,
+                'nome_razao' => 'required|string|unique:clientes,id,' . $cliente->id,
                 'fantasia' => 'nullable|string',
-                'cpf_cnpj' => ['required', new cpfCnpj], 
-                'rg_ie' => 'required',           
-                'fone1' =>  'required|celular_com_ddd',
-                'fone2' => 'nullable|celular_com_ddd',
+                'cpf_cnpj' => ['required', new cpfCnpj],
+                'rg_ie' => 'required',
+                'fone1' =>  ['required', new telefoneComDDD],
+                'fone2' => ['nullable', new telefoneComDDD],
                 'email1' => 'nullable|email',
                 'email2' => 'nullable|email',
                 'endereco' => 'required|string|min:3|max:200',
@@ -185,7 +185,7 @@ class ClienteController extends Controller
                 $cliente->uf_id = $request->uf_id;
                 $cliente->ativo = $request->ativo;
 
-                
+
                 if ($cliente->save()) {
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.cliente'),
@@ -193,7 +193,6 @@ class ClienteController extends Controller
                     ]));
                     return redirect()->action('ClienteController@index');
                 }
-
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
@@ -239,10 +238,11 @@ class ClienteController extends Controller
         } else {
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
-        } 
+        }
     }
-    
-    public function listagemClientes() {
+
+    public function listagemClientes()
+    {
         return View('relatorios.clientes.listagem_clientes')->withClientes(Cliente::all())->withTitulo('Listagem de Clientes')->withParametro(Parametro::first());
     }
 }

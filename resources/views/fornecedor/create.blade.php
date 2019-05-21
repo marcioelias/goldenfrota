@@ -160,36 +160,34 @@
             @endsection
         @endcomponent
     </div>
-    <script>
-        $(document).ready(function() {
-            var SPMaskBehavior = function (val) {
-                return val.replace(/\D/g, '').length === 11 ? '(00)00000-0000' : '(00)0000-00009';
-            },
-            spOptions = {
-                onKeyPress: function(val, e, field, options) {
-                    field.mask(SPMaskBehavior.apply({}, arguments), options);
-                },
-                placeholder: '(__) ______-_____'
-            };
-
-            $('.mask_phone').mask(SPMaskBehavior, spOptions);
-
-            $('#cep').mask('00.000-000', {placeholder: '__.___-___'});
-            
-            if ($("#tipo_pessoa_id").val() == 1) {
-                $("#cpf_cnpj").mask('000.000.000-00', {placeholder: '___.___.___-__'});
-            } else {
-               $("#cpf_cnpj").mask('00.000.000/0000-00', {placeholder: '__.___.___/____-__'}); 
-            }
-
-            $('#tipo_pessoa_id').on('changed.bs.select', function (e) {
-                $("#cpf_cnpj").val('');
-                if ($("#tipo_pessoa_id").val() == 1) {
-                    $("#cpf_cnpj").mask('000.000.000-00', {placeholder: '___.___.___-__'});
-                } else {
-                    $("#cpf_cnpj").mask('00.000.000/0000-00', {placeholder: '__.___.___/____-__'}); 
-                }
-            });
-        });
-    </script>
 @endsection
+@push('document-ready')
+    var SPMaskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00)00000-0000' : '(00)0000-00009';
+    },
+    spOptions = {
+        onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
+        },
+        placeholder: '(__) ______-_____'
+    };
+
+    $('.mask_phone').mask(SPMaskBehavior, spOptions);
+
+    $('#cep').mask('00.000-000', {placeholder: '__.___-___'});
+
+    if ($("#tipo_pessoa_id").val() == 1) {
+        $("#cpf_cnpj").mask('000.000.000-00', {placeholder: '___.___.___-__'});
+    } else {
+    $("#cpf_cnpj").mask('00.000.000/0000-00', {placeholder: '__.___.___/____-__'}); 
+    }
+
+    $('#tipo_pessoa_id').on('changed.bs.select', function (e) {
+        $("#cpf_cnpj").val('');
+        if ($("#tipo_pessoa_id").val() == 1) {
+            $("#cpf_cnpj").mask('000.000.000-00', {placeholder: '___.___.___-__'});
+        } else {
+            $("#cpf_cnpj").mask('00.000.000/0000-00', {placeholder: '__.___.___/____-__'}); 
+        }
+    });
+@endpush
