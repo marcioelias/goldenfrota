@@ -456,6 +456,11 @@ class VeiculoController extends Controller
     }
 
     public function apiIndex() {
-        return response()->json(Veiculo::Ativo()->get());
+        return response()->json(
+            Veiculo::with('cliente')
+                ->with('modelo_veiculo.marca_veiculo')
+                ->Ativo()
+                ->get()
+        );
     }
 }
