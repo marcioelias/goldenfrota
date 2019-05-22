@@ -146,7 +146,7 @@ class ClienteController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Cliente  $cliente
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response 
      */
     public function update(Request $request, Cliente $cliente)
     {
