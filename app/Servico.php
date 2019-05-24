@@ -18,4 +18,8 @@ class Servico extends Model
     public function grupo_servico() {
         return $this->belongsTo(GrupoServico::class);
     }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
+    }
 }

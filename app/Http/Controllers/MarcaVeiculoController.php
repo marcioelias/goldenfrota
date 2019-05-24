@@ -74,6 +74,9 @@ class MarcaVeiculoController extends Controller
                 $marcaVeiculo = new MarcaVeiculo($request->all());
 
                 if ($marcaVeiculo->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($marcaVeiculo));
+
                     Session::flash('success', __('messages.create_success_f', [
                         'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
@@ -129,6 +132,9 @@ class MarcaVeiculoController extends Controller
                 $marcaVeiculo->ativo = $request->ativo;
 
                 if ($marcaVeiculo->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($marcaVeiculo));
+
                     Session::flash('success', __('messages.update_success_f', [
                         'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
@@ -158,6 +164,9 @@ class MarcaVeiculoController extends Controller
         if (Auth::user()->canAlterarMarcaVeiculo()) {
             try {
                 if ($marcaVeiculo->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($marcaVeiculo, true));
+
                     Session::flash('success', __('messages.delete_success_f', [
                         'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
@@ -181,5 +190,13 @@ class MarcaVeiculoController extends Controller
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
+    }
+
+    public function apiMarcaVeiculos() {
+        return response()->json(MarcaVeiculo::ativo()->get());
+    }
+
+    public function apiMarcaVeiculo($id) {
+        return response()->json(MarcaVeiculo::ativo()->where('id', $id)->get());
     }
 }

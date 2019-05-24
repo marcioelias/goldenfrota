@@ -45,4 +45,8 @@ class Produto extends Model
     public function grupo_produto() {
         return $this->belongsTo(GrupoProduto::class);
     }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
+    }
 }

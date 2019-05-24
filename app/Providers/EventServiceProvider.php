@@ -18,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\UtilizadoProdutoControleVencimento' => [
             'App\Listeners\RegistraVencimentoProdutoUtilizado'
+        ],
+        'App\Events\NovoRegistroAtualizacaoApp' => [
+            'App\Listeners\ExportaDadosApp'
         ]
     ];
 

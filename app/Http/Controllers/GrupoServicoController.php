@@ -68,6 +68,9 @@ class GrupoServicoController extends Controller
                 $grupoServico = new GrupoServico($request->all());
 
                 if ($grupoServico->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoServico));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.grupo_servico'),
                         'name' => $grupoServico->grupo_servico
@@ -126,6 +129,9 @@ class GrupoServicoController extends Controller
                 $grupoServico->fill($request->all());
 
                 if ($grupoServico->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoServico));
+
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.grupo_servico'),
                         'name' => $grupoServico->grupo_servico
@@ -162,6 +168,9 @@ class GrupoServicoController extends Controller
         if (Auth::user()->canExcluirGrupoServico()) {
             try {
                 if ($grupoServico->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoServico, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.grupo_servico'),
                         'name' => $grupoServico->grupo_servico
@@ -185,5 +194,13 @@ class GrupoServicoController extends Controller
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         } 
+    }
+
+    public function apiGrupoServicos() {
+        return response()->json(GrupoServico::ativo()->get());
+    }
+
+    public function apiGrupoServico($id) {
+        return response()->json(GrupoServico::ativo()->where('id', $id)->get());
     }
 }

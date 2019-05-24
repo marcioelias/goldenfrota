@@ -111,6 +111,9 @@ class ProdutoController extends Controller
                     $produto->estoques()->sync($request->estoques);
 
                     DB::commit();
+
+                    event(new NovoRegistroAtualizacaoApp($produto));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
@@ -189,6 +192,9 @@ class ProdutoController extends Controller
                     $produto->estoques()->sync($request->estoques);
 
                     DB::commit();
+
+                    event(new NovoRegistroAtualizacaoApp($produto));
+
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
@@ -220,6 +226,9 @@ class ProdutoController extends Controller
             try {
                 $produto = Produto::find($produto->id);
                 if ($produto->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($produto, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
@@ -274,5 +283,13 @@ class ProdutoController extends Controller
         $grupoProduto = GrupoProduto::find($request->id);
         
         return response()->json($grupoProduto->produtos()->get());
+    }
+
+    public function apiProdutos() {
+        return response()->json(Produto::ativo()->get());
+    }
+
+    public function apiProduto($id) {
+        return response()->json(Produto::ativo()->where('id', $id)->get());
     }
 }

@@ -12,4 +12,8 @@ class GrupoVeiculo extends Model
     public function veiculos() {
         return $this->hasMany(Veiculo::class);
     }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
+    }
 }

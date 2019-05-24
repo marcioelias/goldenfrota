@@ -71,6 +71,9 @@ class GrupoVeiculoController extends Controller
                 $grupoVeiculo = new GrupoVeiculo($request->all());
 
                 if ($grupoVeiculo->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoVeiculo));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
@@ -126,6 +129,9 @@ class GrupoVeiculoController extends Controller
                 $grupoVeiculo->ativo = $request->ativo;
 
                 if ($grupoVeiculo->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoVeiculo));
+
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
@@ -155,6 +161,9 @@ class GrupoVeiculoController extends Controller
         if (Auth::user()->canExcluirGrupoVeiculo()) {
             try {
                 if ($grupoVeiculo->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoVeiculo, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
@@ -178,5 +187,13 @@ class GrupoVeiculoController extends Controller
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
+    }
+
+    public function apiGrupoVeiculos() {
+        return response()->json(GrupoVeiculo::ativo()->get());
+    }
+
+    public function apiGrupoVeiculo($id) {
+        return response()->json(GrupoVeiculo::ativo()->where('id', $id)->get());
     }
 }

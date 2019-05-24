@@ -71,6 +71,9 @@ class CombustivelController extends Controller
             try {
                 $combustivel = new Combustivel($request->all());
                 if ($combustivel->save()){
+
+                    event(new NovoRegistroAtualizacaoApp($combustivel));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.combustivel'),
                         'name' => $combustivel->descricao
@@ -127,6 +130,9 @@ class CombustivelController extends Controller
                 $combustivel->fill($request->all());
 
                 if ($combustivel->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($combustivel));
+
                     Session::flash('success', __('messages.update_success', [
                         'model' => 'combustivel',
                         'name' => $combustivel->descricao
@@ -156,6 +162,9 @@ class CombustivelController extends Controller
         if (Auth::user()->canExcluirCombustivel()) {   
             try {
                 if ($combustivel->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($combustivel, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.combustivel'),
                         'name' => $combustivel->descricao
@@ -179,5 +188,13 @@ class CombustivelController extends Controller
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
         }
+    }
+
+    public function apiCombustiveis() {
+        return response()->json(Combustivel::ativo()->get());
+    }
+
+    public function apiCombustivel($id) {
+        return response()->json(Combustivel::ativo()->where('id', $id)->get());
     }
 }

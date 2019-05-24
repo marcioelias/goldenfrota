@@ -63,7 +63,7 @@
                             'label' => 'Placa',
                             'required' => true,
                             'inputSize' => 3,
-                            'css' => 'uppercase'
+                            'css' => 'text-uppercase'
                         ],
                         [
                             'type' => 'text',
@@ -145,7 +145,7 @@
 @endsection
 
 @push('document-ready')
-    $('#placa').mask('AAA-9999', {placeholder: '___-____'});
+    $('#placa').mask('SSS-0AA0', {placeholder: '___-____'});
 
     var buscarDepartamentos = function() {
         var departamento = {};

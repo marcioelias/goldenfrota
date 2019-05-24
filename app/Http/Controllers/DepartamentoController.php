@@ -81,6 +81,9 @@ class DepartamentoController extends Controller
                 $departamento = new Departamento($request->all());
 
                 if ($departamento->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($departamento));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.departamento'),
                         'name' => $departamento->departamento
@@ -138,6 +141,9 @@ class DepartamentoController extends Controller
                 $departamento->ativo = $request->ativo;
 
                 if ($departamento->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($departamento));
+
                     Session::flash('success',  __('messages.update_success', [
                         'model' => __('models.departamento'),
                         'name' => $departamento->departamento
@@ -167,6 +173,9 @@ class DepartamentoController extends Controller
         if (Auth::user()->canExcluirDepartamento()) {   
             try {
                 if ($departamento->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($departamento, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.departamento'),
                         'name' => $departamento->departamento
@@ -199,5 +208,13 @@ class DepartamentoController extends Controller
                     ])->get();
 
         return response()->json($departamentos);
+    }
+
+    public function apiDepartamentos() {
+        return response()->json(Departamento::ativo()->get());
+    }
+
+    public function apiDepartamento($id) {
+        return response()->json(Departamento::ativo()->where('id', $id)->get());
     }
 }

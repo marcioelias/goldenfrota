@@ -72,7 +72,7 @@
                             'label' => 'Placa',
                             'required' => true,
                             'inputSize' => 3,
-                            'css' => 'uppercase',
+                            'css' => 'text-uppercase',
                             'inputValue' => $veiculo->placa
                         ],
                         [
@@ -160,7 +160,7 @@
 @endsection
 
 @push('document-ready')
-    $('#placa').mask('AAA-9999', {placeholder: '___-____'});
+    $('#placa').mask('SSS-9AA9', {placeholder: '___-____'});
             
     var buscarDepartamentos = function() {
         var departamento = {};

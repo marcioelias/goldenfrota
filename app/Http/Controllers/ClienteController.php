@@ -11,6 +11,7 @@ use App\Rules\telefoneComDDD;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Events\NovoRegistroAtualizacaoApp;
 
 class ClienteController extends Controller
 {
@@ -103,6 +104,9 @@ class ClienteController extends Controller
                 $cliente = new Cliente($request->all());
 
                 if ($cliente->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($cliente));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.cliente'),
                         'name' => $cliente->nome_razao
@@ -187,6 +191,9 @@ class ClienteController extends Controller
 
 
                 if ($cliente->save()) {
+                    
+                    event(new NovoRegistroAtualizacaoApp($cliente));
+
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.cliente'),
                         '$cliente->nome_razao'
@@ -216,6 +223,9 @@ class ClienteController extends Controller
         if (Auth::user()->canExcluirCliente()) {
             try {
                 if ($cliente->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($cliente, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.cliente'),
                         'name' => $cliente->nome_razao
@@ -244,5 +254,13 @@ class ClienteController extends Controller
     public function listagemClientes()
     {
         return View('relatorios.clientes.listagem_clientes')->withClientes(Cliente::all())->withTitulo('Listagem de Clientes')->withParametro(Parametro::first());
+    }
+
+    public function apiClientes() {
+        return response()->json(Cliente::ativo()->get());
+    }
+
+    public function apiCliente($id) {
+        return response()->json(Cliente::ativo()->where('id', $id)->get());
     }
 }

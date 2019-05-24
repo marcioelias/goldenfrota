@@ -21,4 +21,8 @@ class Combustivel extends Model
     public function tanques() {
         return $this->belongsTo(Tanque::class);
     }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
+    }
 }

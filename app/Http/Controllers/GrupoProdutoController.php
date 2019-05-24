@@ -75,6 +75,9 @@ class GrupoProdutoController extends Controller
                 $grupoProduto = new GrupoProduto($request->all());
 
                 if ($grupoProduto->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoProduto));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
@@ -130,6 +133,9 @@ class GrupoProdutoController extends Controller
                 $grupoProduto->ativo = $request->ativo;
 
                 if ($grupoProduto->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoProduto));
+
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
@@ -159,6 +165,9 @@ class GrupoProdutoController extends Controller
         if (Auth::user()->canExcluirGrupoProduto()) {
             try {
                 if ($grupoProduto->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($grupoProduto, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
@@ -189,5 +198,13 @@ class GrupoProdutoController extends Controller
         $grupos = $estoque->produtos->unique('grupo_produto_id')->pluck('grupo_produto_id');
 
         return response()->json(GrupoProduto::whereIn('id', $grupos)->get());
+    }
+
+    public function apiGrupoProdutos() {
+        return response()->json(GrupoProduto::ativo()->get());
+    }
+
+    public function apiGrupoProduto($id) {
+        return response()->json(GrupoProduto::ativo()->where('id', $id)->get());
     }
 }

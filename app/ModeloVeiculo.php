@@ -31,4 +31,8 @@ class ModeloVeiculo extends Model
     public function controlePorKmRodados() {
         return $this->tipo_controle_veiculo_id == 1;
     }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
+    }
  }

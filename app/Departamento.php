@@ -21,4 +21,8 @@ class Departamento extends Model
     public function saida_estoque() {
         return $this->belongsTo(SaidaEstoque::class);
     }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
+    }
 }

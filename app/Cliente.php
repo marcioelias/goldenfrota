@@ -40,6 +40,10 @@ class Cliente extends Model
         return $this->hasMany(Veiculo::class);
     }
 
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
+    }
+
     /* public function parametro() {
         return $this->belongsTo(Parametro::class);
     } */

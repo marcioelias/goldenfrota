@@ -87,6 +87,9 @@ class ModeloVeiculoController extends Controller
                 $modeloVeiculo = new ModeloVeiculo($request->all());
 
                 if ($modeloVeiculo->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($modeloVeiculo));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
@@ -145,6 +148,9 @@ class ModeloVeiculoController extends Controller
                 $modeloVeiculo->fill($request->all());
 
                 if ($modeloVeiculo->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($modeloVeiculo));
+
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
@@ -174,6 +180,9 @@ class ModeloVeiculoController extends Controller
         if (Auth::user()->canExcluirModeloVeiculo()) {
             try {
                 if ($modeloVeiculo->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($modeloVeiculo, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
@@ -203,5 +212,13 @@ class ModeloVeiculoController extends Controller
         $modeloVeiculos = ModeloVeiculo::where('marca_veiculo_id', $request->id)->get();
 
         return response()->json($modeloVeiculos);
+    }
+
+    public function apiModeloVeiculos() {
+        return response()->json(ModeloVeiculo::ativo()->get());
+    }
+
+    public function apiModeloVeiculo($id) {
+        return response()->json(ModeloVeiculo::ativo()->where('id', $id)->get());
     }
 }

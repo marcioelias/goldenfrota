@@ -16,6 +16,8 @@ use ConsoleTVs\Charts\Facades\Charts;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use App\Events\NovoRegistroAtualizacaoApp;
+use App\AtualizacaoApp;
 
 class VeiculoController extends Controller
 {
@@ -121,9 +123,10 @@ class VeiculoController extends Controller
             $veiculo->hodometro = $request->hodometro;
             $veiculo->media_minima = $request->media_minima;
 
-            $teste = 0/2;
-
             if ($veiculo->save()) {
+
+                event(new NovoRegistroAtualizacaoApp($veiculo));
+
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' cadastrado com sucesso.');
                 return redirect()->action('VeiculoController@index');
             }
@@ -213,6 +216,9 @@ class VeiculoController extends Controller
 
 
             if ($veiculo->save()) {
+
+                event(new NovoRegistroAtualizacaoApp($veiculo));
+
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' alterado com sucesso.');
                 return redirect()->action('VeiculoController@index');
             }
@@ -233,6 +239,9 @@ class VeiculoController extends Controller
         try {
             $veiculo = Veiculo::find($veiculo->id);
             if ($veiculo->delete()) {
+
+                event(new NovoRegistroAtualizacaoApp($veiculo, true));
+
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' removido com sucesso.');
                 
                 return redirect()->action('VeiculoController@index');
@@ -461,5 +470,13 @@ class VeiculoController extends Controller
                 ->Ativo()
                 ->get()
         );
+    }
+
+    public function apiVeiculos() {
+        return response()->json(Veiculo::ativo()->get());
+    }
+
+    public function apiVeiculo($id) {
+        return response()->json(Veiculo::ativo()->where('id', $id)->get());
     }
 }

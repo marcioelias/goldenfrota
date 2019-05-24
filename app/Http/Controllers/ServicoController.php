@@ -91,6 +91,9 @@ class ServicoController extends Controller
                 $servico = new Servico($request->all());
 
                 if ($servico->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($servico));
+
                     Session::flash('success', __('messages.create_success', [
                         'model' => __('models.servico'),
                         'name' => $request->servico
@@ -158,6 +161,9 @@ class ServicoController extends Controller
                 $servico->fill($request->all());
 
                 if ($servico->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($servico));
+
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.servico'),
                         'name' => $request->servico
@@ -197,6 +203,9 @@ class ServicoController extends Controller
         if (Auth::user()->canExcluirServico()) {
             try {
                 if ($servico->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($servico, true));
+
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.servico'),
                         'name' => $servico->servico 
@@ -221,5 +230,13 @@ class ServicoController extends Controller
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();   
         }
+    }
+
+    public function apiServicos() {
+        return response()->json(Servico::ativo()->get());
+    }
+
+    public function apiServico($id) {
+        return response()->json(Servico::ativo()->where('id', $id)->get());
     }
 }

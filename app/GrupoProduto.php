@@ -12,4 +12,8 @@ class GrupoProduto extends Model
     public function produtos() {
         return $this->hasMany(Produto::class);
     }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
+    }
 }
