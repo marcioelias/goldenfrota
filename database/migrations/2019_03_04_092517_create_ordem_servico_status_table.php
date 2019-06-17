@@ -19,6 +19,8 @@ class CreateOrdemServicoStatusTable extends Migration
             $table->boolean('em_aberto')->default(true);
             $table->timestamps();
         });
+
+        Artisan::call('db:seed', array('--class' => 'OrdemServicoStatusSeeder'));
     }
 
     /**

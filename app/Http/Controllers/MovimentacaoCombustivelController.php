@@ -49,7 +49,8 @@ class MovimentacaoCombustivelController extends Controller
             return true;
 
         } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+            dd($e);
+            throw new \Exception($e);
         } 
     }
 

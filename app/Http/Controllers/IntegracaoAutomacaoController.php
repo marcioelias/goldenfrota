@@ -197,7 +197,7 @@ class IntegracaoAutomacaoController extends Controller
     public function ImportarAbastecimentos() {
         if (App::environment('local')) {
             Log::debug('Tarefa agendada: Importação de Abastecimento... [ambiente de desenvolvimento]');
-            return;
+            //return;
         }
         try {
             /* Config da conta de FTP */
@@ -270,14 +270,15 @@ class IntegracaoAutomacaoController extends Controller
                                     $abastecimento->media_veiculo = 0;
                                 } else {
                                     $abastecimento->veiculo_id = $veiculo->id;
-                                    if ( $veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1) {
+                                    //if ( $veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1) {
                                         /* controle de km rodados */
-                                        $abastecimento->km_veiculo = $this->formataValorDecimal(trim($registro[15]), 1);
-                                    } else {
+                                    $abastecimento->km_veiculo = $this->formataValorDecimal(trim($registro[15]), 1);
+                                    // } else {
                                         /* controle de horas trabalhadas */
-                                        $abastecimento->horas_trabalhadas = $this->formataValorDecimal(trim($registro[15]), 1);
-                                    }
-                                    $abastecimento->media_veiculo = $abastecimentoController->obterMediaVeiculo($veiculo, $abastecimento);
+                                    //    $abastecimento->horas_trabalhadas = $this->formataValorDecimal(trim($registro[15]), 1);
+                                    //} 
+                                    $abastecimento->media_veiculo = $abastecimentoController->obterMediaVeiculo($veiculo, $abastecimento) ?? 0;
+                                    Log::debug('Mesia_Veiculo='.$abastecimento->media_veiculo);
                                 }
         
                                 if ($abastecimento->km_veiculo <= 0) {
@@ -289,20 +290,24 @@ class IntegracaoAutomacaoController extends Controller
                                     $abastecimento->obs_abastecimento = $obs;
                                     $abastecimento->inconsistencias_importacao = true;
                                 } 
-                                
+
                                 $dataAbastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5]);
 
-                                if ( $dataAbastecimento <= $dataInicio) {
+                                if ($dataAbastecimento <= $dataInicio) {
                                     continue;
                                 } 
                             } catch (\Exception $e) {
-                                Log::info($e);
+                                if (App::environment('local')) {
+                                    Log::debug($e);
+                                } else {
+                                    Log::error($e->getMessage());
+                                }
                             }
 
 
                             try {
                                 DB::beginTransaction();
-
+                                
                                 if($abastecimento->save()) {
                                     /* Movimenta o estoque do tanque */
                                     if (MovimentacaoCombustivelController::saidaAbastecimento($abastecimento)) {
@@ -317,7 +322,11 @@ class IntegracaoAutomacaoController extends Controller
                             } catch (\Exception $e) {
                                 $errosImportacao = true;
                                 DB::rollback();
-                                Log::error($e->getMessage());
+                                if (App::environment('local')) {
+                                    Log::debug($e);
+                                } else {
+                                    Log::error($e->getMessage());
+                                }
                             }
                         } else {
                             Log::alert('Erro ao importar registro: '.implode("|",$registro), []);
@@ -346,8 +355,13 @@ class IntegracaoAutomacaoController extends Controller
     }
 
     protected function limparArquivoAbastecimentosServidor() {
-        if (!Storage::disk('ftp')->delete('abastecimentos.hir')) {
-            Log::alert('Não foi possível apagar o arquivo abastecimentos.hir do servidor...', []);
+        if (App::environment('local')) {
+            Log::info('Arquivo remoto de integração não removido por estar em ambiente de testes...');
+            return;
+        } else {
+            if (!Storage::disk('ftp')->delete('abastecimentos.hir')) {
+                Log::alert('Não foi possível apagar o arquivo abastecimentos.hir do servidor...', []);
+            }   
         }
     }
 

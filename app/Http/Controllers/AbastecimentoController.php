@@ -365,24 +365,22 @@ class AbastecimentoController extends Controller
                 if ($abastecimento->abastecimento_local) {
                     //abastecimento local, tem movimentação de estoque. Remove a movimentação e a abastecida
                     $movimentacao = TanqueMovimentacao::find($abastecimento->tanque_movimentacao_id);
-                    if ($movimentacao->delete()) {
-                        Session::flash('success', __('messages.delete_success', [
-                            'model' => __('models.abastecimento'),
-                            'name' => $abastecimento->id
-                        ]));
-                        
-                        return redirect()->action('AbastecimentoController@index');
+                    if ($movimentacao) {
+                        if ($movimentacao->delete()) {
+                            Session::flash('success', __('messages.delete_success', [
+                                'model' => __('models.abastecimento'),
+                                'name' => $abastecimento->id
+                            ]));
+                            
+                            return redirect()->action('AbastecimentoController@index');
+                        }
+                    } else {
+                        //abastecimento local, porém não tem movimentação de estoque... pq???
+                        return $this->removeAbastecimento($abastecimento);
                     }
                 } else {
                     //abastecimento externo, não tem movimentação de estoque, por isso remove somente a abastecida
-                    if ($abastecimento->delete()) {
-                        Session::flash('success', __('messages.delete_success', [
-                            'model' => __('models.abastecimento'),
-                            'name' => $abastecimento->id
-                        ]));
-                        
-                        return redirect()->action('AbastecimentoController@index');
-                    }
+                    return $this->removeAbastecimento($abastecimento);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -400,6 +398,17 @@ class AbastecimentoController extends Controller
         } else {
             Session::flash('error', __('messages.access_denied'));
             return redirect()->back();
+        }
+    }
+
+    protected function removeAbastecimento(Abastecimento $abastecimento) {
+        if ($abastecimento->delete()) {
+            Session::flash('success', __('messages.delete_success', [
+                'model' => __('models.abastecimento'),
+                'name' => $abastecimento->id
+            ]));
+            
+            return redirect()->action('AbastecimentoController@index');
         }
     }
 
