@@ -5,8 +5,8 @@
             <input type="hidden" name="valor_total" v-model="valor_total">
             <div v-bind:class="{'col-md-7': true, ' has-error': this.errors.estoqueId}">
                 <label for="estoqueId" class="control-label">Estoque</label>
-                <select data-style="btn-secondary" ref="estoqueId" v-model="estoqueId" data-live-search="true" class="form-control selectpicker" name="estoqueId" id="estoqueId" :disabled="produtosSelecionados.length > 0">
-                    <option selected value=""> Nada Selecionado </option>
+                <select data-style="btn-secondary" data-title="Nada Selecionado" ref="estoqueId" v-model="estoqueId" data-live-search="true" class="form-control selectpicker" name="estoqueId" id="estoqueId" :disabled="produtosSelecionados.length > 0">
+                    <!-- <option selected value=""> Nada Selecionado </option> -->
                     <option v-for="(estoque, index) in this.estoques" :value="estoque.id" :key="index">{{ estoque.estoque }}</option>
                 </select>
                 <span class="help-block" :v-if="this.errors.estoqueId">
@@ -23,7 +23,7 @@
                     <thead class="thead-light">
                         <tr class="row m-0">
                             <th class="col-md-1">Id</th>
-                            <th class="col-md-5">Produto (Substituído)</th>
+                            <th class="col-md-5">Produto</th>
                             <th class="col-md-1">Qtd</th>
                             <th class="col-md-1">R$ Un.</th>
                             <th class="col-md-1">R$ Acrés.</th>
@@ -88,21 +88,21 @@
             </div>
             <div>
                 <div class="row m-0">
-                    <div v-bind:class="{'col-md-3': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
+                    <div v-bind:class="{'col-md-6': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
                         <select data-style="btn-secondary" :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
-                            <option selected value="false"> Produto Novo </option>
+                            <option selected value="false">Produto</option>
                             <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.produto_descricao }}</option>
                         </select>
                         <span class="help-block" :v-if="this.errors.inputProdutos">
                             <strong>{{ this.errors.inputProdutosMsg }}</strong>
                         </span>
                     </div>
-                    <div class="col-md-3 pr-0 pl-0">
-                        <select data-style="btn-secondary" :disabled="(produtosVencimento.length == 0)" ref="inputProdutosVencimento" v-model="produto_vencimento_id" data-live-search="true" class="form-control selectpicker" name="inputProdutosVencimento" id="inputProdutosVencimento">
+                    <!-- <div class="col-md-3 pr-0 pl-0">
+                        <select data-style="btn-secondary" data-title="Produto Substituto" :disabled="(produtosVencimento.length == 0)" ref="inputProdutosVencimento" v-model="produto_vencimento_id" data-live-search="true" class="form-control selectpicker" name="inputProdutosVencimento" id="inputProdutosVencimento">
                             <option selected value="false"> Produto Substituído </option>
                             <option v-for="(produtoVencimento, index) in produtosVencimento" :value="produtoVencimento.id" :key="index">{{ produtoVencimento.produto.produto_desc_red }}</option>
                         </select>   
-                    </div>
+                    </div> -->
                     <div v-bind:class="{'col-md-1': true, ' has-error': this.errors.inputQuantidade}" style="padding-right: 0 !important; padding-left: 0 !important;">
                         <input :disabled="((estoqueId == 'false') || (estoqueId == null))" type="number" min="0,000" max="9999999999,999" step="any" ref="inputQuantidade" v-model.number="quantidade" class="form-control" name="inputQuantidade" id="inputQuantidade">
                         <span class="help-block" :v-if="this.errors.inputQuantidade">

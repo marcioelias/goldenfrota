@@ -6,7 +6,7 @@ use App\MarcaVeiculo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Events\NovoRegistroAtualizacaoApp;
 
 class MarcaVeiculoController extends Controller
 {

@@ -79,6 +79,9 @@
     </div>
 </div>
 @endsection
+@push('bottom-scripts')
+    <script src="{{ mix('js/os.js') }}"></script>
+@endpush
 @push('document-ready')
 var buscarVeiculos = function() {
     var cliente = {};
@@ -130,7 +133,4 @@ $('#veiculo_id').on('changed.bs.select', (e) => {
             $('#label__km_veiculo').html('Horas trabalhadas');
         }
 });
-@endpush
-@push('bottom-scripts')
-    <script src="{{ mix('js/os.js') }}"></script>
 @endpush

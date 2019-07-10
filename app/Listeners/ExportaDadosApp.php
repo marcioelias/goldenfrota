@@ -3,10 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\NovoRegistroAtualizacaoApp;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use App\AtualizacaoApp;
+use Illuminate\Support\Facades\App;
 
 class ExportaDadosApp
 {
@@ -38,7 +37,9 @@ class ExportaDadosApp
                 'remover' => $event->exclusao
             ]);
 
-            log::debug($atualizacaoApp);
+            if (App::environment('local')) {
+                log::debug($atualizacaoApp);
+            }
          
             $atualizacaoApp->save();
 

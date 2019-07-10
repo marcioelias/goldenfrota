@@ -6,6 +6,7 @@ use App\Combustivel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\Session;
+use App\Events\NovoRegistroAtualizacaoApp;
 
 class CombustivelController extends Controller
 {
@@ -26,7 +27,7 @@ class CombustivelController extends Controller
     {
         if (Auth::user()->canListarCombustivel()) {
             if (isset($request->searchField)) {
-                $combustiveis = Combustivel::where('descricao', 'like', '%'.$request->searchField.'%')->paginate();
+                $combustiveis = Combustivel::where('descricao', 'like', '%' . $request->searchField . '%')->paginate();
             } else {
                 $combustiveis = Combustivel::paginate();
             }
@@ -60,7 +61,7 @@ class CombustivelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
+    {
         if (Auth::user()->canCadastrarCombustivel()) {
             $this->validate($request, [
                 'descricao' => 'string|required|min:5|unique:combustiveis',
@@ -70,7 +71,7 @@ class CombustivelController extends Controller
 
             try {
                 $combustivel = new Combustivel($request->all());
-                if ($combustivel->save()){
+                if ($combustivel->save()) {
 
                     event(new NovoRegistroAtualizacaoApp($combustivel));
 
@@ -78,7 +79,7 @@ class CombustivelController extends Controller
                         'model' => __('models.combustivel'),
                         'name' => $combustivel->descricao
                     ]));
-                    
+
                     return redirect()->action('CombustivelController@index');
                 }
             } catch (\Exception $e) {
@@ -121,12 +122,12 @@ class CombustivelController extends Controller
     {
         if (Auth::user()->canAlterarCombustivel()) {
             $this->validate($request, [
-                'descricao' => 'required|string|min:5|unique:combustiveis,id,'.$combustivel->id,
-                'descricao_reduzida' => 'required|string|min:3|max:8|unique:combustiveis,id,'.$combustivel->id,
+                'descricao' => 'required|string|min:5|unique:combustiveis,id,' . $combustivel->id,
+                'descricao_reduzida' => 'required|string|min:3|max:8|unique:combustiveis,id,' . $combustivel->id,
                 'valor' => 'required|numeric'
             ]);
 
-            try {                 
+            try {
                 $combustivel->fill($request->all());
 
                 if ($combustivel->save()) {
@@ -143,7 +144,7 @@ class CombustivelController extends Controller
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));
-                return redirect()->back()->withInput();            
+                return redirect()->back()->withInput();
             }
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -159,7 +160,7 @@ class CombustivelController extends Controller
      */
     public function destroy(Combustivel $combustivel)
     {
-        if (Auth::user()->canExcluirCombustivel()) {   
+        if (Auth::user()->canExcluirCombustivel()) {
             try {
                 if ($combustivel->delete()) {
 
@@ -182,7 +183,7 @@ class CombustivelController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('CombustivelController@index');        
+                return redirect()->action('CombustivelController@index');
             }
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -190,11 +191,13 @@ class CombustivelController extends Controller
         }
     }
 
-    public function apiCombustiveis() {
+    public function apiCombustiveis()
+    {
         return response()->json(Combustivel::ativo()->get());
     }
 
-    public function apiCombustivel($id) {
+    public function apiCombustivel($id)
+    {
         return response()->json(Combustivel::ativo()->where('id', $id)->get());
     }
 }
