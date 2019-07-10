@@ -24,7 +24,7 @@ class GrupoVeiculoController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->canListarGrupoVeiculo()) {
-            if (isset($requet->searchField)) {
+            if (isset($request->searchField)) {
                 $grupoVeiculos = GrupoVeiculo::where('grupo_veiculo', 'like', '%'.$request->searchField.'%')->paginate();
             } else {
                 $grupoVeiculos = GrupoVeiculo::paginate();
