@@ -438,7 +438,7 @@
                 this.$delete(this.produtos, this.deleteIndex);
             },
             limparFormulario() {
-                this.produto_id = null;
+                this.produto_id = false;
                 this.produtoSelecionado = false;
                 this.quantidade = 1;
                 this.valor_unitario = 0.000;
