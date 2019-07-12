@@ -68,7 +68,7 @@
                         [
                             'type' => 'number',
                             'field' => 'km_veiculo',
-                            'label' => ($abastecimento->veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1) ? 'KM do Veículo' : 'Horas trabalhadas',
+                            'label' => ($abastecimento->veiculo_id) ? ($abastecimento->veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1) ? 'KM do Veículo' : 'Horas trabalhadas' : 'Km do Veículo',
                             'inputSize' => 3,
                             'inputValue' => $abastecimento->km_veiculo,
                             'disabled' => ($abastecimento->eh_afericao)
