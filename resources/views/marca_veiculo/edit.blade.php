@@ -4,7 +4,7 @@
     <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Alterar Marca de Veículo', 
-            'routeUrl' => route('marca_veiculo.update', $marcaVeiulo->id), 
+            'routeUrl' => route('marca_veiculo.update', $marcaVeiculo->id), 
             'method' => 'PUT',
             'formButtons' => [
                 ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
@@ -20,7 +20,7 @@
                             'label' => 'Marca de Veículo',
                             'required' => true,
                             'autofocus' => true,
-                            'inputValue' => $marcaVeiulo->marca_veiculo,
+                            'inputValue' => $marcaVeiculo->marca_veiculo,
                             'inputSize' => 7
                         ],
                         [
@@ -28,7 +28,7 @@
                             'field' => 'ativo',
                             'label' => 'Ativo',
                             'inputSize' => 1,
-                            'indexSelected' => $marcaVeiulo->ativo,
+                            'indexSelected' => $marcaVeiculo->ativo,
                             'items' => Array('Não', 'Sim'),
                         ]
                     ]
