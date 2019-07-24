@@ -47,7 +47,7 @@ class Abastecimento extends Model
 
     public function scopeUltimoDoVeiculo($query, $veiculo_id) {
         return $query->where('veiculo_id', $veiculo_id)
-            ->orderBy('id', 'desc')
+            ->orderBy('data_hora_abastecimento', 'desc')
             ->first();
     }
 }
