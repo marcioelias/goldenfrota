@@ -435,18 +435,40 @@ class AbastecimentoController extends Controller
 
     public function obterMediaVeiculo(Veiculo $veiculo, Abastecimento $abastecimentoAtual, $ehUpdate = false) {
         try {
-            $whereAbastAtual = 'data_hora_abastecimento < "'.$abastecimentoAtual->data_hora_abastecimento.'"';
-            $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id);
-            
+            if (App::environment('local')) {
+                Log::debug('AbastecimentoController::obterMediaVeiculo');
+            }
+            if ($ehUpdate) {
+                $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id, $abastecimentoAtual->id);    
+            } else {
+                $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id);
+            }
+
+            if (App::environment('local')) {
+                Log::debug('obterMediaVeiculo - ehUpdate => ' . ($ehUpdate) ? 'Sim' : 'Não');
+                Log::debug('obterMediaVeiculo - ultimoAbastecimento => ' . $ultimoAbastecimento);
+            }
+
             if (!$ultimoAbastecimento) {
                 //primeiro abastecimento deste veiculo;
+                Log::debug('obterMediaVeiculo - primeiro abastecimento do veículo, não é possível calcular média.');
                 return 0; 
             } else {
                 //veiculo já abasteceu antes
                 if ($veiculo->modelo_veiculo->tipo_controle_veiculo_id == 1) {
+                    if (App::environment('local')) {
+                        Log::debug('obterMediaVeiculo - Controle por KM');
+                    }
                     /* controle de km rodados */
                     if ($abastecimentoAtual->km_veiculo > 0) {
                         //km informada
+                        if (App::environment('local')) {
+                            Log::debug('obterMediaVeiculo - KM informado > 0');
+                            Log::debug('obterMediaVeiculo - abastecimentoAtual->km_veiculo => ' . $abastecimentoAtual->km_veiculo);
+                            Log::debug('obterMediaVeiculo - ultimoAbastecimento->km_veiculo => ' . $ultimoAbastecimento->km_veiculo);
+                            Log::debug('obterMediaVeiculo - abastecimentoAtual->volume_abastecimento => ' . $abastecimentoAtual->volume_abastecimento);
+                            Log::debug('obterMediaVeiculo - Média calculada => ' . ($abastecimentoAtual->km_veiculo - $ultimoAbastecimento->km_veiculo) / $abastecimentoAtual->volume_abastecimento);
+                        }
                         if (($abastecimentoAtual->km_veiculo == $ultimoAbastecimento->km_veiculo) && (!$ehUpdate)) {
                             throw new \Exception('Odômetro/Horímetro informado igual ao do último abastecimento');
                         }
@@ -459,6 +481,9 @@ class AbastecimentoController extends Controller
                     /* controle de horas trabalhadas */
                     if ($abastecimentoAtual->km_veiculo > 0) {
                         //horas trabalhadas informada
+                        if (App::environment('local')) {
+                            Log::debug('obterMediaVeiculo - Controle por Horas trabalhadas');
+                        }
                         if (($abastecimentoAtual->km_veiculo == $ultimoAbastecimento->km_veiculo) && (!$ehUpdate)) {
                             throw new \Exception('Odômetro/Horímetro informado igual ao do último abastecimento');
                         }

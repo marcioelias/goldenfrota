@@ -15,13 +15,13 @@ class OrdemServico extends Model
 {
     protected $fillable = [
         'estoque_id',
-        'fechada',
         'data_fechamento',
         'veiculo_id',
         'km_veiculo',
         'obs', 
         'user_id',
-        'valor_total'
+        'valor_total',
+        'ordem_servico_status_id'
     ];
 
     public function veiculo() {
