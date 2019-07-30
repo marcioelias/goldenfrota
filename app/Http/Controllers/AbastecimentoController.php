@@ -440,7 +440,7 @@ class AbastecimentoController extends Controller
                 Log::debug('AbastecimentoController::obterMediaVeiculo');
             }
             if ($ehUpdate) {
-                $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id, $abastecimentoAtual->id);    
+                $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id, $abastecimentoAtual->data_hora_abastecimento);    
             } else {
                 $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id);
             }

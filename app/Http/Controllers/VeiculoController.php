@@ -402,7 +402,10 @@ class VeiculoController extends Controller
                             ->first();
                                 
         return response()->json($abastecimento); */
-        return response()->json(Abastecimento::select('km_veiculo')->ultimoDoVeiculo($request->veiculo_id, $request->id));
+        
+        //return response()->json(Abastecimento::select('km_veiculo')->ultimoDoVeiculo($request->veiculo_id, $request->id));
+        $ultimoAbast = Abastecimento::find($request->id);
+        return response()->json(Abastecimento::with('veiculo.modelo_veiculo')->ultimoDoVeiculo($request->veiculo_id, $ultimoAbast->data_hora_abastecimento));
     }
 
     public function relatorioMediaModeloParam() {

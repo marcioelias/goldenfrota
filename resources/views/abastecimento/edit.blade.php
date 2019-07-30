@@ -270,8 +270,9 @@ var CalcularKmMedia = function() {
         cache: false,
         success: function (abastecimento) {
             //console.log('retorno_json=' + abastecimento);
+            //console.log(abastecimento.veiculo.modelo_veiculo.tipo_controle_veiculo_id);
 
-            ObterMediaKmVeiculo(abastecimento.km_veiculo);
+            ObterMediaKmVeiculo(abastecimento.km_veiculo, abastecimento.veiculo.modelo_veiculo.tipo_controle_veiculo_id);
         },
         error: function (abastecimento) {
             console.log(abastecimento);
@@ -296,11 +297,18 @@ function CalcValorAbastecimento() {
     }
 }
 
-function ObterMediaKmVeiculo(kmAnterior) {
+function ObterMediaKmVeiculo(kmAnterior, tipoControle) {
     //var kmAnterior = BuscarUltimoAbastecimento();
     var kmAtual = $('#km_veiculo').val();
     var qtdAbastecimento = $('#volume_abastecimento').val();
-    var mediaCalculada = ((kmAtual - kmAnterior) / qtdAbastecimento).toFixed(3);
+    //km percorridos
+    if (tipoControle == 1) {
+        var mediaCalculada = ((kmAtual - kmAnterior) / qtdAbastecimento).toFixed(3);
+    } else {
+        //horas trabalhadas
+        var mediaCalculada = (qtdAbastecimento / (kmAtual - kmAnterior)).toFixed(3);
+    }
+    
 
     //console.log('kmAnterior = ' + kmAnterior);
     //console.log('kmAtual = ' + kmAtual);

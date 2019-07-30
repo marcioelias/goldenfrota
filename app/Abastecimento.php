@@ -45,10 +45,10 @@ class Abastecimento extends Model
         return $this->belongsTo(Bico::class);
     }
 
-    public function scopeUltimoDoVeiculo($query, $veiculo_id, $idAbastecimentoAtual = false) {
-        if ($idAbastecimentoAtual) {
+    public function scopeUltimoDoVeiculo($query, $veiculo_id, $dataHoraAbastecimentoAtual = false) {
+        if ($dataHoraAbastecimentoAtual) {
             return $query->where('veiculo_id', $veiculo_id)
-                ->where('id', '<', $idAbastecimentoAtual)
+                ->where('data_hora_abastecimento', '<', $dataHoraAbastecimentoAtual)
                 ->orderBy('data_hora_abastecimento', 'desc')
                 ->first();    
         } 
