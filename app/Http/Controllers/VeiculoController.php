@@ -395,13 +395,14 @@ class VeiculoController extends Controller
     }
 
     public function obterKmAbasteciemntoAnterior(Request $request) {
-        $abastecimento = Abastecimento::select('km_veiculo')
+        /* $abastecimento = Abastecimento::select('km_veiculo')
                             ->where('abastecimentos.veiculo_id', $request->veiculo_id)
                             ->where('abastecimentos.id', '<', $request->id)
                             ->orderBy('abastecimentos.id', 'asc')
                             ->first();
                                 
-        return response()->json($abastecimento);
+        return response()->json($abastecimento); */
+        return response()->json(Abastecimento::select('km_veiculo')->ultimoDoVeiculo($request->veiculo_id, $request->id));
     }
 
     public function relatorioMediaModeloParam() {
