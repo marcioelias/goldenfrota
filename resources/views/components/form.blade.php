@@ -3,8 +3,11 @@
     $btnColor = ['submit' => 'success', 'reset' => 'danger', 'button' => 'danger'];
     $fileUpload = (isset($fileUpload) && $fileUpload) ? 'enctype=multipart/form-data' : '';
     $cancelRoute = (isset($cancelRoute) ? $cancelRoute : false);
-    $indexRoute = $cancelRoute ? $cancelRoute : explode('.', Route::current()->getAction()['as'])[0].'.index';    
+    $indexRoute = $cancelRoute ? $cancelRoute : explode('.', Route::current()->getAction()['as'])[0].'.index';  
+    $routeUrl .= (count(Request()->all()) > 0) ? '?'.http_build_query(Request()->all()) : '';  
 @endphp
+
+{{-- {{ dd($routeUrl .= (count(Request()->all()) > 0) ? '?'.http_build_query(Request()->all()) : '') }} --}}
 
 @if($title != '')
     <div class="card-header"><h3>{{__($title)}}</h3></div>
@@ -35,7 +38,7 @@
                                 @endif
                             </button>
                         @else
-                            <a href="{{ route($indexRoute) }}" class="btn btn-{{$btnColor[$formButton['type']]}}"  data-toggle="tooltip" data-placement="top" title="{{ __($formButton['label']) }}" data-original-title="{{ __($formButton['label']) }}">
+                            <a href="{{ route($indexRoute, Request()->all() ?? []) }}" class="btn btn-{{$btnColor[$formButton['type']]}}"  data-toggle="tooltip" data-placement="top" title="{{ __($formButton['label']) }}" data-original-title="{{ __($formButton['label']) }}">
                                 @if(isset($formButton['icon']))
                                     <i class="fas fa-{{$formButton['icon']}}"></i>
                                 @else

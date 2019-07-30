@@ -328,7 +328,8 @@ class AbastecimentoController extends Controller
                             'model' => __('models.abastecimento'),
                             'name' => $abastecimento->id
                         ]));
-                        return redirect()->action('AbastecimentoController@index');
+                        //return redirect(url()->previous());
+                        return redirect()->action('AbastecimentoController@index', $request->query->all() ?? []);
                     } else {
                         Session::flash('error', __('messages.update_error', [
                             'model' => 'models.abastecimento',
@@ -358,7 +359,7 @@ class AbastecimentoController extends Controller
      * @param  \App\Abastecimento  $abastecimento
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Abastecimento $abastecimento)
+    public function destroy(Request $request, Abastecimento $abastecimento)
     {
         if (Auth::user()->canExcluirAbastecimento()) {
             try {
@@ -373,7 +374,7 @@ class AbastecimentoController extends Controller
                                 'name' => $abastecimento->id
                             ]));
                             
-                            return redirect()->action('AbastecimentoController@index');
+                            return redirect()->action('AbastecimentoController@index', json_decode($request->backUrlParams, true));
                         }
                     } else {
                         //abastecimento local, porém não tem movimentação de estoque... pq???

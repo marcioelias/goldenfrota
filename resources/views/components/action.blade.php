@@ -24,11 +24,19 @@
 @php
     $displayField = isset($displayField) ? $displayField : 'name';
     $keyField = isset($keyField) ? $keyField : 'id';
+    $parameters = Request()->request->all() ?? [];
 @endphp
+
+{{-- {{ dd(Request()) }} --}}
+
+{{-- @foreach (Request()->request->all() as $key => $value) 
+    {{ $key . ' = ' . $value }}
+@endforeach --}}
 
 @permission($permission)
 @if($action == 'destroy')    
     <form id="deleteForm{{$row->id}}" action="{{route($model.'.'.$action, ['$model' => $row->$keyField])}}" method="POST" style="display: inline">
+        <input type="hidden" name="backUrlParams" value="{{ json_encode(Request()->request->all()) }}">
         <span data-toggle="tooltip" data-placement="top" title="{{$tooltip}}" data-original-title="{{$tooltip}}">
              <button class="btn btn-sm btn-danger" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="{{__('Remover ').__('models.'.$model)}}" 
                 data-message="Remover {{ __('models.'.$model).': '.$row->$displayField}}?">
@@ -40,7 +48,7 @@
     </form>
 @else
     <span data-toggle="tooltip" data-placement="top" title="{{$tooltip}}" data-original-title="{{$tooltip}}">
-        <a href="{{route($model.'.'.$action, [$model => $row->$keyField])}}" {{ $target }} class="btn btn-sm {{$btn_style}}"><i class="fas fa-{{$btn_icon}}"></i></a>
+        <a href="{{route($model.'.'.$action, array_add($parameters, $model, $row->$keyField))}}" {{ $target }} class="btn btn-sm {{$btn_style}}"><i class="fas fa-{{$btn_icon}}"></i></a>
     </span>
 @endif
 @endpermission
