@@ -59,7 +59,7 @@
                 <div v-bind:class="{'col-md-7': true, ' has-error': this.errors.inputServicos}" style="padding-right: 0 !important; padding-left: 0 !important;">
                     <select data-style="btn-secondary" ref="inputServicos" v-model="servico_id" data-live-search="true" class="form-control selectpicker" name="inputServicos" id="inputServicos">
                         <option selected value="false"> Nada Selecionado </option>
-                        <option v-for="(servico, index) in servicosDisponiveisOrdenados" :value="servico.id" :key="index">{{ servico.servico }}</option>
+                        <option v-for="(servico, index) in servicosDisponiveisOrdenados" :value="servico.id" :key="index">{{ servico.id + ' - ' + servico.servico }}</option>
                     </select>
                      <span class="help-block" :v-if="this.errors.inputServicos">
                         <strong>{{ this.errors.inputServicosMsg }}</strong>

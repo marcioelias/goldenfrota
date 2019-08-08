@@ -5,8 +5,8 @@
             <input type="hidden" name="valor_total" v-model="valor_total">
             <div v-bind:class="{'col-md-7': true, ' has-error': this.errors.estoqueId}">
                 <label for="estoqueId" class="control-label">Estoque</label>
-                <select ref="estoqueId" v-model="estoqueId" data-live-search="true" class="form-control selectpicker" name="estoqueId" id="estoqueId" :disabled="produtosSelecionados.length > 0">
-                    <option selected value=""> Nada Selecionado </option>
+                <select ref="estoqueId" v-model="estoqueId" data-live-search="true" data-title="Nada Selecionado" data-style="btn-secondary" class="form-control selectpicker mb-3" name="estoqueId" id="estoqueId" :disabled="produtosSelecionados.length > 0">
+                    <!-- <option value="" disabled> Nada Selecionado </option> -->
                     <option v-for="(estoque, index) in this.estoques" :value="estoque.id" :key="index">{{ estoque.estoque }}</option>
                 </select>
                 <span class="help-block" :v-if="this.errors.estoqueId">
@@ -19,9 +19,9 @@
                 <strong>Produtos</strong>
             </div>
             <div class="card-body" style="padding: 0 !important;">
-                <table class="table table-condensed table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
-                    <thead>
-                        <tr class="row">
+                <table class="table table-sm table-striped table-bordered table-hover" style="margin-bottom:0 !important;">
+                    <thead class="thead-light">
+                        <tr class="row m-0">
                             <th class="col-md-1">Id</th>
                             <th class="col-md-6">Produto</th>
                             <th class="col-md-1">Qtd</th>
@@ -32,7 +32,7 @@
                         </tr>
                     </thead>
                     <tbody name="fade" is="transition-group">
-                        <tr class="row" v-for="(item, index) in items" :key="index">
+                        <tr class="row m-0" v-for="(item, index) in items" :key="index">
                             <td class="col-md-1 pool-right">
                                 {{ item.id }}
                                 <input type="hidden" :name="'items['+index+'][produto_id]'" :value="item.id">
@@ -58,35 +58,44 @@
                             </td>
                             <td class="col-md-1">
                                 <button type="button" class="btn-xs btn-warning" @click="editItem(index)" v-show="!editing">
-                                    <span class="glyphicon glyphicon-edit"></span>
+                                    <i class="fas fa-edit"></i>
                                 </button>
                                 <button type="button" class="btn-xs btn-danger" @click="confirmDelete(index)" data-toggle="modal" data-target="#confirmDelete" v-show="!editing">
-                                    <span class="glyphicon glyphicon-trash"></span>
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </td>
                         </tr>
                     </tbody>
                     <tfoot v-if="this.items.length > 0">
-                        <tr class="row">
+                        <tr class="row m-0">
                             <td class="col-md-1"><strong>{{ this.items.length }}</strong></td>
                             <td class="col-md-6"></td>
                             <td class="col-md-1 text-right"><strong>{{ this.totalQuantidade() }}</strong></td>
                             <td class="col-md-1 text-right"><strong>{{ this.totalValor() }}</strong></td>
                             <td class="col-md-1 text-right"><strong>{{ this.totalDesconto() }}</strong></td>
                             <td class="col-md-1 text-right"><strong>{{ this.totalAcrescimo() }}</strong></td>
-                            <td class="col-md-2"></td>
+                            <td class="col-md-1"></td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
             <div>
-                <div class="row">
+                <div class="row m-0">
                     <div v-bind:class="{'col-md-7': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
-                        <select :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
-                            <option selected value="false"> Nada Selecionado </option>
-                            <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.produto_descricao }}</option>
+                        <!-- <select ref="estoqueId" v-model="estoqueId" data-live-search="true" data-title="Nada Selecionado" data-style="btn-secondary" class="form-control selectpicker mb-3" name="estoqueId" id="estoqueId" :disabled="produtosSelecionados.length > 0"> -->
+                        <!-- <select :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" data-title="Nada selecionado" v-model="produto_id" data-live-search="true" data-style="btn-secondary" class="form-control selectpicker" name="inputProdutos" id="inputProdutos"> -->
+                            <!-- <option selected value=""> Nada Selecionado </option> -->
+                            <!-- <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.id + ' - ' +produto.produto_descricao }}</option>
                         </select>
                         <span class="help-block" :v-if="this.errors.inputProdutos">
+                            <strong>{{ this.errors.inputProdutosMsg }}</strong>
+                        </span> -->
+
+                        <select :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" data-style="btn-secondary" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
+                            <option selected value="false"> Nada Selecionado </option>
+                            <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.id + ' - ' +produto.produto_descricao }}</option>
+                        </select>
+                            <span class="help-block" :v-if="this.errors.inputProdutos">
                             <strong>{{ this.errors.inputProdutosMsg }}</strong>
                         </span>
                     </div>
@@ -116,7 +125,7 @@
                     </div>
                     <div class="col-md-1">
                         <button :disabled="((estoqueId == 'false') || (estoqueId == null))" type="button" class="btn btn-success" @click="addProduto" v-show="!editing">
-                            <span class="glyphicon glyphicon-plus"></span>
+                            <i class="fas fa-plus"></i>
                         </button>
                         <button :disabled="((estoqueId == 'false') || (estoqueId == null))" type="button" class="btn btn-success" @click="updateProduto" v-show="editing">
                             <i class="fas fa-check"></i>
@@ -150,6 +159,7 @@
                 quantidade: 1,
                 desconto: 0,
                 acrescimo: 0,
+                valorUnitario: 0,
                 isModalVisible: false,
                 deleteIndex: false,
                 produtosDisponiveis: [],
@@ -192,7 +202,23 @@
             },
             estoqueId: function() {
                 this.getProdutos();
-            }
+            },
+            produto_id: function() {
+                if (!this.editing) {
+                    //this.valor_unitario = this.getProdutoById(this.produto_id).valor_venda;
+                    let prod = this.produtosData.find(p => p.id === this.produto_id);
+                    if (prod != undefined) {
+                        this.valorUnitario = prod.valor_venda;
+                    }
+                }
+                //this.calcTotalProdutoItem();
+            }/* ,
+            produto_id: function() {
+                let prod = this.produtosData.find(p => p.id === this.produto_id);
+                if (prod != undefined) {
+                    this.valorUnitario = prod.valor_venda;
+                }
+            } */
         },
         computed: {
             estoque_id: {
@@ -212,11 +238,11 @@
                     return total;
                 }
             },
-            valorUnitario: {
+            /* valorUnitario: {
                 get() {
                     return this.getProdutoById(this.produto_id).valor_venda;
                 }
-            },
+            }, */
             produtosDisponiveisOrdenados: function() {
                 function compare(a, b) {
                     if (a.produto_descricao < b.produto_descricao)
@@ -344,6 +370,7 @@
                 this.produto_id = item.id;
                 this.editing = true;
                 this.editingIndex = index;
+                this.produtosDisponiveis.push(item);
             },
             updateProduto() {
                 this.items[this.editingIndex] = {
@@ -358,6 +385,7 @@
                 this.editing = false;
                 this.editingIndex = false;
                 this.limparFormulario();
+                this.$delete(this.produtosDisponiveis, this.getProdutoIndexById(this.produto_id));
             },
             deleteItem() {
                 this.removerProduto(this.items[this.deleteIndex].id);

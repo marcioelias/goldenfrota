@@ -1,9 +1,9 @@
-let saida_estoque = require('./components/SaidaEstoqueItemsComponent.vue');
+import SaidaEstoqueItemsComponent from './components/SaidaEstoqueItemsComponent.vue';
 
 const leads = new Vue({
     el: '#saida_estoque_produtos',
     components:{
-        'saida-estoque': saida_estoque,
+        SaidaEstoqueItemsComponent,
     },
     data() {
         return {

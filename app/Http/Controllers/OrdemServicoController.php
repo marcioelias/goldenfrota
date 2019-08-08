@@ -45,7 +45,8 @@ class OrdemServicoController extends Controller
                                 ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
                                 ->leftJoin('users', 'users.id', 'ordem_servicos.user_id')
                                 ->leftJoin('ordem_servico_status', 'ordem_servico_status.id', 'ordem_servico_status_id')
-                                ->where('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
+                                ->where('ordem_servicos.id', $request->searchField)
+                                ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
                                 ->orWhere('veiculos.placa', 'like', '%'.$request->searchField.'%')
                                 ->orderBy('id', 'desc')
                                 ->paginate();

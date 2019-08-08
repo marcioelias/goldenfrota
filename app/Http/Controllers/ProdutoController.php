@@ -49,7 +49,8 @@ class ProdutoController extends Controller
                                 ->select('produtos.*', 'unidades.unidade', 'grupo_produtos.grupo_produto')
                                 ->join('unidades', 'unidades.id', 'produtos.unidade_id')
                                 ->join('grupo_produtos', 'grupo_produtos.id', 'produtos.grupo_produto_id')
-                                ->where('produto_descricao', 'like', '%'.$request->searchField.'%')
+                                ->where('produtos.id', $request->searchField)
+                                ->orWhere('produto_descricao', 'like', '%'.$request->searchField.'%')
                                 ->orWhere('produto_desc_red', 'like', '%'.$request->searchField.'%')
                                 ->paginate();
             } else {

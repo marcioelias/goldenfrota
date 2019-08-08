@@ -75,7 +75,7 @@
                 <div v-bind:class="{'col-md-6': true, ' has-error': this.errors.inputProdutos}" style="padding-right: 0 !important; padding-left: 0 !important;">
                     <select ref="inputProdutos" data-style="btn-secondary" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
                         <option selected value="false"> Nada Selecionado </option>
-                        <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.produto_descricao }}</option>
+                        <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.id + ' - ' + produto.produto_descricao }}</option>
                     </select>
                      <span class="help-block" :v-if="this.errors.inputProdutos">
                         <strong>{{ this.errors.inputProdutosMsg }}</strong>

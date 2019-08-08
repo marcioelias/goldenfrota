@@ -50,13 +50,13 @@
                 ])
                 @endcomponent         
                 <div class="{{ $errors->has('items') ? ' has-error' : '' }}">
-                    <saida-estoque 
+                    <saida-estoque-items-component 
                         :estoques="{{ json_encode($estoques) }}" 
                         :estoque-error="{{ $errors->has('estoque_id') ? json_encode(['msg' => $errors->first('estoque_id')]) : 'null' }}" 
                         :old-estoque-id="{{ json_encode(['estoque_id' => old('estoque_id')]) }}"
                         {{--  :produtos-data="{{ json_encode($produtos) }}"  --}} 
                         :old-data="{{ json_encode(old('items')) }}">
-                    </saida-estoque>
+                    </saida-estoque-items-component>
                     @if ($errors->has('items'))
                         <span class="help-block">
                             <strong>{{ $errors->first('items') }}</strong>

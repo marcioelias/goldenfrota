@@ -27,7 +27,8 @@ class SaidaEstoqueController extends Controller
             'label' => 'Valor',
             'type' => 'decimal',
             'decimais' => 3
-        ]
+        ],
+        'name' => 'Usuário'
     ];
 
     /**
@@ -40,16 +41,19 @@ class SaidaEstoqueController extends Controller
         if (Auth::user()->canListarSaidaEstoque()) {
             if ($request->searchField) {
                 $saidas = DB::table('saida_estoques')
-                                    ->select('saida_estoques.*', 'clientes.nome_razao as nome_cliente')
+                                    ->select('saida_estoques.*', 'clientes.nome_razao as nome_cliente', 'users.name')
                                     ->leftJoin('clientes', 'clientes.id', 'saida_estoques.cliente_id')
-                                    ->where('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
+                                    ->leftJoin('users', 'users.id', 'saida_estoques.user_id')
+                                    ->where('saida_estoques.id', $request->searchField)
+                                    ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
                                     ->orWhere('clientes.fantasia', 'like', '%'.$request->searchField.'%')
                                     ->orderBy('id', 'desc')
                                     ->paginate();
             } else {
                 $saidas = DB::table('saida_estoques')
-                                    ->select('saida_estoques.*', 'clientes.nome_razao as nome_cliente')
+                                    ->select('saida_estoques.*', 'clientes.nome_razao as nome_cliente', 'users.name')
                                     ->leftJoin('clientes', 'clientes.id', 'saida_estoques.cliente_id')
+                                    ->leftJoin('users', 'users.id', 'saida_estoques.user_id')
                                     ->orderBy('id', 'desc')
                                     ->paginate();
             }
@@ -108,6 +112,7 @@ class SaidaEstoqueController extends Controller
     
                 $saidaEstoque = new SaidaEstoque($request->all());
                 $saidaEstoque->data_saida = $dataSaida->format('Y-m-d H:i:s');
+                $saidaEstoque->user_id = Auth::user()->id;
 
                 if ($saidaEstoque->save()) {
                     $saidaEstoque->saida_estoque_items()->createMany($request->items);
