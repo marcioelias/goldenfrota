@@ -9,6 +9,7 @@
     $defaultNone = isset($defaultNone) ? $defaultNone : false;
     $vModel = isset($vModel) ? $vModel : false;
     $div_css = isset($div_css) ? $div_css : '';
+    $searchById = isset($searchById) ? $searchById : true;
 @endphp
 <div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }} {{$div_css}}">
     @if(isset($label))
@@ -22,7 +23,7 @@
             @endif
             @if(is_array($items))
                 @foreach($items as $key => $value) 
-                    <option value="{{ $key }}" {{($key==$indexSelected) ? 'selected=selected' : ''}}>{{ $value }}</option>
+                    <option value="{{ $key }}" {{($key==$indexSelected) ? 'selected=selected' : ''}}>{{ $key . ' - ' . $value }}</option>
                 @endforeach
                 {{--  @for ($i = 0; $i < count($items); $i++)
                     <option v-bind:value="{{ $i }}" {{($i==$indexSelected) ? 'selected=selected' : ''}}>{{ $items[$i] }}</option>
@@ -30,9 +31,9 @@
             @else
                 @foreach($items as $item)
                     @if (($item->$keyField == $indexSelected) || ($item->$keyField == old($field)))
-                        <option value="{{ $item->$keyField }}" selected="selected">{{ $item->$displayField }}</option>
+                        <option value="{{ $item->$keyField }}" selected="selected">{{ $item->$keyField . ' - ' . $item->$displayField }}</option>
                     @else
-                        <option value="{{ $item->$keyField }}">{{ $item->$displayField }}</option>
+                        <option value="{{ $item->$keyField }}">{{ $item->$keyField . ' - ' . $item->$displayField }}</option>
                     @endif
                 @endforeach
             @endif

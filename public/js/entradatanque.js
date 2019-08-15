@@ -770,7 +770,7 @@ var render = function() {
                     return _c(
                       "option",
                       { key: index, domProps: { value: tanque.id } },
-                      [_vm._v(_vm._s(tanque.tanque))]
+                      [_vm._v(_vm._s(tanque.id + " - " + tanque.tanque))]
                     )
                   })
                 ],

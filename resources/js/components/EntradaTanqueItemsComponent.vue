@@ -58,7 +58,7 @@
                 <div v-bind:class="{'col-md-6': true, ' has-error': this.errors.inputTanques}" style="padding-right: 0 !important; padding-left: 0 !important;">
                     <select data-style="btn-secondary" ref="inputTanques" v-model="tanque_id" data-live-search="true" class="form-control selectpicker" name="inputTanques" id="inputTanques">
                         <option selected value="false"> Nada Selecionado </option>
-                        <option v-for="(tanque, index) in tanquesDisponiveisOrdenados" :value="tanque.id" :key="index">{{ tanque.tanque }}</option>
+                        <option v-for="(tanque, index) in tanquesDisponiveisOrdenados" :value="tanque.id" :key="index">{{ tanque.id + ' - ' + tanque.tanque }}</option>
                     </select>
                      <span class="help-block" :v-if="this.errors.inputTanques">
                         <strong>{{ this.errors.inputTanquesMsg }}</strong>
