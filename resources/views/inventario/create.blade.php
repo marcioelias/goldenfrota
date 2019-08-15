@@ -104,7 +104,7 @@ var clearSelect = function (selectComponentId) {
                         $.each(data, function (i, item) {
                             $('#grupo_produto_id').append($('<option>', { 
                                 value: item.id,
-                                text : item.grupo_produto
+                                text : item.id + ' - ' + item.grupo_produto
                             }));
                         });
                         
@@ -149,7 +149,7 @@ var clearSelect = function (selectComponentId) {
                         $.each(data, function (i, item) {
                             $('#produto_id').append($('<option>', { 
                                 value: item.id,
-                                text : item.produto_descricao
+                                text : item.id + ' - ' + item.produto_descricao
                             }));
                         });
                         

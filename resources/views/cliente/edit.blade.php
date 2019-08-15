@@ -185,7 +185,8 @@
                                     'displayField' => 'uf',
                                     'liveSearch' => true,
                                     'keyField' => 'id',
-                                    'indexSelected' => $cliente->uf_id
+                                    'indexSelected' => $cliente->uf_id,
+                                    'searchById' => false
                                 ]
                             ]
                         ])

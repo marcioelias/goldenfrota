@@ -106,7 +106,7 @@ var buscarDepartamentos = function() {
                 $.each(data, function (i, item) {
                     $('#departamento_id').append($('<option>', { 
                         value: item.id,
-                        text : item.departamento 
+                        text : item.id + ' - ' + item.departamento 
                     }));
                 });
                 

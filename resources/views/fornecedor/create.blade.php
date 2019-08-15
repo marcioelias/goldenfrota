@@ -150,7 +150,8 @@
                                     'inputSize' => 2,
                                     'displayField' => 'uf',
                                     'liveSearch' => true,
-                                    'keyField' => 'id'
+                                    'keyField' => 'id',
+                                    'searchById' => false
                                 ]
                             ]
                         ])

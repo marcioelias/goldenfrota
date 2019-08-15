@@ -173,7 +173,8 @@
                                     'displayField' => 'uf',
                                     'liveSearch' => true,
                                     'keyField' => 'id',
-                                    'indexSelected' => $fornecedor->uf_id
+                                    'indexSelected' => $fornecedor->uf_id,
+                                    'searchById' => false
                                 ]
                             ]
                         ])

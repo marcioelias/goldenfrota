@@ -7,7 +7,7 @@
                 <label for="estoqueId" class="control-label">Estoque</label>
                 <select data-style="btn-secondary" data-title="Nada Selecionado" ref="estoqueId" v-model="estoqueId" data-live-search="true" class="form-control selectpicker" name="estoqueId" id="estoqueId" :disabled="produtosSelecionados.length > 0">
                     <!-- <option selected value=""> Nada Selecionado </option> -->
-                    <option v-for="(estoque, index) in this.estoques" :value="estoque.id" :key="index">{{ estoque.estoque }}</option>
+                    <option v-for="(estoque, index) in this.estoques" :value="estoque.id" :key="index">{{ estoque.id + ' - ' + estoque.estoque }}</option>
                 </select>
                 <span class="help-block" :v-if="this.errors.estoqueId">
                     <strong>{{ this.errors.estoqueIdMsg }}</strong>

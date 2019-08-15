@@ -2206,7 +2206,7 @@ var render = function() {
               return _c(
                 "option",
                 { key: index, domProps: { value: estoque.id } },
-                [_vm._v(_vm._s(estoque.estoque))]
+                [_vm._v(_vm._s(estoque.id + " - " + estoque.estoque))]
               )
             })
           ),

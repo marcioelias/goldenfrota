@@ -36,6 +36,7 @@
                 $input['dataOffStyle'] = isset($input['dataOffStyle']) ? $input['dataOffStyle'] : null;
                 $input['permission'] = isset($input['permission']) ? $input['permission'] : null;
                 $input['visible'] = isset($input['visible']) ? $input['visible'] : true;
+                $input['searchById'] = isset($input['searchById']) ? $input['searchById']: true;
             @endphp
             @if($input['type'] == 'text')
                 @component('components.input-text', [
@@ -159,7 +160,8 @@
                     'defaultNone' => $input['defaultNone'],
                     'div_css' => $input['div_css'],
                     'vModel' => $input['vModel'],
-                    'visible' => $input['visible']
+                    'visible' => $input['visible'],
+                    'searchById' => $input['searchById']
                 ])
                 @endcomponent
             @endif
