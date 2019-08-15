@@ -236,6 +236,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -501,12 +508,12 @@ __webpack_require__.r(__webpack_exports__);
       this.$delete(this.items, this.deleteIndex);
     },
     limparFormulario: function limparFormulario() {
-      this.produto_id = null;
+      this.produto_id = false;
       this.produtoSelecionado = false;
-      this.quantidade = ''; //this.valorUnitario = '';
-
-      this.desconto = '';
-      this.acrescimo = '';
+      this.quantidade = 1;
+      this.valorUnitario = 0;
+      this.desconto = 0;
+      this.acrescimo = 0;
       this.$refs.inputProdutos.focus();
     },
     totalQuantidade: function totalQuantidade() {

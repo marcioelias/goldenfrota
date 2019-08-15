@@ -414,6 +414,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$delete(this.items, this.deleteIndex);
     },
     limparFormulario: function limparFormulario() {
+      this.produto_id = false;
       this.produtoSelecionado = false;
       this.quantidade = 1;
       this.valorUnitario = 0;

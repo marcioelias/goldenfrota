@@ -318,6 +318,7 @@
                 this.$delete(this.items, this.deleteIndex);
             },
             limparFormulario() {
+                this.produto_id = false;
                 this.produtoSelecionado = false;
                 this.quantidade = 1;
                 this.valorUnitario = 0;

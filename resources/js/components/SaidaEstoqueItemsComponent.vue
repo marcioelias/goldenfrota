@@ -91,11 +91,18 @@
                             <strong>{{ this.errors.inputProdutosMsg }}</strong>
                         </span> -->
 
-                        <select :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" data-style="btn-secondary" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
-                            <option selected value="false"> Nada Selecionado </option>
+                        <!-- <select :disabled="((estoqueId == 'false') || (estoqueId == null))" data-title="Nada selecionado" ref="inputProdutos" data-style="btn-secondary" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
                             <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.id + ' - ' +produto.produto_descricao }}</option>
                         </select>
-                            <span class="help-block" :v-if="this.errors.inputProdutos">
+                        <span class="help-block" :v-if="this.errors.inputProdutos">
+                            <strong>{{ this.errors.inputProdutosMsg }}</strong>
+                        </span> -->
+
+                        <select :disabled="((estoqueId == 'false') || (estoqueId == null))" ref="inputProdutos" data-style="btn-secondary" v-model="produto_id" data-live-search="true" class="form-control selectpicker" name="inputProdutos" id="inputProdutos">
+                            <option selected value="false"> Nada Selecionado </option>
+                            <option v-for="(produto, index) in produtosDisponiveisOrdenados" :value="produto.id" :key="index">{{ produto.id + ' - ' + produto.produto_descricao }}</option>
+                        </select>
+                        <span class="help-block" :v-if="this.errors.inputProdutos">
                             <strong>{{ this.errors.inputProdutosMsg }}</strong>
                         </span>
                     </div>
@@ -392,12 +399,12 @@
                 this.$delete(this.items, this.deleteIndex);
             },
             limparFormulario() {
-                this.produto_id = null;
+                this.produto_id = false;
                 this.produtoSelecionado = false;
-                this.quantidade = '';
-                //this.valorUnitario = '';
-                this.desconto = '';
-                this.acrescimo = '';
+                this.quantidade = 1;
+                this.valorUnitario = 0;
+                this.desconto = 0;
+                this.acrescimo = 0;
                 this.$refs.inputProdutos.focus();
             },
             totalQuantidade() {
