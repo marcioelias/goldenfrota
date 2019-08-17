@@ -6,7 +6,7 @@
         'rows' => $users, 
         'model' => 'user',
         'tableTitle' => 'Usuários',
-        'displayField' => 'unidade',
+        'displayField' => 'name',
         'actions' => ['edit', 'destroy']
         ]);
     @endcomponent

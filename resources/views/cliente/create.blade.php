@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Novo Cliente', 
             'routeUrl' => route('cliente.store'), 
             'method' => 'POST',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -65,11 +65,11 @@
                     ]
                 ])
                 @endcomponent
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <strong>CONTATOS</strong>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         @component('components.form-group', [
                             'inputs' => [
                                 [
@@ -109,11 +109,11 @@
                         @endcomponent
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <strong>ENDEREÇO</strong>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         @component('components.form-group', [
                             'inputs' => [
                                 [
@@ -161,7 +161,8 @@
                                     'inputSize' => 2,
                                     'displayField' => 'uf',
                                     'liveSearch' => true,
-                                    'keyField' => 'id'
+                                    'keyField' => 'id',
+                                    'searchById' => false
                                 ]
                             ]
                         ])
@@ -171,36 +172,34 @@
             @endsection
         @endcomponent
     </div>
-    <script>
-        $(document).ready(function() {
-            var SPMaskBehavior = function (val) {
-                return val.replace(/\D/g, '').length === 11 ? '(00)00000-0000' : '(00)0000-00009';
-            },
-            spOptions = {
-                onKeyPress: function(val, e, field, options) {
-                    field.mask(SPMaskBehavior.apply({}, arguments), options);
-                },
-                placeholder: '(__) ______-_____'
-            };
-
-            $('.mask_phone').mask(SPMaskBehavior, spOptions);
-
-            $('#cep').mask('00.000-000', {placeholder: '__.___-___'});
-            
-            if ($("#tipo_pessoa_id").val() == 1) {
-                $("#cpf_cnpj").mask('000.000.000-00', {placeholder: '___.___.___-__'});
-            } else {
-               $("#cpf_cnpj").mask('00.000.000/0000-00', {placeholder: '__.___.___/____-__'}); 
-            }
-
-            $('#tipo_pessoa_id').on('changed.bs.select', function (e) {
-                $("#cpf_cnpj").val('');
-                if ($("#tipo_pessoa_id").val() == 1) {
-                    $("#cpf_cnpj").mask('000.000.000-00', {placeholder: '___.___.___-__'});
-                } else {
-                    $("#cpf_cnpj").mask('00.000.000/0000-00', {placeholder: '__.___.___/____-__'}); 
-                }
-            });
-        });
-    </script>
 @endsection
+@push('document-ready')
+    var SPMaskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00)00000-0000' : '(00)0000-00009';
+    },
+    spOptions = {
+        onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
+        },
+        placeholder: '(__) ______-_____'
+    };
+
+    $('.mask_phone').mask(SPMaskBehavior, spOptions);
+
+    $('#cep').mask('00.000-000', {placeholder: '__.___-___'});
+
+    if ($("#tipo_pessoa_id").val() == 1) {
+        $("#cpf_cnpj").mask('000.000.000-00', {placeholder: '___.___.___-__'});
+    } else {
+    $("#cpf_cnpj").mask('00.000.000/0000-00', {placeholder: '__.___.___/____-__'}); 
+    }
+
+    $('#tipo_pessoa_id').on('changed.bs.select', function (e) {
+        $("#cpf_cnpj").val('');
+        if ($("#tipo_pessoa_id").val() == 1) {
+            $("#cpf_cnpj").mask('000.000.000-00', {placeholder: '___.___.___-__'});
+        } else {
+            $("#cpf_cnpj").mask('00.000.000/0000-00', {placeholder: '__.___.___/____-__'}); 
+        }
+    });
+@endpush

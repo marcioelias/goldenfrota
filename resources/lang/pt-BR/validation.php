@@ -88,6 +88,7 @@ return [
     'uploaded'             => 'O campo :attribute falha no upload.',
     'url'                  => 'O campo :attribute tem um formato inválido.',
     'cpfCnpj'              => 'O número informado no campo :attribute não é válido.',
+    'telefone'             => 'O campo :attribute não representa um telefone válido.',
 
     /*
     |--------------------------------------------------------------------------
@@ -162,6 +163,19 @@ return [
         'bairro' => 'Bairro',
         'cidade' => 'Cidade',
         'uf' => 'UF',
+        'cliente_id' => 'Cliente',
+        'veiculo_id' => 'Veículo',
+        'km_veiculo' => 'KM do Veículo',
+        'volume abastecimento' => 'Quantidade',
+        'campo valor' => 'Valor Unitário',
+        'valor abastecimento' => 'Valor Total',
+        'eh_afericao' => 'Aferição',
+        'true' => 'Verdadeiro',
+        'password' => 'Senha',
+        'estoque_id' => 'Estoque',
+        'servico' => 'Serviço',
+        'grupo_servico_id' => 'Grupo de Serviço',
+        'valor_servico' => 'Valor',
     ],
 
 ];

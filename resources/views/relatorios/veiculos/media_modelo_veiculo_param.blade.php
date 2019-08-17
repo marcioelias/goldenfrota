@@ -5,15 +5,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Relatório de Média de Consumo por Modelo', 
             'routeUrl' => route('relatorio_media_modelo'), 
             'formTarget' => '_blank',
             'method' => 'POST',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Gerar Relatório', 'icon' => 'stats'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Gerar Relatório', 'icon' => 'chart-line'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')

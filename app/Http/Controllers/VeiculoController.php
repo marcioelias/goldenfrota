@@ -16,6 +16,8 @@ use ConsoleTVs\Charts\Facades\Charts;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use App\Events\NovoRegistroAtualizacaoApp;
+use App\AtualizacaoApp;
 
 class VeiculoController extends Controller
 {
@@ -30,16 +32,6 @@ class VeiculoController extends Controller
         'departamento' => 'Departamento',
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
 
     /**
      * Display a listing of the resource.
@@ -105,7 +97,7 @@ class VeiculoController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'grupo_veiculo_id' => 'required',
+            'grupo_veiculo_id' => 'required|integer|min:1',
             'cliente_id' => 'required',
             'placa' => 'required|formato_placa_de_veiculo',
             'marca_veiculo_id' => 'required',
@@ -131,9 +123,10 @@ class VeiculoController extends Controller
             $veiculo->hodometro = $request->hodometro;
             $veiculo->media_minima = $request->media_minima;
 
-            $teste = 0/2;
-
             if ($veiculo->save()) {
+
+                event(new NovoRegistroAtualizacaoApp($veiculo));
+
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' cadastrado com sucesso.');
                 return redirect()->action('VeiculoController@index');
             }
@@ -223,6 +216,9 @@ class VeiculoController extends Controller
 
 
             if ($veiculo->save()) {
+
+                event(new NovoRegistroAtualizacaoApp($veiculo));
+
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' alterado com sucesso.');
                 return redirect()->action('VeiculoController@index');
             }
@@ -243,6 +239,9 @@ class VeiculoController extends Controller
         try {
             $veiculo = Veiculo::find($veiculo->id);
             if ($veiculo->delete()) {
+
+                event(new NovoRegistroAtualizacaoApp($veiculo, true));
+
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' removido com sucesso.');
                 
                 return redirect()->action('VeiculoController@index');
@@ -260,12 +259,19 @@ class VeiculoController extends Controller
             $whereCliente = '1 = 1';
         }
 
-        $veiculos = Veiculo::select('veiculos.*', 'marca_veiculos.marca_veiculo', 'modelo_veiculos.modelo_veiculo')
+        $veiculos = Veiculo::with('modelo_veiculo.tipo_controle_veiculo')
+                        ->with('modelo_veiculo.marca_veiculo')
+                        ->with('vencimento_produtos')
+                        ->where('veiculos.ativo', true)
+                        ->whereRaw($whereCliente)
+                        ->orderBy('veiculos.placa', 'asc')
+                        ->get();
+        /* $veiculos = Veiculo::select('veiculos.*', 'marca_veiculos.marca_veiculo', 'modelo_veiculos.modelo_veiculo')
                     ->join('modelo_veiculos', 'modelo_veiculos.id', 'veiculos.modelo_veiculo_id')
                     ->join('marca_veiculos', 'marca_veiculos.id', 'modelo_veiculos.marca_veiculo_id')
                     ->where('veiculos.ativo', true)
                     ->whereRaw($whereCliente)
-                    ->get();
+                    ->get(); */
 
         return response()->json($veiculos);
     }
@@ -309,7 +315,7 @@ class VeiculoController extends Controller
                 $values[] = $abastecimento->media_veiculo;
             }
 
-
+ 
             $graficos[] = Charts::create('area', 'highcharts')
                                 ->title('Veículo: '.$veiculo->placa)
                                 ->elementLabel('Média')
@@ -389,13 +395,17 @@ class VeiculoController extends Controller
     }
 
     public function obterKmAbasteciemntoAnterior(Request $request) {
-        $abastecimento = Abastecimento::select('km_veiculo')
+        /* $abastecimento = Abastecimento::select('km_veiculo')
                             ->where('abastecimentos.veiculo_id', $request->veiculo_id)
                             ->where('abastecimentos.id', '<', $request->id)
                             ->orderBy('abastecimentos.id', 'asc')
                             ->first();
                                 
-        return response()->json($abastecimento);
+        return response()->json($abastecimento); */
+        
+        //return response()->json(Abastecimento::select('km_veiculo')->ultimoDoVeiculo($request->veiculo_id, $request->id));
+        $ultimoAbast = Abastecimento::find($request->id);
+        return response()->json(Abastecimento::with('veiculo.modelo_veiculo')->ultimoDoVeiculo($request->veiculo_id, $ultimoAbast->data_hora_abastecimento));
     }
 
     public function relatorioMediaModeloParam() {
@@ -439,7 +449,7 @@ class VeiculoController extends Controller
             $whereModelo = '1 = 1';
         }
 
-        dd($request);
+        //dd($request);
 
         $modeloVeiculos = Abastecimento::select('marca_veiculos.marca_veiculo', 'modelo_veiculos.id', 'modelo_veiculos.modelo_veiculo')
                             ->join('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
@@ -456,5 +466,21 @@ class VeiculoController extends Controller
         foreach ($modeloVeiculos as $modeloVeiculo) {
             
         }
+    }
+
+    public function apiIndex() {
+        return response()->json(
+            Veiculo::with('modelo_veiculo.marca_veiculo')
+                ->Ativo()
+                ->get()
+        );
+    }
+
+    public function apiVeiculos() {
+        return response()->json(Veiculo::ativo()->get());
+    }
+
+    public function apiVeiculo($id) {
+        return response()->json(Veiculo::ativo()->where('id', $id)->get());
     }
 }

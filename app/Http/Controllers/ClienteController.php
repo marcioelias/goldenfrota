@@ -7,8 +7,11 @@ use App\Cliente;
 use App\Parametro;
 use App\TipoPessoa;
 use App\Rules\cpfCnpj;
+use App\Rules\telefoneComDDD;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Events\NovoRegistroAtualizacaoApp;
 
 class ClienteController extends Controller
 {
@@ -21,15 +24,7 @@ class ClienteController extends Controller
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,23 +32,28 @@ class ClienteController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->searchField) {
-            $clientes = Cliente::where('nome_razao', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('fantasia', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('cpf_cnpj', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('rg_ie', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('endereco', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('fone1', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('fone2', 'like', '%'.$request->searchField.'%')
-                                ->paginate();
-        } else {
-            $clientes = Cliente::paginate();
-        }
+        if (Auth::user()->canListarCliente()) {
+            if ($request->searchField) {
+                $clientes = Cliente::where('nome_razao', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('fantasia', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('cpf_cnpj', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('rg_ie', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('endereco', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('fone1', 'like', '%' . $request->searchField . '%')
+                    ->orWhere('fone2', 'like', '%' . $request->searchField . '%')
+                    ->paginate();
+            } else {
+                $clientes = Cliente::paginate();
+            }
 
-        return View('cliente.index', [
-            'clientes' => $clientes,
-            'fields' => $this->fields
-        ]);
+            return View('cliente.index', [
+                'clientes' => $clientes,
+                'fields' => $this->fields
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -63,13 +63,15 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        $tipoPessoas = TipoPessoa::all();
-        $ufs = Uf::all();
-
-        return View('cliente.create', [
-            'tipoPessoas' => $tipoPessoas,
-            'ufs' => $ufs
-        ]);
+        if (Auth::user()->canCadastrarCliente()) {
+            return View('cliente.create', [
+                'tipoPessoas' => TipoPessoa::all(),
+                'ufs' => Uf::all()
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -80,50 +82,47 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'nome_razao' => 'required|string|unique:clientes',
-            'fantasia' => 'nullable|string',
-            'cpf_cnpj' => ['required', new cpfCnpj], 
-            'rg_ie' => 'required',           
-            'fone1' =>  'required|celular_com_ddd',
-            'fone2' => 'nullable|celular_com_ddd',
-            'email1' => 'nullable|email',
-            'email2' => 'nullable|email',
-            'endereco' => 'required|string|min:3|max:200',
-            'numero' => 'required',
-            'bairro' => 'required|string|min:3|max:200',
-            'cidade' => 'required|string|min:3|max:200',
-            'cep' => 'required',
-            'uf_id' => 'required'
-        ]);
-
-        try {
-            $cliente = new Cliente($request->all());
-            
-            if ($cliente->save()) {
-                Session::flash('success', 'Cliente '.$cliente->nome_razao.' cadastrado com sucesso.');
-                return redirect()->action('ClienteController@index');
-            }
-
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('cliente.create', [
-                'cliente' => new Cliente($request->all()),
-                'tipoPessoas' => TipoPessoa::all(),
-                'ufs' => Uf::all()
+        if (Auth::user()->canCadastrarCliente()) {
+            $this->validate($request, [
+                'nome_razao' => 'required|string|unique:clientes',
+                'fantasia' => 'nullable|string',
+                'cpf_cnpj' => ['required', new cpfCnpj],
+                'rg_ie' => 'required',
+                'fone1' =>  ['required', new telefoneComDDD],
+                'fone2' => ['nullable', new telefoneComDDD],
+                'email1' => 'nullable|email',
+                'email2' => 'nullable|email',
+                'endereco' => 'required|string|min:3|max:200',
+                'numero' => 'required',
+                'bairro' => 'required|string|min:3|max:200',
+                'cidade' => 'required|string|min:3|max:200',
+                'cep' => 'required',
+                'uf_id' => 'required'
             ]);
-        }
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cliente $cliente)
-    {
-        //
+            try {
+                $cliente = new Cliente($request->all());
+
+                if ($cliente->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($cliente));
+
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('models.cliente'),
+                        'name' => $cliente->nome_razao
+                    ]));
+                    return redirect()->action('ClienteController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -134,15 +133,16 @@ class ClienteController extends Controller
      */
     public function edit(Cliente $cliente)
     {
-        $ufs = Uf::all();
-        $tipoPessoas = TipoPessoa::all();
-        $cliente = Cliente::find($cliente->id);
-
-        return View('cliente.edit', [
-            'ufs' => $ufs,
-            'tipoPessoas' => $tipoPessoas,
-            'cliente' => $cliente
-        ]);
+        if (Auth::user()->canAlterarCliente()) {
+            return View('cliente.edit', [
+                'ufs' => Uf::all(),
+                'tipoPessoas' => TipoPessoa::all(),
+                'cliente' => $cliente
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -150,59 +150,65 @@ class ClienteController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Cliente  $cliente
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response 
      */
     public function update(Request $request, Cliente $cliente)
     {
-        $this->validate($request, [
-            'nome_razao' => 'required|string|unique:clientes,id,'.$cliente->id,
-            'fantasia' => 'nullable|string',
-            'cpf_cnpj' => ['required', new cpfCnpj], 
-            'rg_ie' => 'required',           
-            'fone1' =>  'required|celular_com_ddd',
-            'fone2' => 'nullable|celular_com_ddd',
-            'email1' => 'nullable|email',
-            'email2' => 'nullable|email',
-            'endereco' => 'required|string|min:3|max:200',
-            'numero' => 'required',
-            'bairro' => 'required|string|min:3|max:200',
-            'cidade' => 'required|string|min:3|max:200',
-            'cep' => 'required',
-            'uf_id' => 'required'
-        ]);
-
-        try {
-            $cliente = Cliente::find($cliente->id);
-
-            $cliente->nome_razao = $request->nome_razao;
-            $cliente->fantasia = $request->fantasia;
-            $cliente->cpf_cnpj = $request->cpf_cnpj;
-            $cliente->rg_ie = $request->rg_ie;
-            $cliente->fone1 = $request->fone1;
-            $cliente->fone2 = $request->fone2;
-            $cliente->email1 = $request->email1;
-            $cliente->email2 = $request->email2;
-            $cliente->endereco = $request->endereco;
-            $cliente->numero = $request->numero;
-            $cliente->bairro = $request->bairro;
-            $cliente->cidade = $request->cidade;
-            $cliente->cep = $request->cep;
-            $cliente->uf_id = $request->uf_id;
-            $cliente->ativo = $request->ativo;
-
-            
-            if ($cliente->save()) {
-                Session::flash('success', 'Cliente '.$cliente->nome_razao.' alterado com sucesso.');
-                return redirect()->action('ClienteController@index');
-            }
-
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('cliente.edit', [
-                'cliente' => new Cliente($request->all()),
-                'tipoPessoas' => TipoPessoa::all(),
-                'ufs' => Uf::all()
+        if (Auth::user()->canAlterarCliente()) {
+            $this->validate($request, [
+                'nome_razao' => 'required|string|unique:clientes,id,' . $cliente->id,
+                'fantasia' => 'nullable|string',
+                'cpf_cnpj' => ['required', new cpfCnpj],
+                'rg_ie' => 'required',
+                'fone1' =>  ['required', new telefoneComDDD],
+                'fone2' => ['nullable', new telefoneComDDD],
+                'email1' => 'nullable|email',
+                'email2' => 'nullable|email',
+                'endereco' => 'required|string|min:3|max:200',
+                'numero' => 'required',
+                'bairro' => 'required|string|min:3|max:200',
+                'cidade' => 'required|string|min:3|max:200',
+                'cep' => 'required',
+                'uf_id' => 'required'
             ]);
+
+            try {
+                $cliente->nome_razao = $request->nome_razao;
+                $cliente->fantasia = $request->fantasia;
+                $cliente->cpf_cnpj = $request->cpf_cnpj;
+                $cliente->rg_ie = $request->rg_ie;
+                $cliente->fone1 = $request->fone1;
+                $cliente->fone2 = $request->fone2;
+                $cliente->email1 = $request->email1;
+                $cliente->email2 = $request->email2;
+                $cliente->endereco = $request->endereco;
+                $cliente->numero = $request->numero;
+                $cliente->bairro = $request->bairro;
+                $cliente->cidade = $request->cidade;
+                $cliente->cep = $request->cep;
+                $cliente->uf_id = $request->uf_id;
+                $cliente->ativo = $request->ativo;
+
+
+                if ($cliente->save()) {
+                    
+                    event(new NovoRegistroAtualizacaoApp($cliente));
+
+                    Session::flash('success', __('messages.update_success', [
+                        'model' => __('models.cliente'),
+                        '$cliente->nome_razao'
+                    ]));
+                    return redirect()->action('ClienteController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
@@ -214,23 +220,47 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
-        try {
-            $cliente = Cliente::find($cliente->id);
+        if (Auth::user()->canExcluirCliente()) {
+            try {
+                if ($cliente->delete()) {
 
-            if ($cliente->delete()) {
-                Session::flash('success', 'Cliente '.$cliente->nome_razao.' removid ocom sucesso.');
-                
+                    event(new NovoRegistroAtualizacaoApp($cliente, true));
+
+                    Session::flash('success', __('messages.delete_success', [
+                        'model' => __('models.cliente'),
+                        'name' => $cliente->nome_razao
+                    ]));
+                    return redirect()->action('ClienteController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('ClienteController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('ClienteController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
-    
-    public function listagemClientes() {
-        $clientes = Cliente::all();
 
-        return View('relatorios.clientes.listagem_clientes')->withClientes($clientes)->withTitulo('Listagem de Clientes')->withParametro(Parametro::first());
+    public function listagemClientes()
+    {
+        return View('relatorios.clientes.listagem_clientes')->withClientes(Cliente::all())->withTitulo('Listagem de Clientes')->withParametro(Parametro::first());
+    }
+
+    public function apiClientes() {
+        return response()->json(Cliente::ativo()->get());
+    }
+
+    public function apiCliente($id) {
+        return response()->json(Cliente::ativo()->where('id', $id)->get());
     }
 }

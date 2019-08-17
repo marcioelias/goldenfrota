@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Novo Combustível', 
             'routeUrl' => route('combustivel.store'), 
             'method' => 'POST',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -35,7 +35,7 @@
                             'inputSize' => 4
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'valor',
                             'label' => 'Valor',
                             'required' => true,
@@ -48,9 +48,4 @@
             @endsection
         @endcomponent
     </div>
-    <script>
-        jQuery(function($){
-            $("#valor").mask('0.000', {reverse: true});
-        });
-    </script>
 @endsection

@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Alterar Combustível', 
             'routeUrl' => route('combustivel.update', $combustivel->id), 
             'method' => 'PUT',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -17,7 +17,7 @@
                         [
                             'type' => 'text',
                             'field' => 'descricao',
-                            'label' => 'Combustivel',
+                            'label' => 'Combustível',
                             'required' => true,
                             'autofocus' => true,
                             'inputValue' => $combustivel->descricao,
@@ -46,7 +46,7 @@
                             'inputValue' => $combustivel->descricao_reduzida
                         ],
                         [
-                            'type' => 'text',
+                            'type' => 'number',
                             'field' => 'valor',
                             'label' => 'Valor',
                             'required' => true,
@@ -60,9 +60,4 @@
             @endsection
         @endcomponent
     </div>
-    <script>
-        jQuery(function($){
-            $("#valor").mask('0.000', {reverse: true});
-        });
-    </script>
 @endsection

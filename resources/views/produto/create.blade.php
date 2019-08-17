@@ -1,14 +1,17 @@
 @extends('layouts.app')
 
-@section('content')
-    <div class="panel panel-default">
+@section('content-no-app')
+@if(old('fornecedores')) 
+    {{--  {{ dd(old(str_replace('[]', '', 'fornecedores[]'))) }}  --}}
+@endif
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Novo Produto', 
             'routeUrl' => route('produto.store'), 
             'method' => 'POST',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -20,15 +23,14 @@
                             'label' => 'Descrição',
                             'required' => true,
                             'autofocus' => true,
-                            'inputValue' => isset($produto->produto_descricao) ? $produto->produto_descricao : '',
                             'inputSize' => 6
                         ],
                         [
                             'type' => 'text',
                             'field' => 'produto_desc_red',
                             'label' => 'Descrição Reduzida',
-                            'inputValue' => isset($produto->produto_desc_red) ? $produto->produto_desc_red : '',
-                            'inputSize' => 2
+                            'inputSize' => 2,
+                            'maxLength' => 10
                         ],
                         [
                             'type' => 'select',
@@ -40,7 +42,6 @@
                             'displayField' => 'grupo_produto',
                             'keyField' => 'id',
                             'liveSearch' => true,
-                            'indexSelected' => isset($produto->grupo_produto_id) ? $produto->grupo_produto_id : ''
                         ]
                     ]
                 ])
@@ -57,31 +58,111 @@
                             'displayField' => 'unidade',
                             'keyField' => 'id',
                             'liveSearch' => true,
-                            'indexSelected' => isset($produto->unidade_id) ? $produto->unidade_id : ''
                         ],
                         [
-                            'type' => 'text',
-                            'field' => 'valor_unitario',
-                            'label' => 'Valor Unitário',
-                            'inputValue' => isset($produto->valor_unitario) ? $produto->valor_unitario : '',
+                            'type' => 'number',
+                            'field' => 'valor_custo',
+                            'label' => 'Preço de Custo',
                             'inputSize' => 4
                         ],
                         [
-                            'type' => 'text',
-                            'field' => 'qtd_estoque',
-                            'label' => 'Qtd. Estoque',
-                            'inputValue' => isset($produto->qtd_estoque) ? $produto->qtd_estoque : '',
+                            'type' => 'number',
+                            'field' => 'valor_venda',
+                            'label' => 'Preço de Venda',
                             'inputSize' => 4
                         ]
                     ]
                 ])
                 @endcomponent
+                @component('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'select',
+                            'field' => 'controla_vencimento',
+                            'label' => 'Controla Vencimento',
+                            'inputSize' => 3,
+                            'items' => Array('Não', 'Sim'),
+                        ],  
+                        [
+                            'type' => 'number',
+                            'field' => 'vencimento_dias',
+                            'label' => 'Vencimento em Dias',
+                            'readOnly' => true,
+                            'inputSize' => 3
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'vencimento_km',
+                            'label' => 'Vencimento em Km',
+                            'readOnly' => true,
+                            'inputSize' => 3
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'vencimento_horas_trabalhadas',
+                            'label' => 'Vencimento em Horas/Trabalhadas',
+                            'readOnly' => true,
+                            'inputSize' => 3
+                        ]
+                    ]
+                ])
+                @endcomponent
+                @component('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'text',
+                            'field' => 'numero_serie',
+                            'label' => 'Número de Série',
+                            'inputSize' => 6
+                        ],
+                        [
+                            'type' => 'text',
+                            'field' => 'codigo_barras',
+                            'label' => 'Código de Barras',
+                            'inputSize' => 6
+                        ]
+                    ]
+                ])
+                @endcomponent
+                <div class="row">
+                    <div class="col-md-4">
+                        @component('components.input-checklist-group', [
+                            'items' => $fornecedores,
+                            'label' => 'nome_razao',
+                            'field' => 'fornecedores[]',
+                            'title' => 'Fornecedores',
+                            'value' => 'id'
+                        ])
+                        @endcomponent
+                    </div>
+                    <div class="col-md-8" id="estoque-produto-component">
+                        {{--  @component('components.input-checklist-group', [
+                            'items' => $estoques,
+                            'label' => 'estoque',
+                            'field' => 'estoques[]',
+                            'title' => 'Estoques',
+                            'value' => 'id'
+                        ])
+                        @endcomponent  --}}  
+                        <estoque-produto :estoques-data="{{ json_encode($listaEstoques) }}" :old-data="{{ json_encode(old('estoques')) }}"></estoque_produto>                      
+                    </div>
+                </div>
             @endsection
         @endcomponent
     </div>
-    <script>
-        jQuery(function($){
-            $("#valor").mask('0.00', {reverse: true});
-        });
-    </script>
 @endsection
+@push('document-ready')
+    $('#controla_vencimento').on('changed.bs.select', (e) => {
+        $('#vencimento_dias').prop('readonly', (e.target.value == 0));
+        $('#vencimento_km').prop('readonly', (e.target.value == 0));
+        $('#vencimento_horas_trabalhadas').prop('readonly', (e.target.value == 0));
+        if (e.target.value == 0) {
+           $('#vencimento_dias').val(''); 
+           $('#vencimento_km').val('');
+           $('#vencimento_horas_trabalhadas').val('');
+        }
+    });
+@endpush
+@push('bottom-scripts')
+    <script src="{{ mix('js/estoqueproduto.js') }}"></script>
+@endpush

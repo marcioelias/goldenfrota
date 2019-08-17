@@ -1,14 +1,12 @@
 @extends('layouts.base')
 
-@section('head')
-    <link href="{{ asset('css/report.css') }}" rel="stylesheet" media="all">
-@endsection
+@push('header-styles')
+    <link href="{{ mix('css/report.css') }}" rel="stylesheet" media="all">
+@endpush
 
 @section('body')
-    {{--  @component('layouts.main_nav')
-    @endcomponent  --}}
-    <div class="panel panel-default" style="margin-bottom: 80px">
-        <div class="panel-heading">
+    <div class="card" style="margin-bottom: 80px">
+        <div class="card-header">
             <div class="row">
                 <div class="col-sm-2 col-md-2 col-lg-2">
                     @if(isset($parametro))
@@ -50,8 +48,8 @@
             </div>
         </div>
         @if(isset($parametros) && count($parametros) > 0)
-        <div class="panel-sm panel-default">
-            <div class="panel-heading">
+        <div class="panel-sm">
+            <div class="card-header">
                 <div class="row"><span class="parametro-relatorio" style="margin: 4px">Parâmetros selecionados</span></div>
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-12">
@@ -65,18 +63,18 @@
         @endif
         @yield('relatorio')
     </div>
-    <div class="footer navbar-fixed-bottom">
-        <div class="panel panel-default" style="padding: 5px; margin-bottom: 0px" id="print-command-panel">
-            <div align="right">
-                <span data-toggle="tooltip" data-placement="top" title="Imprimir" data-original-title="Imprimir">
-                    <a href="javascript:window.print()" class="btn btn-success" style="margin-right: 10px" id="btn-report-print"><span class="glyphicon glyphicon-print"></span></a>
-                </span>
-                <span data-toggle="tooltip" data-placement="top" title="Fechar" data-original-title="Fechar">
-                    <a href="javascript:window.close()" class="btn btn-danger" style="margin-right: 10px" id="btn-report-close"><span class="glyphicon glyphicon-remove"></span></a>
-                </span>
-            </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+        <div class="ml-auto">
+            <span data-toggle="tooltip" data-placement="top" title="Imprimir" data-original-title="Imprimir">
+                <a href="javascript:window.print()" class="btn btn-success ml-auto" style="margin-right: 10px" id="btn-report-print">
+                    <i class="fas fa-print"></i>
+                </a>
+            </span>
+            <span data-toggle="tooltip" data-placement="top" title="Fechar" data-original-title="Fechar">
+                <a href="javascript:window.close()" class="btn btn-danger ml-auto" style="margin-right: 10px" id="btn-report-close">
+                    <i class="fas fa-times"></i>
+                </a>
+            </span>
         </div>
-    </div>
-@component('layouts.bottom_scripts')
-@endcomponent
+    </nav>
 @endsection

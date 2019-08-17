@@ -9,30 +9,39 @@
     $dateTimeFormat = isset($dateTimeFormat) ? $dateTimeFormat : false;
     $picker_begin = isset($picker_begin) ? $picker_begin : '';
     $picker_end = isset($picker_end) ? $picker_end : '';
+    $div_css = isset($div_css) ? $div_css : '';
 @endphp
 
 {{--  {{dd($inputValue)}}  --}}
-<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }}">
+<div class="col col-sm col-md{{$inputSize}} col-lg{{$inputSize}} {{ $errors->has($field) ? ' has-error' : '' }} {{$div_css}}">
     @if(isset($label))
         @component('components.label', ['label' => $label, 'field' => $field, 'required' => $required])
         @endcomponent
     @endif  
     
-    <div class="input-group date" id="{{$id}}_picker">
+    <div class="form-group">
+        <div class="input-group date" id="{{$id}}_picker" data-target-input="nearest">
+            <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
+            <div class="input-group-append" data-target="#{{$id}}_picker" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fas fa-calendar"></i></div>
+            </div>
+        </div>
+    </div>
+    {{--  <div class="input-group date" id="{{$id}}_picker">
         <input type="text" class="form-control {{$css}}" name="{{$name}}" id="{{$id}}" value="{{ isset($inputValue) ? $inputValue : old($field) }}" {{ $required ? 'required' : '' }}  {{ $autofocus ? 'autofocus' : '' }} {{ $disabled ? 'disabled="disabled"' : '' }}>
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
-    </div>
+    </div>  --}}
 
     @if ($errors->has($field))
-        <span class="help-block">
+        <span class="invalid-feedback">
             <strong>{{ $errors->first($field) }}</strong>
         </span>
     @endif
 </div>
-<script type="text/javascript">
-    $(function () {
+@push('document-ready')
+$(function () {
         $('#{{$id}}_picker').datetimepicker({
             {{ $sideBySide ? 'sideBySide: true, ' : '' }}
             format : "{{ $dateTimeFormat ? $dateTimeFormat : 'DD/MM/YYYY HH:mm' }}",
@@ -51,4 +60,4 @@
             });
         @endif
     });
-</script>
+@endpush

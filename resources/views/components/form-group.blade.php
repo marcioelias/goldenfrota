@@ -24,6 +24,19 @@
                 $input['defaultValue'] = isset($input['defaultValue']) ? $input['defaultValue'] : false;
                 $input['picker_begin'] = isset($input['picker_begin']) ? $input['picker_begin'] : false;
                 $input['picker_end'] = isset($input['picker_end']) ? $input['picker_end'] : false;
+                $input['div_css'] = isset($input['div_css']) ? $input['div_css'] : '';
+                $input['vModel'] = isset($input['vModel']) ? $input['vModel'] : false;
+                $input['readOnly'] = isset($input['readOnly']) ? $input['readOnly'] : false;
+                $input['maxLength'] = isset($input['maxLength']) ? $input['maxLength'] : false;
+                $input['dataWidth'] = isset($input['dataWidth']) ? $input['dataWidth'] : null;
+                $input['dataSize'] = isset($input['dataSize']) ? $input['dataSize'] : null;
+                $input['dataOn'] = isset($input['dataOn']) ? $input['dataOn'] : null;
+                $input['dataOff'] = isset($input['dataOff']) ? $input['dataOff'] : null;
+                $input['dataOnStyle'] = isset($input['dataOnStyle']) ? $input['dataOnStyle'] : null;
+                $input['dataOffStyle'] = isset($input['dataOffStyle']) ? $input['dataOffStyle'] : null;
+                $input['permission'] = isset($input['permission']) ? $input['permission'] : null;
+                $input['visible'] = isset($input['visible']) ? $input['visible'] : true;
+                $input['searchById'] = isset($input['searchById']) ? $input['searchById']: true;
             @endphp
             @if($input['type'] == 'text')
                 @component('components.input-text', [
@@ -34,7 +47,30 @@
                     'disabled' => $input['disabled'],
                     'name' => $input['name'],
                     'id' => $input['id'],
-                    'css' => $input['css']
+                    'css' => $input['css'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly'],
+                    'visible' => $input['visible']
+                ])
+                @endcomponent
+            @endif
+            @if($input['type'] == 'text-typeahead')
+                @php
+                    $initialize_typeahead_scripts = true;
+                @endphp
+                @component('components.input-text-typeahead', [
+                    'field' => $input['field'],
+                    'label' => $input['label'],
+                    'inputSize' => $input['inputSize'],
+                    'inputValue' => $input['inputValue'],
+                    'disabled' => $input['disabled'],
+                    'name' => $input['name'],
+                    'id' => $input['id'],
+                    'css' => $input['css'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -47,7 +83,10 @@
                     'disabled' => $input['disabled'],
                     'name' => $input['name'],
                     'id' => $input['id'],
-                    'css' => $input['css']
+                    'css' => $input['css'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -61,7 +100,10 @@
                     'name' => $input['name'],
                     'id' => $input['id'],
                     'css' => $input['css'],
-                    'rows' => $input['rows']
+                    'rows' => $input['rows'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -73,7 +115,10 @@
                     'disabled' => $input['disabled'],
                     'name' => $input['name'],
                     'id' => $input['id'],
-                    'css' => $input['css']
+                    'css' => $input['css'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -91,6 +136,9 @@
                     'dateTimeFormat' => $input['dateTimeFormat'],
                     'picker_begin' => $input['picker_begin'],
                     'picker_end' => $input['picker_end'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -109,7 +157,33 @@
                     'inputValue' => $input['inputValue'],
                     'indexSelected' => $input['indexSelected'],
                     'liveSearch' => $input['liveSearch'],
-                    'defaultNone' => $input['defaultNone']
+                    'defaultNone' => $input['defaultNone'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible'],
+                    'searchById' => $input['searchById']
+                ])
+                @endcomponent
+            @endif
+            @if($input['type'] == 'select-tree')
+                @component('components.input-select-tree', [
+                    'field' => $input['field'],
+                    'label' => $input['label'],
+                    'inputSize' => $input['inputSize'],
+                    'items' => $input['items'],
+                    'displayField' => $input['displayField'],
+                    'keyField' => $input['keyField'],
+                    'disabled' => $input['disabled'],
+                    'name' => $input['name'],
+                    'id' => $input['id'],
+                    'css' => $input['css'],
+                    'inputValue' => $input['inputValue'],
+                    'indexSelected' => $input['indexSelected'],
+                    'liveSearch' => $input['liveSearch'],
+                    'defaultNone' => $input['defaultNone'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif
@@ -125,7 +199,11 @@
                     'css' => $input['css'],
                     'numMin' => $input['numMin'],
                     'numMax' => $input['numMax'],
-                    'numStep' => $input['numStep']
+                    'numStep' => $input['numStep'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly'],
+                    'visible' => $input['visible']
                 ])    
                 @endcomponent
             @endif
@@ -140,7 +218,43 @@
                     'id' => $input['id'],
                     'css' => $input['css'],
                     'radioButtons' => $input['radioButtons'],
-                    'defaultValue' => $input['defaultValue']
+                    'defaultValue' => $input['defaultValue'],
+                    'div_css' => $input['div_css'],
+                    'vModel' => $input['vModel'],
+                    'visible' => $input['visible']
+                ])
+                @endcomponent
+            @endif
+            @if($input['type'] == 'hidden')
+                @component('components.input-hidden', [
+                    'field' => $input['field'],
+                    'inputValue' => $input['inputValue'],
+                    'id' => $input['id'],
+                    'name' => $input['name'],
+                    'vModel' => $input['vModel']
+                ])
+                @endcomponent
+            @endif
+            @if($input['type'] == 'checkbox')
+                @component('components.input-checkbox', [
+                    'field' => $input['field'],
+                    'label' => $input['label'],
+                    'inputSize' => $input['inputSize'],
+                    'inputValue' => $input['inputValue'],
+                    'dataWidth' => $input['dataWidth'],
+                    'dataSize' => $input['dataSize'],
+                    'dataOn' => $input['dataOn'],
+                    'dataOff' => $input['dataOff'],
+                    'dataOnStyle' => $input['dataOnStyle'],
+                    'dataOffStyle' => $input['dataOffStyle'],
+                    'disabled' => $input['disabled'],
+                    'name' => $input['name'],
+                    'id' => $input['id'],
+                    'css' => $input['css'],
+                    'vModel' => $input['vModel'],
+                    'readOnly' => $input['readOnly'],
+                    'permission' => $input['permission'],
+                    'visible' => $input['visible']
                 ])
                 @endcomponent
             @endif

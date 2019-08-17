@@ -64,9 +64,10 @@ return [
         ],
         'ftp' => [
             'driver'   => 'ftp',
-            'host'     => 'ftp.verity.ind.br',
-            'username' => 'verity06',
-            'password' => 'verity06',
+            'host'     => env('FTP_HOST', ''), 
+            'port'     => env('FTP_PORT', 21),
+            'username' => env('FTP_USER', ''), 
+            'password' => env('FTP_PASS', ''), 
         
             // Optional FTP Settings...
             // 'port'     => 21,

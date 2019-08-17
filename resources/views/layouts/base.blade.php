@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
-    @component('layouts.main_header')
-    @endcomponent 
+    @include('layouts.main_header')
     @yield('head')
 </head>
-<body>
+<body class="bg-white">
     @yield('body')
 </body>
 </html>

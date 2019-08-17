@@ -18,7 +18,7 @@ class ParametroController extends Controller
     public function index()
     {
         $parametro = Parametro::first();
-        if (count($parametro) == 0) {
+        if ($parametro == null) {
             return $this->create();
         } else {
             return $this->edit($parametro);
@@ -33,8 +33,9 @@ class ParametroController extends Controller
     public function create()
     {
         $clientes = Cliente::where('ativo', true)->get();
+        $parametro = Parametro::first();
 
-        return View('parametro.create')->withClientes($clientes);
+        return View('parametro.create')->withClientes($clientes)->withParametro($parametro);
     }
 
     /**
@@ -53,18 +54,17 @@ class ParametroController extends Controller
         try {
             if ($request->hasFile('logotipo')) {
                 $logtipo_relatorio = $request->logotipo->storeAs('images', 'logo_relatorio.png');
-
-                //dd(Storage::url('logo_relatorio.png'));
             }
 
-            $parametro = new Parametro;
-
-            $parametro->cliente_id = $request->cliente_id;
+            $parametro = Parametro::firstOrNew(['cliente_id' => $request->cliente_id]);
+            $parametro->fill($request->all());
             $parametro->logotipo = Storage::url('logo_relatorio.png');
 
             if ($parametro->save()) {
                 Session::flash('success', 'Parâmetros cadastrados com sucesso.');
             }
+
+            return redirect()->route('home');
         } catch (\Exception $e) {
             Storage::delete('logo_relatorio.png');
             Session::flash('error', 'Ocorreu um erro ao cadastrar os parâmetros. '.$e->getMessage());

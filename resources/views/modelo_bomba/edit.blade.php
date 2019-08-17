@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Alterar Modelo de Bomba', 
             'routeUrl' => route('modelo_bomba.update', $modelo_bomba->id), 
             'method' => 'PUT',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')

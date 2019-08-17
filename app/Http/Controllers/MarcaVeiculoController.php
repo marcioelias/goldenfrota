@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\MarcaVeiculo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Events\NovoRegistroAtualizacaoApp;
 
 class MarcaVeiculoController extends Controller
 {
@@ -17,33 +18,28 @@ class MarcaVeiculoController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        if (isset($request->searchField)) {
-            $marcaVeiculos = MarcaVeiculo::where('marca_veiculo', 'like', '%'.$request->searchField.'%')
-                                        ->paginate();
-        } else {
-            $marcaVeiculos = MarcaVeiculo::paginate();
-        }
+        if (Auth::user()->canListarMarcaVeiculo()) {
+            if (isset($request->searchField)) {
+                $marcaVeiculos = MarcaVeiculo::where('marca_veiculo', 'like', '%'.$request->searchField.'%')
+                                            ->paginate();
+            } else {
+                $marcaVeiculos = MarcaVeiculo::paginate();
+            }
 
-        return View('marca_veiculo.index', [
-            'marcaVeiculos' => $marcaVeiculos,
-            'fields' => $this->fields
-        ]);
+            return View('marca_veiculo.index', [
+                'marcaVeiculos' => $marcaVeiculos,
+                'fields' => $this->fields
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -53,7 +49,12 @@ class MarcaVeiculoController extends Controller
      */
     public function create()
     {
-        return View('marca_veiculo.create');
+        if (Auth::user()->canCadastrarMarcaVeiculo()) {
+            return View('marca_veiculo.create');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -64,34 +65,34 @@ class MarcaVeiculoController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'marca_veiculo' => 'required|string|min:3|max:30|unique:marca_veiculos'
-        ]);
-
-        try {
-            $marcaVeiculo = new MarcaVeiculo($request->all());
-
-            if ($marcaVeiculo->save()) {
-                Session::flash('success', 'Marca de Veículo '.$marcaVeiculo->marca_veiculo.' cadastrada com sucesso.');
-                return redirect()->action('MarcaVeiculoController@index');
-            } 
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('marca_veiculo.create', [
-                'marcaVeiculo' => new MarcaVeiculo($request->all())
+        if (Auth::user()->canCadastrarMarcaVeiculo()) {
+            $this->validate($request, [
+                'marca_veiculo' => 'required|string|min:3|max:30|unique:marca_veiculos'
             ]);
-        }
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\MarcaVeiculo  $marcaVeiculo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MarcaVeiculo $marcaVeiculo)
-    {
-        //
+            try {
+                $marcaVeiculo = new MarcaVeiculo($request->all());
+
+                if ($marcaVeiculo->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($marcaVeiculo));
+
+                    Session::flash('success', __('messages.create_success_f', [
+                        'model' => __('models.marca_veiculo'),
+                        'name' => $marcaVeiculo->marca_veiculo
+                    ]));
+                    return redirect()->action('MarcaVeiculoController@index');
+                } 
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -102,11 +103,14 @@ class MarcaVeiculoController extends Controller
      */
     public function edit(MarcaVeiculo $marcaVeiculo)
     {
-        $marcaVeiculo = MarcaVeiculo::find($marcaVeiculo->id);
-
-        return View('marca_veiculo.edit', [
-            'marcaVeiculo' => $marcaVeiculo
-        ]);
+        if (Auth::user()->canAlterarMarcaVeiculo()) {
+            return View('marca_veiculo.edit', [
+                'marcaVeiculo' => $marcaVeiculo
+            ]);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -118,25 +122,34 @@ class MarcaVeiculoController extends Controller
      */
     public function update(Request $request, MarcaVeiculo $marcaVeiculo)
     {
-        $this->validate($request, [
-            'marca_veiculo' => 'required|string|min:3|max:30|unique:marca_veiculos,id,'.$marcaVeiculo->id
-        ]);
-
-        try {
-            $marcaVeiculo = MarcaVeiculo::find($marcaVeiculo->id);
-
-            $marcaVeiculo->marca_veiculo = $request->marca_veiculo;
-            $marcaVeiculo->ativo = $request->ativo;
-
-            if ($marcaVeiculo->save()) {
-                Session::flash('success', 'Marca de Veículo '.$marcaVeiculo->marca_veiculo.' alterada com sucesso.');
-                return redirect()->action('MarcaVeiculoController@index');
-            } 
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('marca_veiculo.edit', [
-                'marcaVeiculo' => new MarcaVeiculo($request->all())
+        if (Auth::user()->canAlterarMarcaVeiculo()) {
+            $this->validate($request, [
+                'marca_veiculo' => 'required|string|min:3|max:30|unique:marca_veiculos,id,'.$marcaVeiculo->id
             ]);
+
+            try {
+                $marcaVeiculo->marca_veiculo = $request->marca_veiculo;
+                $marcaVeiculo->ativo = $request->ativo;
+
+                if ($marcaVeiculo->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($marcaVeiculo));
+
+                    Session::flash('success', __('messages.update_success_f', [
+                        'model' => __('models.marca_veiculo'),
+                        'name' => $marcaVeiculo->marca_veiculo
+                    ]));
+                    return redirect()->action('MarcaVeiculoController@index');
+                } 
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
@@ -148,17 +161,42 @@ class MarcaVeiculoController extends Controller
      */
     public function destroy(MarcaVeiculo $marcaVeiculo)
     {
-        try {
-            $marcaVeiculo = MarcaVeiculo::find($marcaVeiculo->id);
+        if (Auth::user()->canAlterarMarcaVeiculo()) {
+            try {
+                if ($marcaVeiculo->delete()) {
 
-            if ($marcaVeiculo->delete()) {
-                Session::flash('success', 'Marca de Veículo '.$marcaVeiculo->marca_veiculo.' removida com sucesso.');
-                
+                    event(new NovoRegistroAtualizacaoApp($marcaVeiculo, true));
+
+                    Session::flash('success', __('messages.delete_success_f', [
+                        'model' => __('models.marca_veiculo'),
+                        'name' => $marcaVeiculo->marca_veiculo
+                    ]));
+                    return redirect()->action('MarcaVeiculoController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('MarcaVeiculoController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('MarcaVeiculoController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
+    }
+
+    public function apiMarcaVeiculos() {
+        return response()->json(MarcaVeiculo::ativo()->get());
+    }
+
+    public function apiMarcaVeiculo($id) {
+        return response()->json(MarcaVeiculo::ativo()->where('id', $id)->get());
     }
 }

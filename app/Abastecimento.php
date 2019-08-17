@@ -2,6 +2,10 @@
 
 namespace App;
 
+use App\Bico;
+use App\Veiculo;
+use App\TanqueMovimentacao;
+use App\MovimentacaoCombustivel;
 use Illuminate\Database\Eloquent\Model;
 
 class Abastecimento extends Model
@@ -21,14 +25,35 @@ class Abastecimento extends Model
         'requisicao_abastecimento',
         'data_hora_abastecimento',
         'ativo',
-        'abastecimento_local'
+        'abastecimento_local',
+        'eh_afericao'
     ];
 
     public function tanque_movimentacao() {
-        return $this->hasOne('App\TanqueMovimentacao');
+        return $this->hasOne(TanqueMovimentacao::class);
     }
 
     public function veiculo() {
-        return $this->belongsTo('App\Veiculo');
+        return $this->belongsTo(Veiculo::class);
+    }
+
+    public function movimentacao_combustivel() {
+        return $this->hasOne(MovimentacaoCombustivel::class);
+    }
+
+    public function bico() {
+        return $this->belongsTo(Bico::class);
+    }
+
+    public function scopeUltimoDoVeiculo($query, $veiculo_id, $dataHoraAbastecimentoAtual = false) {
+        if ($dataHoraAbastecimentoAtual) {
+            return $query->where('veiculo_id', $veiculo_id)
+                ->where('data_hora_abastecimento', '<', $dataHoraAbastecimentoAtual)
+                ->orderBy('data_hora_abastecimento', 'desc')
+                ->first();    
+        } 
+        return $query->where('veiculo_id', $veiculo_id)
+            ->orderBy('data_hora_abastecimento', 'desc')
+            ->first();
     }
 }

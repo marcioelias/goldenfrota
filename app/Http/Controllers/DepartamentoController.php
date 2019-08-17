@@ -6,7 +6,9 @@ use App\Cliente;
 use App\Departamento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Events\NovoRegistroAtualizacaoApp;
 
 class DepartamentoController extends Controller
 {
@@ -18,37 +20,32 @@ class DepartamentoController extends Controller
     );
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        if ($request->searchField) {
-            $departamentos = DB::table('departamentos')
-                            ->select('departamentos.*', 'clientes.nome_razao')
-                            ->join('clientes', 'clientes.id', 'departamentos.cliente_id')
-                            ->where('departamentos.departamento', 'like', '%'.$request->searchField.'%')
-                            ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
-                            ->paginate();
-        } else {
-            $departamentos = DB::table('departamentos')
-                            ->select('departamentos.*', 'clientes.nome_razao')
-                            ->join('clientes', 'clientes.id', 'departamentos.cliente_id')
-                            ->paginate();
-        }
+        if (Auth::user()->canListarDepartamento()) {
+            if ($request->searchField) {
+                $departamentos = DB::table('departamentos')
+                                ->select('departamentos.*', 'clientes.nome_razao')
+                                ->join('clientes', 'clientes.id', 'departamentos.cliente_id')
+                                ->where('departamentos.departamento', 'like', '%'.$request->searchField.'%')
+                                ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
+                                ->paginate();
+            } else {
+                $departamentos = DB::table('departamentos')
+                                ->select('departamentos.*', 'clientes.nome_razao')
+                                ->join('clientes', 'clientes.id', 'departamentos.cliente_id')
+                                ->paginate();
+            }
 
-        return View('departamento.index')->withDepartamentos($departamentos)->withFields($this->fields);
+            return View('departamento.index')->withDepartamentos($departamentos)->withFields($this->fields);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -58,9 +55,13 @@ class DepartamentoController extends Controller
      */
     public function create()
     {
-        $clientes = Cliente::where('ativo', true)->get();
-
-        return View('departamento.create')->withClientes($clientes);
+        if (Auth::user()->canCadastrarDepartamento()) {
+            $clientes = Cliente::where('ativo', true)->get();
+            return View('departamento.create')->withClientes($clientes);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -71,36 +72,35 @@ class DepartamentoController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'departamento' => 'required|string|unique:departamentos,departamento,NULL,id,cliente_id,'.$request->cliente_id,
-            'cliente_id' => 'required'
-        ]);
-
-        try {
-            $departamento = new Departamento($request->all());
-
-            if ($departamento->save()) {
-                Session::flash('success', 'Departamento '.$departamento->departamento.' cadastrado com sucesso.');
-                return redirect()->action('DepartamentoController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
-            return View('departamento.create', [
-                'departamento' => new Departamento($request->all()),
-                'clientes' => Cliente::where('ativo', true)->get()
+        if (Auth::user()->canCadastrarDepartamento()) {
+            $this->validate($request, [
+                'departamento' => 'required|string|unique:departamentos,departamento,NULL,id,cliente_id,'.$request->cliente_id,
+                'cliente_id' => 'required'
             ]);
-        }
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Departamento  $departamento
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Departamento $departamento)
-    {
-        //
+            try {
+                $departamento = new Departamento($request->all());
+
+                if ($departamento->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($departamento));
+
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('models.departamento'),
+                        'name' => $departamento->departamento
+                    ]));
+                    return redirect()->action('DepartamentoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -111,10 +111,14 @@ class DepartamentoController extends Controller
      */
     public function edit(Departamento $departamento)
     {
-        $departamento = Departamento::find($departamento->id);
-        $clientes = Cliente::where('ativo', true)->orWhere('clientes.id', $departamento->cliente_id)->get();
+        if (Auth::user()->canAlterarDepartamento()) {
+            $clientes = Cliente::where('ativo', true)->orWhere('clientes.id', $departamento->cliente_id)->get();
 
-        return View('departamento.edit')->withDepartamento($departamento)->withClientes($clientes);
+            return View('departamento.edit')->withDepartamento($departamento)->withClientes($clientes);
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -126,28 +130,36 @@ class DepartamentoController extends Controller
      */
     public function update(Request $request, Departamento $departamento)
     {
-        $this->validate($request, [
-            'departamento' => 'required|string|unique:departamentos,cliente_id,'.$request->cliente_id,
-            'cliente_id' => 'required'
-        ]);
-
-        try {
-            $departamento = Departamento::find($departamento->id);
-
-            $departamento->departamento = $request->departamento;
-            $departamento->cliente_id = $request->cliente_id;
-            $departamento->ativo = $request->ativo;
-
-            if ($departamento->save()) {
-                Session::flash('success', 'Departamento '.$departamento->departamento.' alterado com sucesso.');
-                return redirect()->action('DepartamentoController@index');
-            }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Ocorreu um erro ao alterar os dados. '.$e->getMessage());
-            return View('departamento.edit', [
-                'departamento' => $departamento,
-                'clientes' => Cliente::where('ativo', true)->orWhere('clientes.id', $departamento->cliente_id)->get()
+        if (Auth::user()->canAlterarDepartamento()) {
+            $this->validate($request, [
+                'departamento' => 'required|string|unique:departamentos,cliente_id,'.$request->cliente_id,
+                'cliente_id' => 'required'
             ]);
+
+            try {
+                $departamento->departamento = $request->departamento;
+                $departamento->cliente_id = $request->cliente_id;
+                $departamento->ativo = $request->ativo;
+
+                if ($departamento->save()) {
+
+                    event(new NovoRegistroAtualizacaoApp($departamento));
+
+                    Session::flash('success',  __('messages.update_success', [
+                        'model' => __('models.departamento'),
+                        'name' => $departamento->departamento
+                    ]));
+                    return redirect()->action('DepartamentoController@index');
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->bakc()->withInput();
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
@@ -159,16 +171,34 @@ class DepartamentoController extends Controller
      */
     public function destroy(Departamento $departamento)
     {
-        try {
-            $departamento = Departamento::find($departamento->id);
-            if ($departamento->delete()) {
-                Session::flash('success', 'Departamento '.$departamento->departamento.' removido com departamentoucesso.');
-                
+        if (Auth::user()->canExcluirDepartamento()) {   
+            try {
+                if ($departamento->delete()) {
+
+                    event(new NovoRegistroAtualizacaoApp($departamento, true));
+
+                    Session::flash('success', __('messages.delete_success', [
+                        'model' => __('models.departamento'),
+                        'name' => $departamento->departamento
+                    ]));
+                    return redirect()->action('DepartamentoController@index');
+                }
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
                 return redirect()->action('DepartamentoController@index');
             }
-        } catch (\Exception $e) {
-            Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('DepartamentoController@index');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
     }
 
@@ -179,5 +209,13 @@ class DepartamentoController extends Controller
                     ])->get();
 
         return response()->json($departamentos);
+    }
+
+    public function apiDepartamentos() {
+        return response()->json(Departamento::ativo()->get());
+    }
+
+    public function apiDepartamento($id) {
+        return response()->json(Departamento::ativo()->where('id', $id)->get());
     }
 }

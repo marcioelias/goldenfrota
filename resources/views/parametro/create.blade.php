@@ -9,15 +9,15 @@
         {{ Session::get('success') }}
     </div>
 @endif
-    <div class="panel panel-default">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Parametrização', 
             'routeUrl' => route('parametro.store'), 
             'method' => 'POST',
             'fileUpload' => true,
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -33,11 +33,15 @@
                             'displayField' => 'nome_razao',
                             'liveSearch' => true,
                             'keyField' => 'id',
-                            'defaultNone' => true
+                            'defaultNone' => true,
+                            'indexSelected' => isset($parametro->cliente_id) ? $parametro->cliente_id : ''
                         ]
                     ]
                 ])
                 @endcomponent
+                @if(isset($parametro->logotipo))
+                <img src="{{ asset($parametro->logotipo) }}" width="200px">
+                @endif
                 @component('components.form-group', [
                     'inputs' => [
                         [

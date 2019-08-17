@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Tanque;
 use Illuminate\Database\Eloquent\Model;
 
 class Combustivel extends Model
@@ -18,6 +19,10 @@ class Combustivel extends Model
     );
 
     public function tanques() {
-        return $this->hasMany('App\Tanque');
+        return $this->belongsTo(Tanque::class);
+    }
+
+    public function scopeAtivo($query, $ativo = true) {
+        return $query->where('ativo', $ativo);
     }
 }

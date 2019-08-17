@@ -9,15 +9,15 @@
             {{ Session::get('success') }}
         </div>
     @endif
-    <div class="panel panel-default">
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Parametrização', 
             'routeUrl' => route('parametro.update', $parametro->id), 
             'method' => 'PUT',
             'fileUpload' => true,
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -53,7 +53,7 @@
                 ])
                 @endcomponent
                 @if($parametro->logotipo)
-                <div class="panel">
+                <div class="card">
                     <div>
                         <img src="{{ asset($parametro->logotipo) }}" width="200px">
                     </div>

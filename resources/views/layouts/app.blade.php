@@ -4,10 +4,12 @@
     @yield('head_includes')
 @endsection
 @section('body')
-    @component('layouts.main_nav')
-    @endcomponent
+    <div id="app">  
+    @include('layouts.main_nav')
+    @include('layouts.session_messages')
     @yield('content')
-    @component('layouts.bottom_scripts')
-    @endcomponent
-    @yield('bottom_includes')
+    </div>
+    @yield('content-no-app')
+    @include('layouts.bottom_scripts')
+    @stack('bottom-scripts')
 @endsection

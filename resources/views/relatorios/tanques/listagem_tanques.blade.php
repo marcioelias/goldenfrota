@@ -1,7 +1,7 @@
 @extends('layouts.relatorios')
 
 @section('relatorio')
-<table class="table table-condensed report-table">
+<table class="table table-sm report-table">
     <thead>
         <tr class="info">
             <td>
@@ -37,7 +37,7 @@
                 {{$tanque->capacidade}}
             </td>
             <td>
-                {{$tanque->posicao}}
+                {{ number_format($tanque->posicao, 3) }}
             </td>
         </tr>
         @endforeach

@@ -1,14 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="panel panel-default">
+    {{--  {{ dd($estoques) }}  --}}
+    <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Alterar Produto', 
             'routeUrl' => route('produto.update', $produto->id), 
             'method' => 'PUT',
             'formButtons' => [
-                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'ok'],
-                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'remove']
+                ['type' => 'submit', 'label' => 'Salvar', 'icon' => 'check'],
+                ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
                 ]
             ])
             @section('formFields')
@@ -20,15 +21,16 @@
                             'label' => 'Descrição',
                             'required' => true,
                             'autofocus' => true,
-                            'inputValue' => $produto->produto_descricao,
-                            'inputSize' => 5
+                            'inputSize' => 6,
+                            'inputValue' => $produto->produto_descricao
                         ],
                         [
                             'type' => 'text',
                             'field' => 'produto_desc_red',
                             'label' => 'Descrição Reduzida',
-                            'inputValue' => $produto->produto_desc_red,
-                            'inputSize' => 2
+                            'inputSize' => 2,
+                            'maxLength' => 10,
+                            'inputValue' => $produto->produto_desc_red
                         ],
                         [
                             'type' => 'select',
@@ -41,14 +43,6 @@
                             'keyField' => 'id',
                             'liveSearch' => true,
                             'indexSelected' => $produto->grupo_produto_id
-                        ],
-                        [
-                            'type' => 'select',
-                            'field' => 'ativo',
-                            'label' => 'Ativo',
-                            'inputSize' => 1,
-                            'indexSelected' => $produto->ativo,
-                            'items' => Array('Não', 'Sim'),
                         ]
                     ]
                 ])
@@ -68,28 +62,110 @@
                             'indexSelected' => $produto->unidade_id
                         ],
                         [
-                            'type' => 'text',
-                            'field' => 'valor_unitario',
-                            'label' => 'Valor Unitário',
-                            'inputValue' => $produto->valor_unitario,
-                            'inputSize' => 4
+                            'type' => 'number',
+                            'field' => 'valor_custo',
+                            'label' => 'Preço de Custo',
+                            'inputSize' => 4,
+                            'inputValue' => $produto->valor_custo
                         ],
                         [
-                            'type' => 'text',
-                            'field' => 'qtd_estoque',
-                            'label' => 'Qtd. Estoque',
-                            'inputValue' => $produto->qtd_estoque,
-                            'inputSize' => 4
+                            'type' => 'number',
+                            'field' => 'valor_venda',
+                            'label' => 'Preço de Venda',
+                            'inputSize' => 4,
+                            'inputValue' => $produto->valor_venda
                         ]
                     ]
                 ])
                 @endcomponent
+                @component('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'select',
+                            'field' => 'controla_vencimento',
+                            'label' => 'Controla Vencimento',
+                            'inputSize' => 3,
+                            'items' => Array('Não', 'Sim'),
+                            'indexSelected' => $produto->controla_vencimento
+                        ],  
+                        [
+                            'type' => 'number',
+                            'field' => 'vencimento_dias',
+                            'label' => 'Vencimento em Dias',
+                            'inputSize' => 3,
+                            'readOnly' => !$produto->controla_vencimento,
+                            'inputValue' => $produto->vencimento_dias
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'vencimento_km',
+                            'label' => 'Vencimento em Km',
+                            'inputSize' => 3,
+                            'readOnly' => !$produto->controla_vencimento,
+                            'inputValue' => $produto->vencimento_km
+                        ],
+                        [
+                            'type' => 'number',
+                            'field' => 'vencimento_horas_trabalhadas',
+                            'label' => 'Vencimento em Horas/Trabalhadas',
+                            'readOnly' => !$produto->controla_vencimento,
+                            'inputSize' => 3,
+                            'inputValue' => $produto->vencimento_horas_trabalhadas
+                        ]
+                    ]
+                ])
+                @endcomponent
+                @component('components.form-group', [
+                    'inputs' => [
+                        [
+                            'type' => 'text',
+                            'field' => 'numero_serie',
+                            'label' => 'Número de Série',
+                            'inputSize' => 6,
+                            'inputValue' => $produto->numero_serie
+                        ],
+                        [
+                            'type' => 'text',
+                            'field' => 'codigo_barras',
+                            'label' => 'Código de Barras',
+                            'inputSize' => 6,
+                            'inputValue' => $produto->codigo_barras
+                        ]
+                    ]
+                ])
+                @endcomponent
+                <div class="row">
+                    <div class="col-md-4">
+                        @component('components.input-checklist-group', [
+                            'items' => $fornecedores,
+                            'label' => 'nome_razao',
+                            'field' => 'fornecedores[]',
+                            'title' => 'Fornecedores',
+                            'value' => 'id',
+                            'indexSelected' => $produto->fornecedores()->pluck('fornecedor_id')
+                        ])
+                        @endcomponent
+                    </div>
+                    <div class="col-md-8" id="estoque-produto-component">
+                        <estoque-produto :estoques-data="{{ json_encode($listaEstoques) }}" :old-data="{{ json_encode((old('estoques')) ? old('estoques') : $estoques) }}"></estoque-produto>                      
+                    </div>
+                </div>
             @endsection
         @endcomponent
     </div>
-    <script>
-        jQuery(function($){
-            $("#valor").mask('0.00', {reverse: true});
-        });
-    </script>
 @endsection
+@push('document-ready')
+    $('#controla_vencimento').on('changed.bs.select', (e) => {
+        $('#vencimento_dias').prop('readonly', (e.target.value == 0));
+        $('#vencimento_km').prop('readonly', (e.target.value == 0));
+        $('#vencimento_horas_trabalhadas').prop('readonly', (e.target.value == 0));
+        if (e.target.value == 0) {
+           $('#vencimento_dias').val(''); 
+           $('#vencimento_km').val('');
+           $('#vencimento_horas_trabalhadas').val('');
+        }
+    });
+@endpush
+@push('bottom-scripts')
+    <script src="{{ mix('js/estoqueproduto.js') }}"></script>
+@endpush

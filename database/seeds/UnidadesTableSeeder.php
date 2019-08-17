@@ -11,6 +11,11 @@ class UnidadesTableSeeder extends Seeder
      */
     public function run()
     {
+        $this->command->info('Limpando tabela unidades');
+        $this->truncateUnidadesTable();
+
+        $this->command->info('Criando Unidades');
+
         DB::table('unidades')->insert([[
             'unidade' => 'UN',
             'permite_fracionamento' => false
@@ -23,5 +28,12 @@ class UnidadesTableSeeder extends Seeder
             'unidade' => 'KG',
             'permite_fracionamento' => true
         ]]);
+    }
+
+    public function truncateUnidadesTable() {
+        Schema::disableForeignKeyConstraints();
+        DB::table('unidades')->truncate();
+        \App\Unidade::truncate();
+        Schema::enableForeignKeyConstraints();
     }
 }
