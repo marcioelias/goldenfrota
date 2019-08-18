@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class CombustivelController extends Controller
 {
 
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'descricao' => 'Combustível',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'descricao' => ['label' => 'Combustível', 'type' => 'string', 'searchParam' => true],
         'valor' => ['label' => 'Valor', 'type' => 'decimal', 'decimais' => 3],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
@@ -27,7 +30,9 @@ class CombustivelController extends Controller
     {
         if (Auth::user()->canListarCombustivel()) {
             if (isset($request->searchField)) {
-                $combustiveis = Combustivel::where('descricao', 'like', '%' . $request->searchField . '%')->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $combustiveis = Combustivel::whereRaw($whereRaw)
+                        ->paginate();
             } else {
                 $combustiveis = Combustivel::paginate();
             }
@@ -80,7 +85,7 @@ class CombustivelController extends Controller
                         'name' => $combustivel->descricao
                     ]));
 
-                    return redirect()->action('CombustivelController@index');
+                    return redirect()->action('CombustivelController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -138,7 +143,7 @@ class CombustivelController extends Controller
                         'model' => 'combustivel',
                         'name' => $combustivel->descricao
                     ]));
-                    return redirect()->action('CombustivelController@index');
+                    return redirect()->action('CombustivelController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -158,7 +163,7 @@ class CombustivelController extends Controller
      * @param  \App\Combustivel  $combustivel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Combustivel $combustivel)
+    public function destroy(Request $request, Combustivel $combustivel)
     {
         if (Auth::user()->canExcluirCombustivel()) {
             try {
@@ -170,7 +175,7 @@ class CombustivelController extends Controller
                         'model' => __('models.combustivel'),
                         'name' => $combustivel->descricao
                     ]));
-                    return redirect()->action('CombustivelController@index');
+                    return redirect()->action('CombustivelController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -183,7 +188,7 @@ class CombustivelController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('CombustivelController@index');
+                return redirect()->action('CombustivelController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

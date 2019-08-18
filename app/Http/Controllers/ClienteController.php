@@ -12,13 +12,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class ClienteController extends Controller
 {
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'nome_razao' => 'Nome/Razão Social',
-        'cpf_cnpj' => 'CPF/CNPJ',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'nome_razao' => ['label' => 'Nome/Razão Social', 'type' => 'string', 'searchParam' => true],
+        'fantasia' => ['label' => 'Fantasia', 'type' => 'string', 'searchParam' => true],
+        'cpf_cnpj' => ['label' => 'CPF/CNPJ', 'type' => 'string', 'searchParam' => true],
         'fone1' => 'Fone [1]',
         'fone2' => 'Fone [2]',
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
@@ -34,13 +38,8 @@ class ClienteController extends Controller
     {
         if (Auth::user()->canListarCliente()) {
             if ($request->searchField) {
-                $clientes = Cliente::where('nome_razao', 'like', '%' . $request->searchField . '%')
-                    ->orWhere('fantasia', 'like', '%' . $request->searchField . '%')
-                    ->orWhere('cpf_cnpj', 'like', '%' . $request->searchField . '%')
-                    ->orWhere('rg_ie', 'like', '%' . $request->searchField . '%')
-                    ->orWhere('endereco', 'like', '%' . $request->searchField . '%')
-                    ->orWhere('fone1', 'like', '%' . $request->searchField . '%')
-                    ->orWhere('fone2', 'like', '%' . $request->searchField . '%')
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $clientes = Cliente::whereRaw($whereRaw)
                     ->paginate();
             } else {
                 $clientes = Cliente::paginate();
@@ -111,7 +110,7 @@ class ClienteController extends Controller
                         'model' => __('models.cliente'),
                         'name' => $cliente->nome_razao
                     ]));
-                    return redirect()->action('ClienteController@index');
+                    return redirect()->action('ClienteController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -198,7 +197,7 @@ class ClienteController extends Controller
                         'model' => __('models.cliente'),
                         '$cliente->nome_razao'
                     ]));
-                    return redirect()->action('ClienteController@index');
+                    return redirect()->action('ClienteController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -218,7 +217,7 @@ class ClienteController extends Controller
      * @param  \App\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy(Request $request, Cliente $cliente)
     {
         if (Auth::user()->canExcluirCliente()) {
             try {
@@ -230,7 +229,7 @@ class ClienteController extends Controller
                         'model' => __('models.cliente'),
                         'name' => $cliente->nome_razao
                     ]));
-                    return redirect()->action('ClienteController@index');
+                    return redirect()->action('ClienteController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -243,7 +242,7 @@ class ClienteController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('ClienteController@index');
+                return redirect()->action('ClienteController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

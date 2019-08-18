@@ -9,13 +9,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class DepartamentoController extends Controller
 {
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'departamento' => 'Departamento',
-        'nome_razao' => 'Cliente',
+        'departamentos.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'departamento' => ['label' => 'Departamento', 'type' => 'string', 'searchParam' => true],
+        'nome_razao' => ['label' => 'Cliente', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -28,11 +31,11 @@ class DepartamentoController extends Controller
     {
         if (Auth::user()->canListarDepartamento()) {
             if ($request->searchField) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $departamentos = DB::table('departamentos')
                                 ->select('departamentos.*', 'clientes.nome_razao')
                                 ->join('clientes', 'clientes.id', 'departamentos.cliente_id')
-                                ->where('departamentos.departamento', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->paginate();
             } else {
                 $departamentos = DB::table('departamentos')
@@ -89,7 +92,7 @@ class DepartamentoController extends Controller
                         'model' => __('models.departamento'),
                         'name' => $departamento->departamento
                     ]));
-                    return redirect()->action('DepartamentoController@index');
+                    return redirect()->action('DepartamentoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -149,7 +152,7 @@ class DepartamentoController extends Controller
                         'model' => __('models.departamento'),
                         'name' => $departamento->departamento
                     ]));
-                    return redirect()->action('DepartamentoController@index');
+                    return redirect()->action('DepartamentoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -169,7 +172,7 @@ class DepartamentoController extends Controller
      * @param  \App\Departamento  $departamento
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Departamento $departamento)
+    public function destroy(Request $request, Departamento $departamento)
     {
         if (Auth::user()->canExcluirDepartamento()) {   
             try {
@@ -181,7 +184,7 @@ class DepartamentoController extends Controller
                         'model' => __('models.departamento'),
                         'name' => $departamento->departamento
                     ]));
-                    return redirect()->action('DepartamentoController@index');
+                    return redirect()->action('DepartamentoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -194,7 +197,7 @@ class DepartamentoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('DepartamentoController@index');
+                return redirect()->action('DepartamentoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

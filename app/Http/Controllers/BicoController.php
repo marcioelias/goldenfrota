@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Bico;
 use App\Bomba;
 use App\Tanque;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -12,11 +13,13 @@ use Illuminate\Support\Facades\Session;
 
 class BicoController extends Controller
 {
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
-        'num_bico' => 'N. Bico',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'num_bico' => ['label' => 'N. Bico', 'type' => 'int', 'searchParam' => true],
         'descricao_bomba' => 'Bomba',
-        'descricao' => 'Combustível',
+        'descricao' => ['label' => 'Combustível', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -29,13 +32,13 @@ class BicoController extends Controller
     {
         if (Auth::user()->canListarBico()) {
             if (isset($request->searchField)) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $bicos = DB::table('bicos')
                             ->select('bicos.*', 'bombas.descricao_bomba', 'combustiveis.descricao')
                             ->join('tanques', 'tanques.id', 'bicos.tanque_id')
                             ->join('combustiveis', 'combustiveis.id', 'tanques.combustivel_id')
                             ->join('bombas', 'bombas.id', 'bicos.bomba_id')
-                            ->where('num_bico', $request->searchField)
-                            ->orWhere('combustiveis.descricao', 'like', '%'.$request->searchField.'%')
+                            ->whereRaw($whereRaw)
                             ->paginate();
             } else {
                 $bicos = DB::table('bicos')
@@ -92,7 +95,7 @@ class BicoController extends Controller
                         'model' => __('models.bico'),
                         'name' => $bico->num_bico
                     ]));
-                    return redirect()->action('BicoController@index');
+                    return redirect()->action('BicoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -155,7 +158,7 @@ class BicoController extends Controller
                         'model' => __('models.bico'),
                         'name' => $bico->num_bico
                     ]));
-                    return redirect()->action('BicoController@index');
+                    return redirect()->action('BicoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -176,7 +179,7 @@ class BicoController extends Controller
      * @param  \App\Bico  $bico
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bico $bico)
+    public function destroy(Request $request, Bico $bico)
     {
         if (Auth::user()->canExcluirBico()) {
             try {
@@ -186,7 +189,7 @@ class BicoController extends Controller
                         'name' => $bico->num_bico
                     ]));
                     
-                    return redirect()->action('BicoController@index');
+                    return redirect()->action('BicoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -199,7 +202,7 @@ class BicoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('BicoController@index');
+                return redirect()->action('BicoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

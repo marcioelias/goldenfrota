@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Estoque;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class EstoqueController extends Controller
 {
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'estoque' => 'Estoque',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'estoque' => ['label' => 'Estoque', 'type' => 'string', 'searchParam' => true],
         'permite_estoque_negativo' => [
             'label' => 'Estoque Negativo', 
             'type' => 'bool'
@@ -28,7 +31,8 @@ class EstoqueController extends Controller
     {
         if (Auth::user()->canListarEstoque()) {
             if ($request->searchField) {
-                $estoques = Estoque::where('estoque', 'like', '%'.$request->searchField.'%')->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $estoques = Estoque::whereRaw($whereRaw)->paginate();
             } else {
                 $estoques = Estoque::paginate();
             }
@@ -77,7 +81,7 @@ class EstoqueController extends Controller
                         'model' => __('models.estoque'),
                         'name' => $estoque->estoque
                     ]));
-                    return redirect()->action('EstoqueController@index');
+                    return redirect()->action('EstoqueController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('success', __('messages.create_error', [
                         'model' => __('models.estoque'),
@@ -135,7 +139,7 @@ class EstoqueController extends Controller
                         'model' => __('models.estoque'),
                         'name' => $estoque->estoque
                     ]));
-                    return redirect()->action('EstoqueController@index');
+                    return redirect()->action('EstoqueController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('success', __('messages.update_error', [
                         'model' => __('models.estoque'),
@@ -161,7 +165,7 @@ class EstoqueController extends Controller
      * @param  \App\Estoque  $estoque
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Estoque $estoque)
+    public function destroy(Request $request, Estoque $estoque)
     {
         if (Auth::user()->canExcluirEstoque()) {
             try {
@@ -170,7 +174,7 @@ class EstoqueController extends Controller
                         'model' => __('models.estoque'),
                         'name' => $estoque->estoque
                     ]));
-                    return redirect()->action('EstoqueController@index');
+                    return redirect()->action('EstoqueController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -183,7 +187,7 @@ class EstoqueController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('EstoqueController@index');
+                return redirect()->action('EstoqueController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

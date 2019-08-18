@@ -10,12 +10,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Rules\telefoneComDDD;
+use App\Traits\SearchTrait;
 
 class FornecedorController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'nome_razao' => 'Fornecedor',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'nome_razao' => ['label' => 'Fornecedor', 'type' => 'string', 'searchParam' => true],
+        'apelido_fantasia' => ['label' => 'Fantasia', 'type' => 'string', 'searchParam' => true],
         'fone' => 'Telefone',
         'ativo' => ['label' => 'Ativo', 'type' => 'bool'] 
     ];
@@ -29,8 +34,8 @@ class FornecedorController extends Controller
     {
         if (Auth::user()->canListarFornecedor()) {
             if ($request->searchField) {
-                $fornecedores = Fornecedor::where('nome_razao', 'like', '%'.$request->searchField.'%')
-                                          ->orWhere('apelido_fantasia', 'like', '%'.$request->searchField.'%')
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $fornecedores = Fornecedor::whereRaw($whereRaw)
                                           ->paginate();
             } else {
                 $fornecedores = Fornecedor::paginate();
@@ -94,7 +99,7 @@ class FornecedorController extends Controller
                         'model' => __('models.fornecedor'),
                         'name' => $fornecedor->nome_razao
                     ]));
-                    return redirect()->action('FornecedorController@index');
+                    return redirect()->action('FornecedorController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('success', __('messages.create_error', [
                         'model' => __('models.fornecedor'),
@@ -160,17 +165,13 @@ class FornecedorController extends Controller
             ]);
 
             try {
-                foreach($request->all() as $field => $value) {
-                    if (($field != '_token') && ($field != '_method')) {
-                        $fornecedor->$field = $value;
-                    }
-                }
+                $fornecedor->fill($request->all());
                 if ($fornecedor->save()) {
                     Session::flash('success', __('messages.update_success', [
                         'model' => __('models.fornecedor'),
                         'name' => $fornecedor->nome_razao
                     ]));
-                    return redirect()->action('FornecedorController@index');
+                    return redirect()->action('FornecedorController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('success', __('messages.update_error', [
                         'model' => __('models.fornecedor'),
@@ -196,7 +197,7 @@ class FornecedorController extends Controller
      * @param  \App\Fornecedor  $fornecedor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Fornecedor $fornecedor)
+    public function destroy(Request $request, Fornecedor $fornecedor)
     {
         if (Auth::user()->canExcluirFornecedor()) {
             try {
@@ -205,7 +206,7 @@ class FornecedorController extends Controller
                         'model' => __('models.fornecedor'),
                         'name' => $fornecedor->nome_razao
                     ]));
-                    return redirect()->action('FornecedorController@index');
+                    return redirect()->action('FornecedorController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -218,7 +219,7 @@ class FornecedorController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('FornecedorController@index');
+                return redirect()->action('FornecedorController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

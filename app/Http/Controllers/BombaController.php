@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Bomba;
 use App\TipoBomba;
 use App\ModeloBomba;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -12,9 +13,11 @@ use Illuminate\Support\Facades\Session;
 
 class BombaController extends Controller
 {
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
-        'descricao_bomba' => 'Bomba',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'descricao_bomba' => ['label' => 'Bomba', 'type' => 'string', 'searchParam' => true],
         'tipo_bomba' => 'Tipo de Bomba',
         'modelo_bomba' => 'Modelo de Bomba',
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
@@ -29,11 +32,12 @@ class BombaController extends Controller
     {
         if (Auth::user()->canListarBomba()) {
             if (isset($request->searchField)) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $bombas = DB::table('bombas')
                                 ->select('bombas.*', 'tipo_bombas.tipo_bomba', 'modelo_bombas.modelo_bomba')
                                 ->join('tipo_bombas', 'tipo_bombas.id', 'bombas.tipo_bomba_id')
                                 ->join('modelo_bombas', 'modelo_bombas.id', 'bombas.modelo_bomba_id')
-                                ->where('descricao_bomba', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->paginate();
             } else {
                 $bombas = DB::table('bombas')
@@ -91,7 +95,7 @@ class BombaController extends Controller
                         'model' => __('models.bomba'),
                         'name' => $bomba->descricao_bomba
                     ]));
-                    return redirect()->action('BombaController@index');
+                    return redirect()->action('BombaController@index', $request->query->all() ?? []);
                 } 
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -152,7 +156,7 @@ class BombaController extends Controller
                         'model' => __('models.bomba'),
                         'name' => $bomba->descricao_bomba
                     ]));
-                    return redirect()->action('BombaController@index');
+                    return redirect()->action('BombaController@index', $request->query->all() ?? []);
                 } 
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -172,7 +176,7 @@ class BombaController extends Controller
      * @param  \App\Bomba  $bomba
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bomba $bomba)
+    public function destroy(Request $request, Bomba $bomba)
     {
         if (Auth::user()->canExcluirBomba()) {
             try {
@@ -183,7 +187,7 @@ class BombaController extends Controller
                         'name' => $bomba->descricao_bomba
                     ]));
                     
-                    return redirect()->action('BombaController@index');
+                    return redirect()->action('BombaController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -196,7 +200,7 @@ class BombaController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('BombaController@index');
+                return redirect()->action('BombaController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

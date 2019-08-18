@@ -13,15 +13,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\MovimentacaoProdutoController;
+use App\Traits\SearchTrait;
 
 class EntradaEstoqueController extends Controller
 {
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'nr_docto' => 'Nr. Documento',
+        'entrada_estoques.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'nr_docto' => ['label' => 'Nr. Documento', 'type' => 'int', 'searchParam' => true],
         'serie' => 'Série',
         'data_entrada' => ['label' => 'Data Entrada', 'type' => 'datetime'],
-        'nome_razao' => 'Fornecedor'
+        'nome_razao' => ['label' => 'Fornecedor', 'type' => 'string', 'searchParam' => true],
     ];
 
     /**
@@ -33,11 +36,11 @@ class EntradaEstoqueController extends Controller
     {
         if (Auth::user()->canListarEntradaEstoque()) {
             if ($request->searchField) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $entradas = DB::table('entrada_estoques')
                                 ->select('entrada_estoques.*', 'fornecedores.nome_razao as nome_razao')
                                 ->join('fornecedores', 'fornecedores.id', 'entrada_estoques.fornecedor_id')
-                                ->where('nr_docto', $request->searchField)
-                                ->orWhere('fornecedores.nome_razao', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->paginate();
             } else {
                 $entradas = DB::table('entrada_estoques')
@@ -114,7 +117,7 @@ class EntradaEstoqueController extends Controller
                         'name' => $entradaEstoque->nr_docto
                     ]));
 
-                    return redirect()->action('EntradaEstoqueController@index');
+                    return redirect()->action('EntradaEstoqueController@index', $request->query->all() ?? []);
                 } else {
                     throw new Exception(__('messages.create_error', [
                         'model' => 'entrada_estoque', 
@@ -157,7 +160,7 @@ class EntradaEstoqueController extends Controller
      * @param  \App\EntradaEstoque  $entradaEstoque
      * @return \Illuminate\Http\Response
      */
-    public function destroy(EntradaEstoque $entradaEstoque)
+    public function destroy(Request $request, EntradaEstoque $entradaEstoque)
     {
         if (Auth::user()->canExcluirEntradaEstoque()) {
             try {
@@ -166,7 +169,7 @@ class EntradaEstoqueController extends Controller
                         'model' => __('models.entrada_estoque'),
                         'name' => $entradaEstoque->nr_docto 
                     ]));
-                    return redirect()->action('EntradaEstoqueController@index');
+                    return redirect()->action('EntradaEstoqueController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -179,7 +182,7 @@ class EntradaEstoqueController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('EntradaEstoqueController@index');
+                return redirect()->action('EntradaEstoqueController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

@@ -24,17 +24,19 @@ use App\Http\Controllers\BicoController;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\AfericaoController;
 use App\Http\Controllers\MovimentacaoCombustivelController;
-use phpDocumentor\Reflection\Types\Boolean;
+use App\Traits\SearchTrait;
 
 class AbastecimentoController extends Controller
 {
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
+        'abastecimentos.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
         'data_hora_abastecimento' => ['label' => 'Data/Hora', 'type' => 'datetime'],
         'valor_litro' => ['label' => 'Valor Litro', 'type' => 'decimal', 'decimais' => 3],
         'volume_abastecimento' => ['label' => 'Qtd. Abast.', 'type' => 'decimal', 'decimais' => 2],
         'valor_abastecimento' => ['label' => 'Valor Total', 'type' => 'decimal', 'decimais' => 3], 
-        'placa' => 'Veículo',
+        'placa' => ['label' => 'Veículo', 'type' => 'string', 'searchParam' => true],
         'km_veiculo' => ['label' => 'Odômetro/Horímetro', 'type' => 'decimal', 'decimais' => 1],
         'media_veiculo' => ['label' => 'Média', 'type' => 'decimal', 'decimais' => 2],
         'abastecimento_local' => ['label' => 'Abast. Local', 'type' => 'bool'],
@@ -63,6 +65,12 @@ class AbastecimentoController extends Controller
             } else {
                 $whereData = '1 = 1'; //busca qualquer coisa
             }
+
+            $whereRaw = $this->getWhereField($request, $this->fields);
+
+            if ($whereRaw) {
+                $whereData .= ' and ' . $whereRaw;
+            }
             
             if (isset($request->searchField)) {
                 $abastecimentos = DB::table('abastecimentos')
@@ -73,11 +81,13 @@ class AbastecimentoController extends Controller
                                     ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
                                     ->whereRaw('((abastecimentos.abastecimento_local = '.(isset($request->abast_local) ? $request->abast_local : -1).') or ('.(isset($request->abast_local) ? $request->abast_local : -1).' = -1))')
                                     ->whereRaw($whereData)
-                                    ->where('veiculos.placa', 'like', '%'.$request->searchField.'%')
-                                    ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
+                                    //->whereRaw($whereRaw)
+                                    //->where('veiculos.placa', 'like', '%'.$request->searchField.'%')
+                                    //->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
                                     /* ->orderBy('abastecimentos.id', 'desc') */
                                     ->orderBy('abastecimentos.data_hora_abastecimento', 'desc')
                                     ->paginate();
+                //dd($abastecimentos);
             } else {
                 $abastecimentos = DB::table('abastecimentos')
                                     ->select('abastecimentos.*', 'bicos.num_bico', 'veiculos.placa', 'atendentes.nome_atendente')
@@ -90,6 +100,8 @@ class AbastecimentoController extends Controller
                                     /* ->orderBy('abastecimentos.id', 'desc') */
                                     ->orderBy('abastecimentos.data_hora_abastecimento', 'desc')
                                     ->paginate();
+
+                //dd($abastecimentos);
             }
 
             return View('abastecimento.index', [

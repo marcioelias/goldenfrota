@@ -11,19 +11,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\TanqueController;
 use App\Http\Controllers\MovimentacaoCombustivelController;
+use App\Traits\SearchTrait;
 
 class AjusteTanqueController extends Controller
 {
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'tanque' => 'Tanque',
+        'ajuste_tanques.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'descricao_tanque' => ['label' => 'Tanque', 'type' => 'string', 'searchParam' => true],
+        'descricao' => ['label' => 'Combustível', 'type' => 'string', 'searchParam' => true],
         'quantidade_informada' => [
             'label' => 'Qtd Medida',
             'type' => 'decimal',
             'decimais' => 3
         ],
-        'usuario' => 'Usuário',
-        'created_at' => [
+        'users.name' => ['label' => 'Usuário', 'type' => 'string', 'searchParam' => true],
+        'ajuste_tanques.created_at' => [
             'label' => 'Data', 
             'type' => 'datetime'
         ]
@@ -38,27 +42,27 @@ class AjusteTanqueController extends Controller
     {
         if (Auth::user()->canListarAjusteTanque()) {
             if ($request->searchField) {
+
+                $whereRaw = $this->getWhereField($request, $this->fields);
+
                 $ajustes = DB::table('ajuste_tanques')
-                            ->select('ajuste_tanques.*', 
-                                DB::raw('concat_ws(" - ", tanques.descricao_tanque, combustiveis.descricao) as tanque'),
-                                'users.name as usuario')
+                            ->select('ajuste_tanques.*', 'tanques.descricao_tanque', 'combustiveis.descricao', 'users.name') 
                             ->join('tanques', 'tanques.id', 'ajuste_tanques.tanque_id')
                             ->join('users', 'users.id', 'ajuste_tanques.user_id')
                             ->join('combustiveis', 'combustiveis.id', 'tanques.combustivel_id')
-                            ->where('users.name', 'like', '%'.$request->searchField.'%')
+                            /* ->where('users.name', 'like', '%'.$request->searchField.'%')
                             ->orWhere('tanques.descricao_tanque', 'like', '%'.$request->searchField.'%')
-                            ->orWhere('combustiveis.descricao', 'like', '%'.$request->searchField.'%')
-                            ->orderBy('created_at', 'desc')
+                            ->orWhere('combustiveis.descricao', 'like', '%'.$request->searchField.'%') */
+                            ->whereRaw($whereRaw)
+                            ->orderBy('ajuste_tanques.created_at', 'desc')
                             ->paginate();
             } else {
                 $ajustes = DB::table('ajuste_tanques')
-                            ->select('ajuste_tanques.*', 
-                                DB::raw('concat_ws(" - ", tanques.descricao_tanque, combustiveis.descricao) as tanque'),
-                                'users.name as usuario')
+                            ->select('ajuste_tanques.*', 'tanques.descricao_tanque', 'combustiveis.descricao', 'users.name') 
                             ->join('tanques', 'tanques.id', 'ajuste_tanques.tanque_id')
                             ->join('users', 'users.id', 'ajuste_tanques.user_id')
                             ->join('combustiveis', 'combustiveis.id', 'tanques.combustivel_id')
-                            ->orderBy('created_at', 'desc')
+                            ->orderBy('ajuste_tanques.created_at', 'desc')
                             ->paginate();
             }
 
@@ -135,7 +139,7 @@ class AjusteTanqueController extends Controller
                         'name' => $ajusteTanque->id
                     ]));
 
-                    return redirect()->action('AjusteTanqueController@index');
+                    return redirect()->action('AjusteTanqueController@index', $request->query->all() ?? []);
                 } else {
                     
                     DB::rollback();
@@ -169,7 +173,7 @@ class AjusteTanqueController extends Controller
      * @param  \App\AjusteTanque  $ajusteTanque
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AjusteTanque $ajusteTanque)
+    public function destroy(Request $request, AjusteTanque $ajusteTanque)
     {
         if (Auth::user()->canExcluirAjusteTanque()) {   
             try {
@@ -178,7 +182,7 @@ class AjusteTanqueController extends Controller
                         'model' => __('models.ajuste_tanque'),
                         'name' => $ajusteTanque->id
                     ]));
-                    return redirect()->action('AjusteTanqueController@index');
+                    return redirect()->action('AjusteTanqueController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -191,7 +195,7 @@ class AjusteTanqueController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('AjusteTanqueController@index');
+                return redirect()->action('AjusteTanqueController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

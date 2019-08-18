@@ -7,5 +7,6 @@ return [
     'os_status_aberta' => 'Aberta',
     'New' => 'Novo',
     'Search' => 'Buscar',
+    'Clear' => 'Limpar',
     'NothingSelected' => 'Nada Selecionado'
 ];

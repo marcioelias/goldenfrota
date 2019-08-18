@@ -31,5 +31,8 @@ return [
     'no_data' => 'Nenhum dado encontrado para os parâmetros informados.',
 
     /* Status not allow edition */
-    'edit_not_allowed' => ':Model com status ":Status" não permite alterações.'
+    'edit_not_allowed' => ':Model com status ":Status" não permite alterações.',
+
+    /* Value is not a number */
+    'value_not_numeric' => 'O campo :field espera que seja informado um número.'
 ];

@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Atendente;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class AtendenteController extends Controller
 {
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
-        'nome_atendente' => 'Atendente',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'nome_atendente' => ['label' => 'Atendente', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -24,7 +27,8 @@ class AtendenteController extends Controller
     {
         if (Auth::user()->canListarAtendente()) {
             if (isset($request->searchField)) {
-                $atendentes = Atendente::where('nome_atendente', 'like', '%'.$request->searchField.'%')
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $atendentes = Atendente::whereRaw($whereRaw)
                                 ->paginate();
             } else {
                 $atendentes = Atendente::paginate();
@@ -75,7 +79,7 @@ class AtendenteController extends Controller
                         'model' => __('models.atendente'),
                         'name' => $atendente->nome_atendente
                     ]));
-                    return redirect()->action('AtendenteController@index');
+                    return redirect()->action('AtendenteController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -134,7 +138,7 @@ class AtendenteController extends Controller
                         'model' => __('models.atendente'),
                         'name' => $atendente->nome_atendente
                     ]));
-                    return redirect()->action('AtendenteController@index');
+                    return redirect()->action('AtendenteController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -154,7 +158,7 @@ class AtendenteController extends Controller
      * @param  \App\Atendente  $atendente
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Atendente $atendente)
+    public function destroy(Request $request, Atendente $atendente)
     {
         if (Auth::user()->canExcluirAtendente()) {
             try {
@@ -165,7 +169,7 @@ class AtendenteController extends Controller
                         'name' => $atendente->nome_atendnete
                     ]));
                     
-                    return redirect()->action('AtendenteController@index');
+                    return redirect()->action('AtendenteController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -178,7 +182,7 @@ class AtendenteController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('AtendenteController@index');
+                return redirect()->action('AtendenteController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', env('ACCESS_DENIED_MSG'));

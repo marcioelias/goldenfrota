@@ -6,7 +6,7 @@
         'rows' => $ajustes, 
         'model' => 'ajuste_tanque',
         'tableTitle' => 'Ajuste de Tanque',
-        'displayField' => 'tanque',
+        'displayField' => 'descricao_tanque',
         'actions' => ['destroy']
         ]);
     @endcomponent

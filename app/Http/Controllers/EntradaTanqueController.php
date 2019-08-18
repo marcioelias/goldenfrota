@@ -11,15 +11,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\MovimentacaoCombustivelController;
+use App\Traits\SearchTrait;
 
 class EntradaTanqueController extends Controller
 {
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'nr_docto' => 'Nr. Doc.',
+        'entrada_tanques.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'nr_docto' => ['label' => 'Nr. Doc.', 'type' => 'int', 'searchParam' => true],
         'serie' => 'Série',
         'data_entrada' => ['label' => 'Data Entrada', 'type' => 'datetime'],
-        'nome_razao' => 'Fornecedor'
+        'nome_razao' => ['label' => 'Fornecedor', 'type' => 'string', 'searchParam' => true]
     ];
 
     /**
@@ -31,11 +34,11 @@ class EntradaTanqueController extends Controller
     {
         if (Auth::user()->canListarEntradaTanque()) {
             if ($request->searchField) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $entradas = DB::table('entrada_tanques')
                                 ->select('entrada_tanques.*', 'fornecedores.nome_razao as nome_razao')
                                 ->join('fornecedores', 'entrada_tanques.fornecedor_id', 'fornecedores.id')
-                                ->where('nr_docto', $request->searchField)
-                                ->orWhere('fornecedores.nome_razao', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->paginate();
             } else {
                 $entradas = DB::table('entrada_tanques')
@@ -125,7 +128,7 @@ class EntradaTanqueController extends Controller
 
                     DB::commit();
 
-                    return redirect()->action('EntradaTanqueController@index');
+                    return redirect()->action('EntradaTanqueController@index', $request->query->all() ?? []);
                 } else {
                     throw new \Exception(_('messages.create_error_f', [
                         'model' => __('models.entrada_tanque'),
@@ -182,7 +185,7 @@ class EntradaTanqueController extends Controller
      * @param  \App\EntradaTanque  $entradaTanque
      * @return \Illuminate\Http\Response
      */
-    public function destroy(EntradaTanque $entradaTanque)
+    public function destroy(Request $request, EntradaTanque $entradaTanque)
     {
         if (Auth::user()->canExcluirEntradaTanque()) {
             try {
@@ -191,7 +194,7 @@ class EntradaTanqueController extends Controller
                         'model' => __('models.entrada_tanque'),
                         'name' => $entradaTanque->nr_docto 
                     ]));
-                    return redirect()->action('EntradaTanqueController@index');
+                    return redirect()->action('EntradaTanqueController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -204,7 +207,7 @@ class EntradaTanqueController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('EntradaTanqueController@index');
+                return redirect()->action('EntradaTanqueController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

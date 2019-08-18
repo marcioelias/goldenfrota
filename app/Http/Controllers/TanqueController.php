@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Tanque;
 use App\Parametro;
 use App\Combustivel;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -13,10 +14,12 @@ use Illuminate\Support\Facades\Session;
 
 class TanqueController extends Controller
 {
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
-        'descricao_tanque' => 'Tanque',
-        'descricao' => 'Combustivel',
+        'tanques.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'descricao_tanque' => ['label' => 'Tanque', 'type' => 'string', 'searchParam' => true],
+        'descricao' => ['label' => 'Combustivel', 'type' => 'string', 'searchParam' => true],
         'capacidade' => 'Capacidade',
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
@@ -30,10 +33,14 @@ class TanqueController extends Controller
     {
         if (Auth::user()->canListarTanque()) {
             if (isset($request->searchField)) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                //$whereRaw = ($whereRaw) ? $whereRaw : '1 = 1';
+                //dd($this->getWhereField($request, $this->fields));
                 $tanques = DB::table('tanques')
                                 ->select('tanques.*', 'combustiveis.descricao')
                                 ->join('combustiveis', 'combustiveis.id', 'tanques.combustivel_id')
-                                ->where('descricao_tanque', 'like', '%'.$request->searchField.'%')
+                                //->where('descricao_tanque', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->paginate();
             } else {
                 $tanques = DB::table('tanques')
@@ -86,7 +93,7 @@ class TanqueController extends Controller
                         'model' => __('models.tanque'),
                         'name' => $tanque->descricao_tanque 
                     ]));
-                    return redirect()->action('TanqueController@index');
+                    return redirect()->action('TanqueController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -144,7 +151,7 @@ class TanqueController extends Controller
                         'model' => __('models.tanque'),
                         'name' => $tanque->descricao_tanque 
                     ]));
-                    return redirect()->action('TanqueController@index');
+                    return redirect()->action('TanqueController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -164,7 +171,7 @@ class TanqueController extends Controller
      * @param  \App\Tanque  $tanque
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tanque $tanque)
+    public function destroy(Request $request, Tanque $tanque)
     {
         if (Auth::user()->canExcluirTanque()) {
             try {
@@ -174,7 +181,7 @@ class TanqueController extends Controller
                         'name' => $tanque->descricao_tanque 
                     ]));
                     
-                    return redirect()->action('TanqueController@index');
+                    return redirect()->action('TanqueController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -187,7 +194,7 @@ class TanqueController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('TanqueController@index');
+                return redirect()->action('TanqueController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));
