@@ -263,7 +263,11 @@ class VeiculoController extends Controller
 
         $veiculos = Veiculo::with('modelo_veiculo.tipo_controle_veiculo')
                         ->with('modelo_veiculo.marca_veiculo')
-                        ->with('vencimento_produtos')
+                        ->with(['vencimento_produtos' => function($query) {
+                            $query->with('produto')
+                                  ->where('vencido', true)
+                                  ->where('troca_efetuada', false);
+                        }])
                         ->where('veiculos.ativo', true)
                         ->whereRaw($whereCliente)
                         ->orderBy('veiculos.placa', 'asc')
