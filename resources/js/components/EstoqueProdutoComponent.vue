@@ -41,7 +41,7 @@
         <div>
             <div class="row m-0">
                 <div v-bind:class="{'col-md-8': true, ' has-error': this.errors.inputEstoques}" style="padding-right: 0 !important; padding-left: 0 !important;">
-                    <select ref="inputEstoques" v-model="estoque_id" data-live-search="true" class="form-control selectpicker" name="inputEstoques" id="inputEstoques">
+                    <select ref="inputEstoques" v-model="estoque_id" data-live-search="true" class="form-control selectpicker" data-style="btn-secondary" name="inputEstoques" id="inputEstoques">
                         <option selected value="false"> Nada Selecionado </option>
                         <option v-for="(estoque, index) in estoquesDisponiveisOrdenados" :value="estoque.id" :key="index">{{ estoque.estoque }}</option>
                     </select>
