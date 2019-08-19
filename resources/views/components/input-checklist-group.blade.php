@@ -36,7 +36,7 @@
                         @endif
                     @endforeach
                     @endif
-                <li class="list-group-item">
+                <li class="list-group-item" style="padding: 0 !important">
                     @component('components.input-simple-checkbox', [
                         'checked' => $checked,
                         'dataWidth' => $dataWidth,
