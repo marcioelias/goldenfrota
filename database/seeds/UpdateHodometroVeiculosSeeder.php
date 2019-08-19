@@ -23,7 +23,6 @@ class UpdateHodometroVeiculosSeeder extends Seeder
                 $this->command->alert('Veículo ' . $veiculo->placa.' não possui abastecimentos.');
                 $this->command->info('Veículo ' . $veiculo->placa.' NÃO atualizado.');
             } else {
-                Log::debug($abastecimento);
                 if ($abastecimento->km_veiculo) {
                     $this->command->info('Atualizando hodometro do veículo: ' . $veiculo->placa.'.');
                     $veiculo->hodometro = $abastecimento->km_veiculo;
