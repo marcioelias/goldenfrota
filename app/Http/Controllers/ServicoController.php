@@ -9,13 +9,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class ServicoController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'servico' => 'Serviço',
-        'grupo_servico' => 'Grupo de Serviço',
+        'servicos.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'servico' => ['label' => 'Serviço', 'type' => 'string', 'searchParam' => true],
+        'grupo_servico' => ['label' => 'Grupo de Serviço', 'type' => 'string', 'searchParam' => true],
         'valor_servico' => ['label' => 'Valor', 'type' => 'decimal', 'decimais' => 3],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     ];
@@ -28,12 +32,11 @@ class ServicoController extends Controller
     {
         if (Auth::user()->canListarServico()) {
             if ($request->searchField) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $servicos = DB::table('servicos')
                                 ->select('servicos.*', 'grupo_servicos.grupo_servico')
                                 ->leftJoin('grupo_servicos', 'grupo_servicos.id', 'servicos.grupo_servico_id')
-                                ->where('servico', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('descricao', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('grupo_servico', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->orderBy('id', 'desc')
                                 ->paginate();
             } else {
@@ -100,7 +103,7 @@ class ServicoController extends Controller
                         'name' => $request->servico
                     ])); 
 
-                    return redirect()->action('ServicoController@index');
+                    return redirect()->action('ServicoController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('error', __('messages.create_error', [
                         'model' => __('models.servico'),
@@ -170,7 +173,7 @@ class ServicoController extends Controller
                         'name' => $request->servico
                     ])); 
 
-                    return redirect()->action('ServicoController@index');
+                    return redirect()->action('ServicoController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('error', __('messages.update_error', [
                         'model' => __('models.servico'),
@@ -199,7 +202,7 @@ class ServicoController extends Controller
      * @param  \App\Servico  $servico
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Servico $servico)
+    public function destroy(Request $request, Servico $servico)
     {
         if (Auth::user()->canExcluirServico()) {
             try {
@@ -212,7 +215,7 @@ class ServicoController extends Controller
                         'name' => $servico->servico 
                     ]));
                     
-                    return redirect()->action('ServicoController@index');
+                    return redirect()->action('ServicoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -225,7 +228,7 @@ class ServicoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('ServicoController@index');
+                return redirect()->action('ServicoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

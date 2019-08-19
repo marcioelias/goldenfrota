@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class GrupoVeiculoController extends Controller
 {
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
-        'grupo_veiculo' => 'Grupo Veículo',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'grupo_veiculo' => ['label' => 'Grupo Veículo', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -25,7 +28,8 @@ class GrupoVeiculoController extends Controller
     {
         if (Auth::user()->canListarGrupoVeiculo()) {
             if (isset($request->searchField)) {
-                $grupoVeiculos = GrupoVeiculo::where('grupo_veiculo', 'like', '%'.$request->searchField.'%')->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $grupoVeiculos = GrupoVeiculo::whereRaw($whereRaw)->paginate();
             } else {
                 $grupoVeiculos = GrupoVeiculo::paginate();
             }
@@ -79,7 +83,7 @@ class GrupoVeiculoController extends Controller
                         'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
                     ]));
-                    return redirect()->action('GrupoVeiculoController@index');
+                    return redirect()->action('GrupoVeiculoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -137,7 +141,7 @@ class GrupoVeiculoController extends Controller
                         'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
                     ]));
-                    return redirect()->action('GrupoVeiculoController@index');
+                    return redirect()->action('GrupoVeiculoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -157,7 +161,7 @@ class GrupoVeiculoController extends Controller
      * @param  \App\GrupoVeiculo  $grupoVeiculo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(GrupoVeiculo $grupoVeiculo)
+    public function destroy(Request $request, GrupoVeiculo $grupoVeiculo)
     {
         if (Auth::user()->canExcluirGrupoVeiculo()) {
             try {
@@ -169,7 +173,7 @@ class GrupoVeiculoController extends Controller
                         'model' => __('models.grupo_veiculo'),
                         'name' => $grupoVeiculo->grupo_veiculo
                     ]));
-                    return redirect()->action('GrupoVeiculoController@index');
+                    return redirect()->action('GrupoVeiculoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -182,7 +186,7 @@ class GrupoVeiculoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('GrupoVeiculoController@index');
+                return redirect()->action('GrupoVeiculoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

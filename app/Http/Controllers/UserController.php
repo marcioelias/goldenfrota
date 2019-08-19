@@ -6,16 +6,20 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Rules\ValidCurrentPassword;
+use App\Traits\SearchTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'name' => 'Nome',
-        'username' => 'Usuário',
-        'email' => 'E-mail',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'name' => ['label' => 'Nome', 'type' => 'string', 'searchParame' => true],
+        'username' => ['label' => 'Usuário', 'type' => 'string', 'searchParam' => true],
+        'email' => ['label' => 'E-mail', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -28,10 +32,9 @@ class UserController extends Controller
     {
         if (Auth::user()->canListarUser()) {
             if (isset($request->searchField)) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $users = DB::table('users')
-                            ->where('name', 'like', '%'.$request->searchField.'%')
-                            ->orWhere('username', 'like', '%'.$request->searchField.'%')
-                            ->orWhere('email', 'like', '%'.$request->searchField.'%')
+                            ->whereRaw($whereRaw)
                             ->paginate();
             } else {
                 $users = User::paginate();
@@ -88,7 +91,7 @@ class UserController extends Controller
                         'model' => __('models.user'),
                         'name' => $user->name
                     ]));
-                    return redirect()->action('UserController@index');
+                    return redirect()->action('UserController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -151,7 +154,7 @@ class UserController extends Controller
                         'model' => __('models.user'),
                         'name' => $user->name
                     ]));
-                    return redirect()->action('UserController@index');
+                    return redirect()->action('UserController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -171,7 +174,7 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
         if (Auth::user()->canExcluirUser()) {
             try {
@@ -182,7 +185,7 @@ class UserController extends Controller
                         'name' => $user->name
                     ]));
                     
-                    return redirect()->action('UserController@index');
+                    return redirect()->action('UserController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -195,7 +198,7 @@ class UserController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('UserController@index');
+                return redirect()->action('UserController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

@@ -17,19 +17,22 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Events\NovoRegistroAtualizacaoApp;
-use App\AtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class VeiculoController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'placa' => 'Placa',
-        'grupo_veiculo' => 'Grupo',
-        'marca_veiculo' => 'Marca',
-        'modelo_veiculo' => 'Modelo',
+        'veiculos.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'placa' => ['label' => 'Placa', 'type' => 'string', 'searchParam' => true],
+        'grupo_veiculo' => ['label' => 'Grupo', 'type' => 'string', 'searchParam' => true],
+        'marca_veiculo' => ['label' => 'Marca', 'type' => 'string', 'searchParam' => true],
+        'modelo_veiculo' => ['label' => 'Modelo', 'type' => 'string', 'searchParam' => true],
         'ano' => 'Ano',
-        'nome_razao' => 'Cliente',
-        'departamento' => 'Departamento',
+        'nome_razao' => ['label' => 'Cliente', 'type' => 'string', 'searchParam' => true],
+        'departamento' => ['label' => 'Departamento', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -41,6 +44,7 @@ class VeiculoController extends Controller
     public function index(Request $request) 
     {
         if (isset($request->searchField)) {
+            $whereRaw = $this->getWhereField($request, $this->fields);
             $veiculos = DB::table('veiculos')
                             ->select('veiculos.*', 'marca_veiculos.marca_veiculo', 'modelo_veiculos.modelo_veiculo', 'clientes.nome_razao', 'grupo_veiculos.grupo_veiculo', 'departamentos.departamento')
                             ->join('modelo_veiculos', 'modelo_veiculos.id', 'veiculos.modelo_veiculo_id')
@@ -48,9 +52,7 @@ class VeiculoController extends Controller
                             ->join('clientes', 'clientes.id', 'veiculos.cliente_id')
                             ->join('grupo_veiculos', 'grupo_veiculos.id', 'veiculos.grupo_veiculo_id')
                             ->leftJoin('departamentos', 'departamentos.id', 'veiculos.departamento_id')
-                            ->where('placa', 'like', '%'.$request->searchField.'%')
-                            ->orWhere('tag', 'like', '%'.$request->searchField.'%')
-                            ->orWhere('nome_razao', 'like', '%'.$request->searchField.'%')
+                            ->whereRaw($whereRaw)
                             ->orderBy('veiculos.id', 'desc')
                             ->paginate();   
         } else {
@@ -128,7 +130,7 @@ class VeiculoController extends Controller
                 event(new NovoRegistroAtualizacaoApp($veiculo));
 
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' cadastrado com sucesso.');
-                return redirect()->action('VeiculoController@index');
+                return redirect()->action('VeiculoController@index', $request->query->all() ?? []);
             }
         } catch (\Exception $e) {
             Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
@@ -220,7 +222,7 @@ class VeiculoController extends Controller
                 event(new NovoRegistroAtualizacaoApp($veiculo));
 
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' alterado com sucesso.');
-                return redirect()->action('VeiculoController@index');
+                return redirect()->action('VeiculoController@index', $request->query->all() ?? []);
             }
         } catch (\Exception $e) {
             Session::flash('error', 'Ocorreu um erro ao salvar os dados. '.$e->getMessage());
@@ -234,7 +236,7 @@ class VeiculoController extends Controller
      * @param  \App\Veiculo  $veiculo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Veiculo $veiculo)
+    public function destroy(Request $request, Veiculo $veiculo)
     {
         try {
             $veiculo = Veiculo::find($veiculo->id);
@@ -244,11 +246,11 @@ class VeiculoController extends Controller
 
                 Session::flash('success', 'Veiculo '.$veiculo->placa.' removido com sucesso.');
                 
-                return redirect()->action('VeiculoController@index');
+                return redirect()->action('VeiculoController@index', $request->query->all() ?? []);
             }
         } catch (\Exception $e) {
             Session::flash('error', 'Registro não pode ser excluído. '.$e->getMessage());
-            return redirect()->action('VeiculoController@index');
+            return redirect()->action('VeiculoController@index', $request->query->all() ?? []);
         }
     }
 

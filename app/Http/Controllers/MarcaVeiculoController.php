@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class MarcaVeiculoController extends Controller
 {
 
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
-        'marca_veiculo' => 'Marca',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'marca_veiculo' => ['label' => 'Marca', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -26,7 +29,8 @@ class MarcaVeiculoController extends Controller
     {
         if (Auth::user()->canListarMarcaVeiculo()) {
             if (isset($request->searchField)) {
-                $marcaVeiculos = MarcaVeiculo::where('marca_veiculo', 'like', '%'.$request->searchField.'%')
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $marcaVeiculos = MarcaVeiculo::whereRaw($whereRaw)
                                             ->paginate();
             } else {
                 $marcaVeiculos = MarcaVeiculo::paginate();
@@ -81,7 +85,7 @@ class MarcaVeiculoController extends Controller
                         'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
                     ]));
-                    return redirect()->action('MarcaVeiculoController@index');
+                    return redirect()->action('MarcaVeiculoController@index', $request->query->all() ?? []);
                 } 
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -139,7 +143,7 @@ class MarcaVeiculoController extends Controller
                         'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
                     ]));
-                    return redirect()->action('MarcaVeiculoController@index');
+                    return redirect()->action('MarcaVeiculoController@index', $request->query->all() ?? []);
                 } 
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -159,7 +163,7 @@ class MarcaVeiculoController extends Controller
      * @param  \App\MarcaVeiculo  $marcaVeiculo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MarcaVeiculo $marcaVeiculo)
+    public function destroy(Request $request, MarcaVeiculo $marcaVeiculo)
     {
         if (Auth::user()->canAlterarMarcaVeiculo()) {
             try {
@@ -171,7 +175,7 @@ class MarcaVeiculoController extends Controller
                         'model' => __('models.marca_veiculo'),
                         'name' => $marcaVeiculo->marca_veiculo
                     ]));
-                    return redirect()->action('MarcaVeiculoController@index');
+                    return redirect()->action('MarcaVeiculoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -184,7 +188,7 @@ class MarcaVeiculoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('MarcaVeiculoController@index');
+                return redirect()->action('MarcaVeiculoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

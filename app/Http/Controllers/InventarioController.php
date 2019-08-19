@@ -14,12 +14,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\MovimentacaoProdutoController;
+use App\Traits\SearchTrait;
 
 class InventarioController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'estoque' => 'Estoque',
+        'inventarios.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'estoque' => ['label' => 'Estoque', 'type' => 'string', 'searchParam' => true],
         'data_abertura' => ['label' => 'Abertura', 'type' => 'datetime'],
         'data_fechamento' => ['label' => 'Fechamento', 'type' => 'datetime'],
         'fechado' => ['label' => 'Fechado', 'type' => 'bool']
@@ -34,10 +38,11 @@ class InventarioController extends Controller
     {
         if (Auth::user()->canListarInventario()) {
             if ($request->searchFields) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $inventarios = DB::table('inventarios')
                                 ->select('inventarios.*', 'estoques.estoque')
                                 ->join('estoques', 'estoques.id', 'inventarios.estoque_id')
-                                ->where('estoques.estoque', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->orderBy('inventarios.id', 'desc')
                                 ->paginate();
             } else {
@@ -117,7 +122,7 @@ class InventarioController extends Controller
                         'name' => $inventario->id
                     ]));
 
-                    return redirect()->action('InventarioController@index');
+                    return redirect()->action('InventarioController@index', $request->query->all() ?? []);
                 } else {
                     throw new \Exception(__('messages.create_error', [
                         'model' => 'inventario',
@@ -216,7 +221,7 @@ class InventarioController extends Controller
                         $inventarioItem->qtd_estoque = (Estoque::find($inventario->estoque_id))->saldo_produto($inventarioItem->produto);
                         $inventarioItem->qtd_ajuste = $inventarioItem->qtd_contada - $inventarioItem->qtd_estoque;
                         if (!$inventarioItem->save()) {
-                            throw new \Exception('Não foi possível salvar o item: '.$key);
+                            throw new \Exception('Não foi possível salvar o item: '.$id);
                         }
                     }
 
@@ -233,7 +238,7 @@ class InventarioController extends Controller
                         $inventarioItem = InventarioItem::find($id);
                         $inventarioItem->qtd_contada = ($item['qtd_contada'] != null) ? $item['qtd_contada'] : -1;
                         if (!$inventarioItem->save()) {
-                            throw new \Exception('Não foi possível salvar o item: '.$key);
+                            throw new \Exception('Não foi possível salvar o item: '.$id);
                         }
                     }
                 }
@@ -244,7 +249,7 @@ class InventarioController extends Controller
                     'name' => $inventario->id
                 ])));
 
-                return redirect()->action('InventarioController@index');
+                return redirect()->action('InventarioController@index', $request->query->all() ?? []);
 
 
             } catch (\Exception $e) {
@@ -267,7 +272,7 @@ class InventarioController extends Controller
      * @param  \App\Inventario  $inventario
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Inventario $inventario)
+    public function destroy(Request $request, Inventario $inventario)
     {
         if (Auth::user()->canExcluirInventario()) {
             try {
@@ -276,7 +281,7 @@ class InventarioController extends Controller
                         'model' => __('models.inventario'),
                         'name' => $inventario->id 
                     ]));
-                    return redirect()->action('InventarioController@index');
+                    return redirect()->action('InventarioController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -289,7 +294,7 @@ class InventarioController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('InventarioController@index');
+                return redirect()->action('InventarioController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

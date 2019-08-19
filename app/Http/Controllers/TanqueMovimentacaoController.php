@@ -168,18 +168,18 @@ class TanqueMovimentacaoController extends Controller
             ]);
 
             try {
-                $movimentacao->data_movimentacao = \DateTime::createFromFormat('d/m/Y', $request->data_movimentacao)->format('Y-m-d');
-                $movimentacao->documento = $request->documento;
-                $movimentacao->tanque_id = $request->tanque_id;
-                $movimentacao->quantidade_combustivel = $request->quantidade_combustivel;
-                $movimentacao->entrada_combustivel = true;
-                $movimentacao->ativo = $request->ativo;
+                $tanqueMovimentacao->data_movimentacao = \DateTime::createFromFormat('d/m/Y', $request->data_movimentacao)->format('Y-m-d');
+                $tanqueMovimentacao->documento = $request->documento;
+                $tanqueMovimentacao->tanque_id = $request->tanque_id;
+                $tanqueMovimentacao->quantidade_combustivel = $request->quantidade_combustivel;
+                $tanqueMovimentacao->entrada_combustivel = true;
+                $tanqueMovimentacao->ativo = $request->ativo;
 
 
-                if ($movimentacao->save()) {
+                if ($tanqueMovimentacao->save()) {
                     Session::flash('success', __('messages.update_success_f', [
                         'model' => __('models.tanque_movimentacao'),
-                        'name' => $movimentacao->documento
+                        'name' => $tanqueMovimentacao->documento
                     ]));
                     return redirect()->action('TanqueMovimentacaoController@index');
                 }

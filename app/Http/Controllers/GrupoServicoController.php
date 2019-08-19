@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class GrupoServicoController extends Controller
 {
 
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'grupo_servico' => 'Descrição'
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'grupo_servico' => ['label' => 'Descrição', 'type' => 'string', 'searchParam' => true]
     ];
 
     /**
@@ -25,7 +28,8 @@ class GrupoServicoController extends Controller
     {
         if (Auth::user()->canListarGrupoServico()) {
             if ($request->searchField) {
-                $grupoServicos = GrupoServico::where('grupo_servico', 'like', '%'.$request->searchField.'%')->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $grupoServicos = GrupoServico::whereRaw($whereRaw)->paginate();
             } else {
                 $grupoServicos = GrupoServico::paginate();
             }
@@ -77,7 +81,7 @@ class GrupoServicoController extends Controller
                         'name' => $grupoServico->grupo_servico
                     ]));
 
-                    return redirect()->action('GrupoServicoController@index');
+                    return redirect()->action('GrupoServicoController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('error', __('messages.create_error', [
                         'model' => __('models.grupo_servico'),
@@ -138,7 +142,7 @@ class GrupoServicoController extends Controller
                         'name' => $grupoServico->grupo_servico
                     ]));
 
-                    return redirect()->action('GrupoServicoController@index');
+                    return redirect()->action('GrupoServicoController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('error', __('messages.update_error', [
                         'model' => 'grupo_servico',
@@ -164,7 +168,7 @@ class GrupoServicoController extends Controller
      * @param  \App\GrupoServico  $grupoServico
      * @return \Illuminate\Http\Response
      */
-    public function destroy(GrupoServico $grupoServico)
+    public function destroy(Request $request, GrupoServico $grupoServico)
     {
         if (Auth::user()->canExcluirGrupoServico()) {
             try {
@@ -176,7 +180,7 @@ class GrupoServicoController extends Controller
                         'model' => __('models.grupo_servico'),
                         'name' => $grupoServico->grupo_servico
                     ]));
-                    return redirect()->action('GrupoServicoController@index');
+                    return redirect()->action('GrupoServicoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -189,7 +193,7 @@ class GrupoServicoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('GrupoServicoController@index');
+                return redirect()->action('GrupoServicoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

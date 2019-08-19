@@ -10,13 +10,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class ModeloVeiculoController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'marca_veiculo' => 'Marca',
-        'modelo_veiculo' => 'Modelo',
+        'modelo_veiculos.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'marca_veiculo' => ['label' => 'Marca', 'type' => 'string', 'searchParam' => true],
+        'modelo_veiculo' => ['label' => 'Modelo', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -29,10 +33,11 @@ class ModeloVeiculoController extends Controller
     {
         if (Auth::user()->canListarModeloVeiculo()) {
             if ($request->searchField) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $modeloVeiculos = DB::table('modelo_veiculos')
                                     ->select('modelo_veiculos.*', 'marca_veiculos.marca_veiculo')
                                     ->join('marca_veiculos', 'marca_veiculos.id', 'modelo_veiculos.marca_veiculo_id')
-                                    ->where('modelo_veiculo', 'like', '%'.$request->searchField.'%')
+                                    ->whereRaw($whereRaw)
                                     ->paginate();
             } else {
                 $modeloVeiculos = DB::table('modelo_veiculos')
@@ -95,7 +100,7 @@ class ModeloVeiculoController extends Controller
                         'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
                     ]));
-                    return redirect()->action('ModeloVeiculoController@index');
+                    return redirect()->action('ModeloVeiculoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -156,7 +161,7 @@ class ModeloVeiculoController extends Controller
                         'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
                     ]));
-                    return redirect()->action('ModeloVeiculoController@index');
+                    return redirect()->action('ModeloVeiculoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -176,7 +181,7 @@ class ModeloVeiculoController extends Controller
      * @param  \App\ModeloVeiculo  $modeloVeiculo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ModeloVeiculo $modeloVeiculo)
+    public function destroy(Request $request, ModeloVeiculo $modeloVeiculo)
     {
         if (Auth::user()->canExcluirModeloVeiculo()) {
             try {
@@ -188,7 +193,7 @@ class ModeloVeiculoController extends Controller
                         'model' => __('models.modelo_veiculo'),
                         'name' => $modeloVeiculo->modelo_veiculo
                     ]));
-                    return redirect()->action('ModeloVeiculoController@index');
+                    return redirect()->action('ModeloVeiculoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -201,7 +206,7 @@ class ModeloVeiculoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('ModeloVeiculoController@index');
+                return redirect()->action('ModeloVeiculoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

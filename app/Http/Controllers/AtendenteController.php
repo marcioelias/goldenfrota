@@ -162,7 +162,7 @@ class AtendenteController extends Controller
     {
         if (Auth::user()->canExcluirAtendente()) {
             try {
-                $atendente = Atendente::find($Atendente->id);
+                $atendente = Atendente::find($atendente->id);
                 if ($atendente->delete()) {
                     Session::flash('success', __('messages.delete_success', [
                         'model' => __('models.atendente'),

@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\TipoMovimentacaoProduto;
+use App\Traits\SearchTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class TipoMovimentacaoProdutoController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'tipo_movimentacao_produto' => 'Tipo de Movimentação',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'tipo_movimentacao_produto' => ['label' => 'Tipo de Movimentação', 'type' => 'string', 'searchParam' => true],
         'eh_entrada' => ['label' => 'Entrada', 'type' => 'bool'],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool'],
     ];
@@ -25,7 +29,8 @@ class TipoMovimentacaoProdutoController extends Controller
     {
         if (Auth::user()->canListarTipoMovimentacaoProduto()) {
             if ($request->searchField) {
-                $tipoMovimentacaoProdutos = TipoMovimentacaoProduto::where('tipo_movimentacao_produto', 'like', '%'.$request->searchField.'%')->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $tipoMovimentacaoProdutos = TipoMovimentacaoProduto::whereRaw($whereRaw)->paginate();
             } else {
                 $tipoMovimentacaoProdutos = TipoMovimentacaoProduto::paginate();
             }
@@ -75,7 +80,7 @@ class TipoMovimentacaoProdutoController extends Controller
                         'model' => __('models.tipo_movimentacao_produto'),
                         'name' => $tipoMovimentacaoProduto->tipo_movimentacao_produto
                     ]));
-                    return redirect()->action('TipoMovimentacaoProdutoController@index');
+                    return redirect()->action('TipoMovimentacaoProdutoController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('success', __('messages.create_error', [
                         'model' => __('models.tipo_movimentacao_produto'),
@@ -136,7 +141,7 @@ class TipoMovimentacaoProdutoController extends Controller
                         'model' => __('models.tipo_movimentacao_produto'),
                         'name' => $tipoMovimentacaoProduto->tipo_movimentacao_produto
                     ]));
-                    return redirect()->action('TipoMovimentacaoProdutoController@index');
+                    return redirect()->action('TipoMovimentacaoProdutoController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('success', __('messages.update_error', [
                         'model' => __('models.tipo_movimentacao_produto'),
@@ -162,7 +167,7 @@ class TipoMovimentacaoProdutoController extends Controller
      * @param  \App\TipoMovimentacaoProduto  $tipoMovimentacaoProduto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TipoMovimentacaoProduto $tipoMovimentacaoProduto)
+    public function destroy(Request $request, TipoMovimentacaoProduto $tipoMovimentacaoProduto)
     {
         if (Auth::user()->canExcluirTipoMovimentacaoProduto()) {
             try {
@@ -171,7 +176,7 @@ class TipoMovimentacaoProdutoController extends Controller
                         'model' => __('models.tipo_movimentacao_produto'),
                         'name' => $tipoMovimentacaoProduto->tipo_movimentacao_produto
                     ]));
-                    return redirect()->action('TipoMovimentacaoProdutoController@index');
+                    return redirect()->action('TipoMovimentacaoProdutoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -184,7 +189,7 @@ class TipoMovimentacaoProdutoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('TipoMovimentacaoProdutoController@index');
+                return redirect()->action('TipoMovimentacaoProdutoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

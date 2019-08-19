@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\ModeloBomba;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ModeloBombaController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'modelo_bomba' => 'Modelo de Bomba',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'modelo_bomba' => ['label' => 'Modelo de Bomba', 'type' => 'string', 'searchParam' => true],
         'num_bicos' => 'Núm. Bicos',
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
@@ -25,7 +29,8 @@ class ModeloBombaController extends Controller
     {
         if (Auth::user()->canListarModeloBomba()) {
             if (isset($request->searchField)) {
-                $modelo_bombas = ModeloBomba::where('modelo_bomba', 'like', '%'.$request->searchField.'%')->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $modelo_bombas = ModeloBomba::whereRaw($whereRaw)->paginate();
             } else {
                 $modelo_bombas = ModeloBomba::paginate();
             }
@@ -75,7 +80,7 @@ class ModeloBombaController extends Controller
                         'model' => __('models.modelo_bomba'),
                         'name' => $modelo_bomba->modelo_bomba
                     ]));
-                    return redirect()->action('ModeloBombaController@index');
+                    return redirect()->action('ModeloBombaController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -130,7 +135,7 @@ class ModeloBombaController extends Controller
                         'model' => __('models.modelo_bomba'),
                         'name' => $modeloBomba->modelo_bomba
                     ]));
-                    return redirect()->action('ModeloBombaController@index');
+                    return redirect()->action('ModeloBombaController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -150,7 +155,7 @@ class ModeloBombaController extends Controller
      * @param  \App\ModeloBomba  $modeloBomba
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ModeloBomba $modeloBomba)
+    public function destroy(Request $request, ModeloBomba $modeloBomba)
     {
         if (Auth::user()->canAlterarModeloBomba()) {
             try {
@@ -159,7 +164,7 @@ class ModeloBombaController extends Controller
                         'model' => __('models.modelo_bomba'),
                         'name' => $modeloBomba->modelo_bomba
                     ]));
-                    return redirect()->action('ModeloBombaController@index');
+                    return redirect()->action('ModeloBombaController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -172,7 +177,7 @@ class ModeloBombaController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('ModeloBombaController@index');
+                return redirect()->action('ModeloBombaController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

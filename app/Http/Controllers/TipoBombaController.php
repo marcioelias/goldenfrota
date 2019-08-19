@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\TipoBomba;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class TipoBombaController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'tipo_bomba' => 'Tipo Bomba',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'tipo_bomba' => ['label' => 'Tipo Bomba', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -24,7 +28,8 @@ class TipoBombaController extends Controller
     {
         if (Auth::user()->canListarTipoBomba()) {
             if (isset($request->searchField)) {
-                $tipo_bombas = TipoBomba::where('tipo_bomba', 'like', '%'.$request->searchField.'%')->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $tipo_bombas = TipoBomba::whereRaw($whereRaw)->paginate();
             } else {
                 $tipo_bombas = TipoBomba::paginate();
             }
@@ -74,7 +79,7 @@ class TipoBombaController extends Controller
                         'name' => $tipo_bomba->tipo_bomba
                     ]));
 
-                    return redirect()->action('TipoBombaController@index');
+                    return redirect()->action('TipoBombaController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -129,7 +134,7 @@ class TipoBombaController extends Controller
                         'name' => $tipoBomba->tipo_bomba
                     ]));
 
-                    return redirect()->action('TipoBombaController@index');
+                    return redirect()->action('TipoBombaController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -149,7 +154,7 @@ class TipoBombaController extends Controller
      * @param  \App\TipoBomba  $tipoBomba
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TipoBomba $tipoBomba)
+    public function destroy(Request $request, TipoBomba $tipoBomba)
     {
         if (Auth::user()->canAlterarTipoBomba()) {
             try {
@@ -159,7 +164,7 @@ class TipoBombaController extends Controller
                         'name' => $tipoBomba->tipo_bomba
                     ]));
                     
-                    return redirect()->action('TipoBombaController@index');
+                    return redirect()->action('TipoBombaController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -172,7 +177,7 @@ class TipoBombaController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('TipoBombaController@index');
+                return redirect()->action('TipoBombaController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

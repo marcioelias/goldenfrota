@@ -13,12 +13,16 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\MovimentacaoProdutoController;
+use App\Traits\SearchTrait;
 
 class SaidaEstoqueController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'nome_cliente' => 'Cliente',
+        'saida_estoques.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'nome_cliente' => ['label' => 'Cliente', 'type' => 'string', 'searchParam' => true],
         'data_saida' => [
             'label' => 'Data',
             'type' => 'datetime'
@@ -28,7 +32,7 @@ class SaidaEstoqueController extends Controller
             'type' => 'decimal',
             'decimais' => 3
         ],
-        'name' => 'Usuário'
+        'name' => ['label' => 'Usuário', 'type' => 'string', 'searchParam' => true]
     ];
 
     /**
@@ -40,13 +44,12 @@ class SaidaEstoqueController extends Controller
     {
         if (Auth::user()->canListarSaidaEstoque()) {
             if ($request->searchField) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $saidas = DB::table('saida_estoques')
                                     ->select('saida_estoques.*', 'clientes.nome_razao as nome_cliente', 'users.name')
                                     ->leftJoin('clientes', 'clientes.id', 'saida_estoques.cliente_id')
                                     ->leftJoin('users', 'users.id', 'saida_estoques.user_id')
-                                    ->where('saida_estoques.id', $request->searchField)
-                                    ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
-                                    ->orWhere('clientes.fantasia', 'like', '%'.$request->searchField.'%')
+                                    ->whereRaw($whereRaw)
                                     ->orderBy('id', 'desc')
                                     ->paginate();
             } else {
@@ -127,7 +130,7 @@ class SaidaEstoqueController extends Controller
                         'name' => $saidaEstoque->id
                     ]));
 
-                    return redirect()->action('SaidaEstoqueController@index');
+                    return redirect()->action('SaidaEstoqueController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('error', __('messages.create_error_f', [
                         'model' => 'saida_estoque',
@@ -170,7 +173,7 @@ class SaidaEstoqueController extends Controller
      * @param  \App\SaidaEstoque  $saidaEstoque
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaidaEstoque $saidaEstoque)
+    public function destroy(Request $request, SaidaEstoque $saidaEstoque)
     {
         if (Auth::user()->canExcluirSaidaEstoque()) {
             try {
@@ -180,7 +183,7 @@ class SaidaEstoqueController extends Controller
                         'model' => __('models.saida_estoque'),
                         'name' => $saidaEstoque->id 
                     ]));
-                    return redirect()->action('SaidaEstoqueController@index');
+                    return redirect()->action('SaidaEstoqueController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -193,7 +196,7 @@ class SaidaEstoqueController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('SaidaEstoqueController@index');
+                return redirect()->action('SaidaEstoqueController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

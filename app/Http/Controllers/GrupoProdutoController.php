@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class GrupoProdutoController extends Controller
 {
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
-        'grupo_produto' => 'Grupo Produto',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'grupo_produto' => ['label' => 'Grupo Produto', 'type' => 'string', 'searchParam' => true],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
 
@@ -28,8 +31,8 @@ class GrupoProdutoController extends Controller
     {
         if (Auth::user()->canListarGrupoProduto()) {
             if (isset($request->searchField)) {
-                $grupoProdutos = GrupoProduto::where('grupo_produto', 'like', '%'.$request->searchField.'%')
-                                                ->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $grupoProdutos = GrupoProduto::where($whereRaw)->paginate();
             } else {
                 $grupoProdutos = GrupoProduto::paginate();
             }
@@ -83,7 +86,7 @@ class GrupoProdutoController extends Controller
                         'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
                     ]));
-                    return redirect()->action('GrupoProdutoController@index');
+                    return redirect()->action('GrupoProdutoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -141,7 +144,7 @@ class GrupoProdutoController extends Controller
                         'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
                     ]));
-                    return redirect()->action('GrupoProdutoController@index');
+                    return redirect()->action('GrupoProdutoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
@@ -161,7 +164,7 @@ class GrupoProdutoController extends Controller
      * @param  \App\GrupoProduto  $grupoProduto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(GrupoProduto $grupoProduto)
+    public function destroy(Request $request, GrupoProduto $grupoProduto)
     {
         if (Auth::user()->canExcluirGrupoProduto()) {
             try {
@@ -173,7 +176,7 @@ class GrupoProdutoController extends Controller
                         'model' => __('models.grupo_produto'),
                         'name' => $grupoProduto->grupo_produto
                     ]));
-                    return redirect()->action('GrupoProdutoController@index');
+                    return redirect()->action('GrupoProdutoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -186,7 +189,7 @@ class GrupoProdutoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('GrupoProdutoController@index');
+                return redirect()->action('GrupoProdutoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

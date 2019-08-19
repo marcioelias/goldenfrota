@@ -19,14 +19,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\UtilizadoProdutoControleVencimento;
 use App\Http\Controllers\MovimentacaoProdutoController;
+use App\Traits\SearchTrait;
 
 class OrdemServicoController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'nome_razao' => 'Cliente',
-        'placa' => 'Veículo',
-        'name' => 'Usuário',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'nome_razao' => ['label' => 'Cliente', 'type' => 'string', 'searchParam' => true],
+        'placa' => ['label' => 'Veículo', 'type' => 'string', 'searchParam' => true],
+        'name' => ['label' => 'Usuário', 'type' => 'string', 'searchParam' => true],
         'created_at' => ['label' => 'Data', 'type' => 'datetime'],
         'os_status' => 'Status'
     ];
@@ -39,15 +43,14 @@ class OrdemServicoController extends Controller
     {
         if (Auth::user()->canListarOrdemServico()) {
             if ($request->searchField) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $ordemServicos = DB::table('ordem_servicos')
                                 ->select('ordem_servicos.*', 'clientes.nome_razao', 'veiculos.placa', 'users.name', 'ordem_servico_status.os_status')
                                 ->leftJoin('veiculos', 'veiculos.id', 'ordem_servicos.veiculo_id')
                                 ->leftJoin('clientes', 'clientes.id', 'veiculos.cliente_id')
                                 ->leftJoin('users', 'users.id', 'ordem_servicos.user_id')
                                 ->leftJoin('ordem_servico_status', 'ordem_servico_status.id', 'ordem_servico_status_id')
-                                ->where('ordem_servicos.id', $request->searchField)
-                                ->orWhere('clientes.nome_razao', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('veiculos.placa', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->orderBy('id', 'desc')
                                 ->paginate();
             } else {
@@ -165,7 +168,7 @@ class OrdemServicoController extends Controller
                     'name' => 'Ordem de Serviço'
                 ]));
 
-                return redirect()->action('OrdemServicoController@index');
+                return redirect()->action('OrdemServicoController@index', $request->query->all() ?? []);
                 
             } catch (\Exception $e) {
                 DB::rollback();
@@ -293,7 +296,7 @@ class OrdemServicoController extends Controller
                         'name' => $ordemServico->id
                     ]));
     
-                    return redirect()->action('OrdemServicoController@index');
+                    return redirect()->action('OrdemServicoController@index', $request->query->all() ?? []);
                 } else {
                     DB::rollback();
                     
@@ -323,7 +326,7 @@ class OrdemServicoController extends Controller
      * @param  \App\OrdemServico  $ordemServico
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OrdemServico $ordemServico)
+    public function destroy(Request $request, OrdemServico $ordemServico)
     {
         if (Auth::user()->canExcluirOrdemServico()) {   
             try {
@@ -332,7 +335,7 @@ class OrdemServicoController extends Controller
                         'model' => __('models.ordem_servico'),
                         'name' => $ordemServico->id
                     ]));
-                    return redirect()->action('OrdemServicoController@index');
+                    return redirect()->action('OrdemServicoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -345,7 +348,7 @@ class OrdemServicoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('OrdemServicoController@index');        
+                return redirect()->action('OrdemServicoController@index', $request->query->all() ?? []);        
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

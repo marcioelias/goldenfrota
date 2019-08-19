@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\OrdemServicoStatus;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class OrdemServicoStatusController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'os_status' => 'Status',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'os_status' => ['label' => 'Status', 'type' => 'string', 'searchParam' => true],
         'em_aberto' => ['label' => 'Em aberto', 'type' => 'bool']
     ];
 
@@ -24,7 +28,8 @@ class OrdemServicoStatusController extends Controller
     {
         if (Auth::user()->canListarOrdemServicoStatus()) {
             if ($request->searchField) {
-                $ordemServicoStatus = OrdemServicoStatus::where('os_status', 'like', '%'.$request->searchField.'%')
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $ordemServicoStatus = OrdemServicoStatus::whereRaw($whereRaw)
                                 ->orderBy('id', 'asc')
                                 ->paginate();
             } else {
@@ -79,7 +84,7 @@ class OrdemServicoStatusController extends Controller
                     'name' => $ordemServicoStatus->os_status
                 ]));
 
-                return redirect()->action('OrdemServicoStatusController@index');
+                return redirect()->action('OrdemServicoStatusController@index', $request->query->all() ?? []);
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
@@ -132,7 +137,7 @@ class OrdemServicoStatusController extends Controller
                     'name' => $ordemServicoStatus->os_status
                 ]));
 
-                return redirect()->action('OrdemServicoStatusController@index');
+                return redirect()->action('OrdemServicoStatusController@index', $request->query->all() ?? []);
             } catch (\Exception $e) {
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
@@ -151,7 +156,7 @@ class OrdemServicoStatusController extends Controller
      * @param  \App\OrdemServicoStatus  $ordemServicoStatus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OrdemServicoStatus $ordemServicoStatus)
+    public function destroy(Request $request, OrdemServicoStatus $ordemServicoStatus)
     {
         if (Auth::user()->canExcluirOrdemServicoStatus()) {   
             try {
@@ -160,7 +165,7 @@ class OrdemServicoStatusController extends Controller
                         'model' => __('models.ordem_servico_status'),
                         'name' => $ordemServicoStatus->os_status
                     ]));
-                    return redirect()->action('OrdemServicoStatusController@index');
+                    return redirect()->action('OrdemServicoStatusController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -173,7 +178,7 @@ class OrdemServicoStatusController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('OrdemServicoStatusController@index');        
+                return redirect()->action('OrdemServicoStatusController@index', $request->query->all() ?? []);        
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

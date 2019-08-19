@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\SearchTrait;
 use App\Unidade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,9 +10,12 @@ use Illuminate\Support\Facades\Session;
 
 class UnidadeController extends Controller
 {
+
+    use SearchTrait;
+
     public $fields = array(
-        'id' => 'ID',
-        'unidade' => 'Unidade',
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'unidade' => ['label' => 'Unidade', 'type' => 'string', 'searchParam' => true],
         'permite_fracionamento' => ['label' => 'Permite Fracionamento', 'type' => 'bool'],
         'ativo' => ['label' => 'Ativo', 'type' => 'bool']
     );
@@ -26,7 +30,8 @@ class UnidadeController extends Controller
     {
         if (Auth::user()->canListarUnidade()) {
             if (isset($request->searchField)) {
-                $unidades = Unidade::where('unidade', 'like', '%'.$request->searchField.'%')
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $unidades = Unidade::whereRaw($whereRaw)
                                     ->paginate();
             } else {
                 $unidades = Unidade::paginate();
@@ -76,12 +81,12 @@ class UnidadeController extends Controller
                         'name' => $unidade->unidade
                     ]));
 
-                    return redirect()->action('UnidadeController@index');
+                    return redirect()->action('UnidadeController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('success', __('messages.delete_success', [
-                    'model' => __('models.abastecimento'),
-                    'name' => $abastecimento->id
+                    'model' => __('models.unidade'),
+                    'name' => $unidade->id
                 ]));
                 return redirect()->back();
             }
@@ -133,12 +138,12 @@ class UnidadeController extends Controller
                         'name' => $unidade->unidade
                     ]));
 
-                    return redirect()->action('UnidadeController@index');
+                    return redirect()->action('UnidadeController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 Session::flash('success', __('messages.delete_success', [
-                    'model' => __('models.abastecimento'),
-                    'name' => $abastecimento->id
+                    'model' => __('models.unidade'),
+                    'name' => $unidade->id
                 ]));
                 return redirect()->back();
             }
@@ -154,7 +159,7 @@ class UnidadeController extends Controller
      * @param  \App\Unidade  $unidade
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Unidade $unidade)
+    public function destroy(Request $request, Unidade $unidade)
     {
         if (Auth::user()->canAlterarUnidade()) {
             try {
@@ -164,7 +169,7 @@ class UnidadeController extends Controller
                         'name' => $unidade->unidade
                     ]));
                     
-                    return redirect()->action('UnidadeController@index');
+                    return redirect()->action('UnidadeController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -177,7 +182,7 @@ class UnidadeController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('UnidadeController@index');
+                return redirect()->action('UnidadeController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

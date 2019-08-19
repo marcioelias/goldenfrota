@@ -14,15 +14,19 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Events\NovoRegistroAtualizacaoApp;
+use App\Traits\SearchTrait;
 
 class ProdutoController extends Controller
 {
+
+    use SearchTrait;
+
     protected $fields = array(
-        'id' => 'ID',
-        'produto_descricao' => 'Descrição',
-        'produto_desc_red' => 'Descrição Reduzida',
+        'produtos.id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'produto_descricao' => ['label' => 'Descrição', 'type' => 'string', 'searchParam' => true],
+        'produto_desc_red' => ['label' => 'Descrição Reduzida', 'type' => 'string', 'searchParam' => true],
         'unidade' => 'Unidade',
-        'grupo_produto' => 'Grupo',
+        'grupo_produto' => ['label' => 'Grupo', 'type' => 'string', 'searchParam' => true],
         'valor_custo' => [
             'label' => 'Preço de Custo',
             'type' => 'decimal',
@@ -45,13 +49,12 @@ class ProdutoController extends Controller
     {
         if (Auth::user()->canListarProduto()) {
             if ($request->searchField) {
+                $whereRaw = $this->getWhereField($request, $this->fields);
                 $produtos = DB::table('produtos')
                                 ->select('produtos.*', 'unidades.unidade', 'grupo_produtos.grupo_produto')
                                 ->join('unidades', 'unidades.id', 'produtos.unidade_id')
                                 ->join('grupo_produtos', 'grupo_produtos.id', 'produtos.grupo_produto_id')
-                                ->where('produtos.id', $request->searchField)
-                                ->orWhere('produto_descricao', 'like', '%'.$request->searchField.'%')
-                                ->orWhere('produto_desc_red', 'like', '%'.$request->searchField.'%')
+                                ->whereRaw($whereRaw)
                                 ->paginate();
             } else {
                 $produtos = DB::table('produtos')
@@ -120,7 +123,7 @@ class ProdutoController extends Controller
                         'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
                     ]));
-                    return redirect()->action('ProdutoController@index');
+                    return redirect()->action('ProdutoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 DB::rollback();
@@ -201,7 +204,7 @@ class ProdutoController extends Controller
                         'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
                     ]));
-                    return redirect()->action('ProdutoController@index');
+                    return redirect()->action('ProdutoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 DB::rollback();
@@ -222,7 +225,7 @@ class ProdutoController extends Controller
      * @param  \App\Produto  $produto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Produto $produto)
+    public function destroy(Request $request, Produto $produto)
     {
         if (Auth::user()->canExcluirProduto()) {
             try {
@@ -235,7 +238,7 @@ class ProdutoController extends Controller
                         'model' => __('models.produto'),
                         'name' => $produto->produto_descricao 
                     ]));
-                    return redirect()->action('ProdutoController@index');
+                    return redirect()->action('ProdutoController@index', $request->query->all() ?? []);
                 }
             } catch (\Exception $e) {
                 switch ($e->getCode()) {
@@ -248,7 +251,7 @@ class ProdutoController extends Controller
                         ]));
                         break;
                 }
-                return redirect()->action('ProdutoController@index');
+                return redirect()->action('ProdutoController@index', $request->query->all() ?? []);
             }
         } else {
             Session::flash('error', __('messages.access_denied'));

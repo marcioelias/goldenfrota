@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\PosicaoPneu;
+use App\Traits\SearchTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class PosicaoPneuController extends Controller
+class PosicaoPneuController extends Controller 
 {
+
+    use SearchTrait;
+
     public $fields = [
-        'id' => 'ID',
-        'posicao_pneu' => 'Posição Pneu'
+        'id' => ['label' => 'ID', 'type' => 'int', 'searchParam' => true],
+        'posicao_pneu' => ['label' => 'Posição Pneu', 'type' => 'string', 'searchParam' => true]
     ];
 
     /**
@@ -23,7 +27,8 @@ class PosicaoPneuController extends Controller
     {
         if (Auth::user()->canListarPosicaoPneu()) {
             if ($request->searchField) {
-                $posicoes = PosicaoPneu::where('posicao_pneu', 'like', '%'.$request->searchField.'%')->paginate();
+                $whereRaw = $this->getWhereField($request, $this->fields);
+                $posicoes = PosicaoPneu::whereRaw($whereRaw)->paginate();
             } else {
                 $posicoes = PosicaoPneu::paginate();
             }
@@ -75,7 +80,7 @@ class PosicaoPneuController extends Controller
                         'name' => $request->posicao_pneu
                     ]));
 
-                    return redirect()->action('PosicaoPneuController@index');
+                    return redirect()->action('PosicaoPneuController@index', $request->query->all() ?? []);
                 } else {
                     Session::flash('error', __('messages.create_error_f', [
                         'model' => 'posicao_pneu',
