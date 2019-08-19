@@ -212,9 +212,9 @@ class VeiculoController extends Controller
             $veiculo->ano = $request->ano;
             $veiculo->renavam = $request->renavam;
             $veiculo->chassi = $request->chassi;
-            $veiculo->hodometro = $request->hodometro;
+            //$veiculo->hodometro = $request->hodometro;
             $veiculo->media_minima = $request->media_minima;
-            $veiculo->ativo = $request->ativo;
+            $veiculo->ativo = (bool)$request->ativo;
 
 
             if ($veiculo->save()) {

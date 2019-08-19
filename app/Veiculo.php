@@ -13,7 +13,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Veiculo extends Model
 {
-    public $fillable = ['placa', 'tag', 'grupo_veiculo_id', 'cliente_id', 'departamento_id', 'modelo_id', 'ano', 'renavam', 'chassi', 'hodometro', 'media_minima', 'ativo'];
+    public $fillable = [
+        'placa', 
+        'tag', 
+        'grupo_veiculo_id', 
+        'cliente_id', 
+        'departamento_id', 
+        'modelo_id', 
+        'ano', 
+        'renavam', 
+        'chassi', 
+        //'hodometro', 
+        'media_minima', 
+        'ativo'
+    ];
 
     public function abastecimentos() {
         return $this->hasMany(Abastecimento::class)->orderBy('data_hora_abastecimento', 'asc');

@@ -21,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\NovoRegistroAtualizacaoApp' => [
             'App\Listeners\ExportaDadosApp'
+        ],
+        'App\Events\AlteracaoKmVeiculo' => [
+            'App\Listeners\AtualizarKmveiculo'
         ]
     ];
 

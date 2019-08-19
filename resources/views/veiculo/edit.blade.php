@@ -40,13 +40,23 @@
                             'inputSize' => 4,
                             'indexSelected' => $veiculo->departamento_id
                         ],
-                        [
+                        /* [
                             'type' => 'select',
                             'field' => 'ativo',
                             'label' => 'Ativo',
                             'inputSize' => 1,
                             'indexSelected' => $veiculo->ativo,
                             'items' => ['Não', 'Sim'],
+                        ] */
+                        [
+                            'type' => 'checkbox',
+                            'field' => 'ativo',
+                            'label' => 'Ativo',
+                            'dataWidth' => 65,
+                            'inputSize' => 1,
+                            'dataSize' => 'default',
+                            //'disabled' => true,
+                            'inputValue' => $veiculo->ativo
                         ]
                     ]
                 ])
@@ -141,6 +151,7 @@
                             'type' => 'number',
                             'field' => 'hodometro',
                             'label' => 'Km',
+                            'readOnly' => true,
                             'inputSize' => 3,
                             'inputValue' => $veiculo->hodometro
                         ],
@@ -187,7 +198,7 @@
                 $.each(data, function (i, item) {
                     $('#departamento_id').append($('<option>', { 
                         value: item.id,
-                        text : item.departamento 
+                        text : item.id + ' - ' + item.departamento 
                     }));
                 });
                 
@@ -226,7 +237,7 @@
                 $.each(data, function (i, item) {
                     $('#modelo_veiculo_id').append($('<option>', { 
                         value: item.id,
-                        text : item.modelo_veiculo 
+                        text : item.id + ' - ' + item.modelo_veiculo 
                     }));
                 });
 

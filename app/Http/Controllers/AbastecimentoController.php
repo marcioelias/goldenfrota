@@ -13,7 +13,7 @@ use App\Abastecimento;
 use App\TanqueMovimentacao;
 use Illuminate\Http\Request;
 use App\Events\NovoAbastecimento;
-use Barryvdh\DomPDF\Facade as PDF;
+use App\Events\AlteracaoKmVeiculo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\BicoController;
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Controllers\AfericaoController;
 use App\Http\Controllers\MovimentacaoCombustivelController;
 use App\Traits\SearchTrait;
 
@@ -154,6 +153,8 @@ class AbastecimentoController extends Controller
             try {
                 DB::beginTransaction();
 
+                $veiculo = Veiculo::find($request->veiculo_id);
+
                 $abastecimento = new Abastecimento;
                 $abastecimento->data_hora_abastecimento = \DateTime::createFromFormat('d/m/Y H:i:s', $request->data_hora_abastecimento)->format('Y-m-d H:i:s');
                 $abastecimento->veiculo_id = $request->veiculo_id;
@@ -167,13 +168,18 @@ class AbastecimentoController extends Controller
                 $abastecimento->encerrante_final = $request->encerrante_final;
                 /* Calcula a média do veículo, caso seja informado um veículo */
                 if ($request->veiculo_id) {
-                    $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
+                    $abastecimento->media_veiculo = $this->obterMediaVeiculo($veiculo, $abastecimento);
                 } else {
                     $abastecimento->media_veiculo = 0;
                 }
                 $abastecimento->eh_afericao = (bool)$request->eh_afericao;
                 
                 if ($abastecimento->save()) {
+
+                    if (!$abastecimento->eh_afericao) {
+                        //se não for aferição, atualiza KM do Veículo
+                        event(new AlteracaoKmVeiculo($veiculo, $abastecimento->km_veiculo));
+                    }
 
                     if ($request->bico_id) {
                         /* Se for aferição, faz a movimentação de saída e entrada por aferição */
@@ -186,7 +192,7 @@ class AbastecimentoController extends Controller
                             MovimentacaoCombustivelController::cadastroAfericao($afericao);
                         } else {
                             /* Se informado o bico, movimenta o estoque do tanque */
-                            MovimentacaoCombustivelController::saidaAbastecimento($abastecimento);
+                            MovimentacaoCombustivelController::saidaAbastecimento($abastecimento);                            
                         }
                         
                         if (!BicoController::atualizarEncerranteBico($request->bico_id, $request->encerrante_final)) {
