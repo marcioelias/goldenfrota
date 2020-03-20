@@ -293,6 +293,7 @@ class IntegracaoAutomacaoController extends Controller
 
                                 $dataAbastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5]);
 
+                                Log::debug($dataInicio);
                                 if ($dataAbastecimento <= $dataInicio) {
                                     continue;
                                 } 
