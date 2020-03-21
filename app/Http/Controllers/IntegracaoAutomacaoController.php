@@ -20,6 +20,10 @@ use App\Http\Controllers\AbastecimentoController;
 
 class IntegracaoAutomacaoController extends Controller
 {
+    private function disk() {
+        return (App::environment('local')) ? 'local' : 'ftp';
+    }
+
     /* 
         funcionarios.hir - Cadastro de Funcionarios
 
@@ -37,7 +41,7 @@ class IntegracaoAutomacaoController extends Controller
             $conteudo = '';
             $atendentes = Atendente::where('ativo', true)->get();
             foreach ($atendentes as $atendente) {
-                $conteudo = '<01;';
+                $conteudo .= '<01;';
                 $conteudo .= substr('                '.$atendente->senha_atendente, -16).';';
                 $conteudo .= substr('          '.$atendente->usuario_atendente, -10).';';
                 $conteudo .= '>';
@@ -48,7 +52,7 @@ class IntegracaoAutomacaoController extends Controller
             /* Config da conta de FTP */
             $this->configFTP();
 
-            Storage::disk('ftp')->put('funcionarios.hir', $conteudo);
+            Storage::disk($this->disk())->put('funcionarios.hir', $conteudo);
         } catch (\Exception $e) {
             Session::flash('error', __('messages.exception', [
                 'exception' => $e->getMessage()
@@ -87,7 +91,7 @@ class IntegracaoAutomacaoController extends Controller
             /* Config da conta de FTP */
             $this->configFTP();
 
-            Storage::disk('ftp')->put('produtos.hir', $conteudo);
+            Storage::disk($this->disk())->put('produtos.hir', $conteudo);
         } catch (\Exception $e) {
             Session::flash('error', __('messages.exception', [
                 'exception' => $e->getMessage()
@@ -127,7 +131,7 @@ class IntegracaoAutomacaoController extends Controller
             /* Config da conta de FTP */
             $this->configFTP();
 
-            Storage::disk('ftp')->put('veiculos.hir', $conteudo);
+            Storage::disk($this->disk())->put('veiculos.hir', $conteudo);
         } catch(\Exception $e) {
             Session::flash('error', __('messages.exception', [
                 'exception' => $e->getMessage()
@@ -204,9 +208,9 @@ class IntegracaoAutomacaoController extends Controller
             $this->configFTP();
 
             $errosImportacao = false;
-            if (Storage::disk('ftp')->exists('abastecimentos.hir')) {
+            if (Storage::disk($this->disk())->exists('abastecimentos.hir')) {
                 try {
-                    $arquivo = Storage::disk('ftp')->get('abastecimentos.hir');
+                    $arquivo = Storage::disk($this->disk())->get('abastecimentos.hir');
                     $arquivo = $this->cryptAPI($arquivo);
                     
 
@@ -220,7 +224,7 @@ class IntegracaoAutomacaoController extends Controller
                             $registros[] = $linha;
                         }
                     }
-                    
+
                     $dataInicio = \DateTime::createFromFormat('Y-m-d H:i:s', 
                                         Abastecimento::whereNotNull('id_automacao')
                                                 ->orderBy('data_hora_abastecimento', 'desc')
@@ -278,7 +282,7 @@ class IntegracaoAutomacaoController extends Controller
                                     //    $abastecimento->horas_trabalhadas = $this->formataValorDecimal(trim($registro[15]), 1);
                                     //} 
                                     $abastecimento->media_veiculo = $abastecimentoController->obterMediaVeiculo($veiculo, $abastecimento) ?? 0;
-                                    Log::debug('Mesia_Veiculo='.$abastecimento->media_veiculo);
+                                    Log::debug('Media_Veiculo='.$abastecimento->media_veiculo);
                                 }
         
                                 if ($abastecimento->km_veiculo <= 0) {
@@ -293,7 +297,7 @@ class IntegracaoAutomacaoController extends Controller
 
                                 $dataAbastecimento = $this->formataDataHoraAbastecimento($registro[4].$registro[5]);
 
-                                Log::debug($dataInicio);
+                                //Log::debug($dataInicio);
                                 if ($dataAbastecimento <= $dataInicio) {
                                     continue;
                                 } 
@@ -360,7 +364,7 @@ class IntegracaoAutomacaoController extends Controller
             Log::info('Arquivo remoto de integração não removido por estar em ambiente de testes...');
             return;
         } else {
-            if (!Storage::disk('ftp')->delete('abastecimentos.hir')) {
+            if (!Storage::disk($this->disk())->delete('abastecimentos.hir')) {
                 Log::alert('Não foi possível apagar o arquivo abastecimentos.hir do servidor...', []);
             }   
         }

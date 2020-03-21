@@ -14,7 +14,7 @@ class AlterTableAbastecimentoCreateColumnMediaVeiculo extends Migration
     public function up()
     {
         Schema::table('abastecimentos', function (Blueprint $table) {
-            $table->decimal('media_veiculo', 15, 3)->after('km_veiculo');
+            $table->decimal('media_veiculo', 15, 3)->after('km_veiculo')->default(0);
         });
     }
 
