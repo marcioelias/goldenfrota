@@ -43,9 +43,11 @@ class IntegracaoAutomacaoController extends Controller
             foreach ($atendentes as $atendente) {
                 $conteudo .= '<01;';
                 $conteudo .= substr('                '.$atendente->senha_atendente, -16).';';
-                $conteudo .= substr('          '.$atendente->usuario_atendente, -10).';';
+                $conteudo .= substr('          '.$atendente->usuario_atendente, -10);
                 $conteudo .= '>';
             }
+
+            Log::debug($conteudo);
 
             $conteudo = $this->cryptAPI($conteudo);
 
@@ -82,7 +84,7 @@ class IntegracaoAutomacaoController extends Controller
             foreach ($produtos as $produto) {
                 $conteudo .= '<01;';
                 $conteudo .= substr('   '.$produto->id, -3).';';
-                $conteudo .= substr('          '.$produto->produto_desc_red, -10).';';
+                $conteudo .= substr('          '.$produto->produto_desc_red, -10);
                 $conteudo .= '>';
             }
 
