@@ -21,7 +21,7 @@
                             'required' => true,
                             'autofocus' => true,
                             'inputValue' => $atendente->nome_atendente,
-                            'inputSize' => 6
+                            'inputSize' => 11
                         ],
                         [
                             'type' => 'select',
@@ -30,31 +30,39 @@
                             'inputSize' => 1,
                             'indexSelected' => $atendente->ativo,
                             'items' => Array('Não', 'Sim'),
+                            'searchById' => false
                         ]
                     ]
                 ])
                 @endcomponent
-                @component('components.form-group', [
-                    'inputs' => [
-                        [
-                            'type' => 'text',
-                            'field' => 'usuario_atendente',
-                            'label' => 'Usuário',
-                            'required' => true,
-                            'inputValue' => $atendente->usuario_atendente,
-                            'inputSize' => 6
-                        ],
-                        [
-                            'type' => 'text',
-                            'field' => 'senha_atendente',
-                            'label' => 'Senha',
-                            'required' => true,
-                            'inputValue' => $atendente->senha_atendente,
-                            'inputSize' => 6
-                        ]
-                    ]
-                ])
-                @endcomponent
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Automação (Hiro)</strong>
+                    </div>
+                    <div class="card-body">
+                        @component('components.form-group', [
+                            'inputs' => [
+                                [
+                                    'type' => 'text',
+                                    'field' => 'usuario_atendente',
+                                    'label' => 'Usuário',
+                                    'required' => true,
+                                    'inputValue' => $atendente->usuario_atendente,
+                                    'inputSize' => 6
+                                ],
+                                [
+                                    'type' => 'text',
+                                    'field' => 'senha_atendente',
+                                    'label' => 'Senha',
+                                    'required' => true,
+                                    'inputValue' => $atendente->senha_atendente,
+                                    'inputSize' => 6
+                                ]
+                            ]
+                        ])
+                        @endcomponent
+                    </div>
+                </div>
             @endsection
         @endcomponent
     </div>
