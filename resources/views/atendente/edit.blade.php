@@ -45,7 +45,7 @@
                                 [
                                     'type' => 'text',
                                     'field' => 'usuario_atendente',
-                                    'label' => 'Usuário',
+                                    'label' => 'Nome',
                                     'required' => true,
                                     'inputValue' => $atendente->usuario_atendente,
                                     'inputSize' => 6
@@ -53,7 +53,7 @@
                                 [
                                     'type' => 'text',
                                     'field' => 'senha_atendente',
-                                    'label' => 'Senha',
+                                    'label' => 'Identificação',
                                     'required' => true,
                                     'inputValue' => $atendente->senha_atendente,
                                     'inputSize' => 6
