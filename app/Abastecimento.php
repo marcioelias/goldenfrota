@@ -50,10 +50,10 @@ class Abastecimento extends Model
             return $query->where('veiculo_id', $veiculo_id)
                 ->where('data_hora_abastecimento', '<', $dataHoraAbastecimentoAtual)
                 ->orderBy('data_hora_abastecimento', 'desc')
-                ->first();    
+                ->firstOrFail();    
         } 
         return $query->where('veiculo_id', $veiculo_id)
             ->orderBy('data_hora_abastecimento', 'desc')
-            ->first();
+            ->firstOrFail();
     }
 }

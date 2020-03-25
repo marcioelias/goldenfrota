@@ -24,6 +24,7 @@ use App\Http\Controllers\BicoController;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\AfericaoController;
 use App\Http\Controllers\MovimentacaoCombustivelController;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use phpDocumentor\Reflection\Types\Boolean;
 
 class AbastecimentoController extends Controller
@@ -155,7 +156,7 @@ class AbastecimentoController extends Controller
                 $abastecimento->encerrante_final = $request->encerrante_final;
                 /* Calcula a média do veículo, caso seja informado um veículo */
                 if ($request->veiculo_id) {
-                    $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento);
+                    $abastecimento->media_veiculo = $this->obterMediaVeiculo(Veiculo::find($request->veiculo_id), $abastecimento, false);
                 } else {
                     $abastecimento->media_veiculo = 0;
                 }
@@ -178,7 +179,7 @@ class AbastecimentoController extends Controller
                         }
                         
                         if (!BicoController::atualizarEncerranteBico($request->bico_id, $request->encerrante_final)) {
-                            throw new Exception(__('messages.exception', [
+                            throw new \Exception(__('messages.exception', [
                                 'exception' => 'Não foi possível atualizar o encerrante do bico'
                             ]));
                         }
@@ -440,9 +441,9 @@ class AbastecimentoController extends Controller
                 Log::debug('AbastecimentoController::obterMediaVeiculo');
             }
             if ($ehUpdate) {
-                $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id, $abastecimentoAtual->data_hora_abastecimento);    
+                $ultimoAbastecimento =  $this->ObterUltimoAbastecimentoVeiculo($veiculo, $abastecimentoAtual);    
             } else {
-                $ultimoAbastecimento = Abastecimento::UltimoDoVeiculo($veiculo->id);
+                $ultimoAbastecimento = $this->ObterUltimoAbastecimentoVeiculo($veiculo);
             }
 
             if (App::environment('local')) {
@@ -756,7 +757,7 @@ class AbastecimentoController extends Controller
                     ->withParametro(Parametro::first());
     }
 
-    function ajustarMediaAbastecimentosFuturos(Abastecimento $abastecimento) {
+    public function ajustarMediaAbastecimentosFuturos(Abastecimento $abastecimento) {
         try {
             $abastFuturos = Abastecimento::where('veiculo_id', $abastecimento->veiculo_id)
                             ->where('data_hora_abastecimento', '>', $abastecimento->data_hora_abastecimento)
@@ -777,6 +778,23 @@ class AbastecimentoController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function ObterUltimoAbastecimentoVeiculo(Veiculo $veiculo, Abastecimento $abastecimentoAtual = null) {
+        if ($abastecimentoAtual) {
+            try {
+                return Abastecimento::UltimoDoVeiculo($veiculo->id, $abastecimentoAtual->data_hora_abastecimento);    
+            } catch (ModelNotFoundException $e) {
+                Log::error($e);
+                throw new \Exception('Não foi possível localizar o último abastecimento deste veículo para cálculo de média...');
+            }
+        }  else {
+            try {
+                return Abastecimento::UltimoDoVeiculo($veiculo->id);    
+            } catch (ModelNotFoundException $e) {
+                return null;
+            }  
         }
     }
 }
