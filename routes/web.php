@@ -102,7 +102,8 @@ Route::middleware(['auth:web'])->group(function() {
     Route::post('relatorios/estoque_minimo', 'MovimentacaoProdutoController@relatorioEstoqueMinimo')->name('relatorio_estoque_minimo');
     Route::get('relatorios/movimentacao_produto', 'MovimentacaoProdutoController@paramRelatorioMovimetacaoEstoque')->name('param_relatorio_movimentacao_estoque');
     Route::post('relatorios/movimentacao_produto', 'MovimentacaoProdutoController@relatorioMovimentacaoEstoque')->name('relatorio_movimentacao_estoque');
-
+    Route::get('relatorios/grupo_produto', 'GrupoProdutoController@listagemGrupoProduto')->name('relatorio_listagem_grupo_produto');
+    
     Route::get('setting', 'SettingController@index')->name('setting.index');
     Route::put('setting', 'SettingController@update')->name('setting.update');
     Route::get('afericao/{abastecimento}', 'AfericaoController@create')->name('afericao.create');
