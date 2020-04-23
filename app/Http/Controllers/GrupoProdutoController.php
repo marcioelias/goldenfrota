@@ -215,7 +215,7 @@ class GrupoProdutoController extends Controller
         ->select('grupo_produtos.*')
         ->orderBy('grupo_produto', 'desc')
         ->get();
-        return View('relatorios.grupo_produto.listagem_grupo_produto', ['grupoproduto' => $grupoproduto])->withTitulo('Listagem de Grupo de Produto')->withParametro(Parametro::first());
+        return View('relatorios.grupo_produto.listagem_grupo_produto')->withgrupoproduto($grupoproduto)->withTitulo('Listagem de Grupo de Produto')->withParametro(Parametro::first());
     }
 
 }
