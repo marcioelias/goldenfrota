@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Afericao;
 use App\Abastecimento;
+use App\Bico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\MovimentacaoCombustivelController;
+use App\Parametro;
 
 class AfericaoController extends Controller
 {
@@ -133,4 +135,70 @@ class AfericaoController extends Controller
             return redirect()->action('AbastecimentoController@index');
         }
     }
+
+    public function relatorioAfericaoParam() {
+       $bicos = Bico::where('ativo', true)->get();
+       return View('relatorios.afericoes.param_relatorio_afericoes')->withBicos($bicos);
+    }
+
+    public function relatorioAfericao(Request $request) {
+
+        $data_inicial = $request->data_inicial;
+        $data_final = $request->data_final;
+        $parametros = array();
+
+        if($data_inicial && $data_final) {
+            $whereData = 'abastecimentos.data_hora_abastecimento between \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_inicial.'00:00:00'), 'Y-m-d H:i:s').'\' and \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_final.'23:59:59'), 'Y-m-d H:i:s').'\'';
+            array_push($parametros, 'Período de '.$data_inicial.' até '.$data_final);
+        } elseif ($data_inicial) {
+            $whereData = 'abastecimentos.data_hora_abastecimento >= \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_inicial.'00:00:00'), 'Y-m-d H:i:s').'\'';
+            array_push($parametros, 'A partir de '.$data_inicial);
+        } elseif ($data_final) {
+            $whereData = 'abastecimentos.data_hora_abastecimento <= \''.date_format(date_create_from_format('d/m/Y H:i:s', $data_final.'23:59:59'), 'Y-m-d H:i:s').'\'';
+            array_push($parametros, 'Até '.$data_final);
+        } else {
+            $whereData = '1 = 1'; //busca qualquer coisa
+        }
+
+        if ($request->bico_id > 0) {
+            $whereBico = 'abastecimentos.bico_id = '.$request->bico_id;
+            array_push($parametros, 'Bico: '.Bico::find($request->bico_id)->num_bico);
+        } else {
+            $whereBico = '1 = 1';
+        }
+
+        $bicos = DB::table('afericoes')
+                        ->select('bicos.id', 'bicos.num_bico', 'tanques.descricao_tanque', 'combustiveis.descricao')
+                        ->join('abastecimentos','abastecimentos.id','afericoes.abastecimento_id')
+                        ->join('bicos', 'bicos.id', 'abastecimentos.bico_id')
+                        ->join('tanques', 'tanques.id', 'bicos.tanque_id')
+                        ->join('combustiveis', 'combustiveis.id', 'tanques.combustivel_id')
+                        ->whereRaw($whereData)
+                        ->whereRaw($whereBico)
+                        ->distinct()
+                        ->orderBy('bicos.num_bico', 'asc')
+                        ->get();
+
+        foreach ($bicos as $bico) {
+            $bico->abastecimentos = DB::table('afericoes')
+                                            ->select('abastecimentos.*', 'veiculos.placa','roles.display_name')
+                                            ->join('abastecimentos','abastecimentos.id','afericoes.abastecimento_id')
+                                            ->join('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
+                                            ->join('roles','roles.id','afericoes.user_id')
+                                            ->where('abastecimentos.bico_id', '=', $bico->id)
+                                            ->whereRaw($whereData)
+                                            /* ->orderBy('abastecimentos.id', 'asc') */
+                                            ->orderBy('abastecimentos.data_hora_abastecimento', 'asc')
+                                            ->get();
+        }
+
+        return View('relatorios.afericoes.relatorio_afericoes')
+                    ->withBicos($bicos)
+                    ->withParametros($parametros)
+                    ->withTitulo('Relatório de Aferições')
+                    ->withParametro(Parametro::first());
+    }
+
+    
+    
 }

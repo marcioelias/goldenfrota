@@ -412,9 +412,13 @@ class VeiculoController extends Controller
         $marcaVeiculos = MarcaVeiculo::where('ativo', true)
                             ->orderBy('marca_veiculo', 'asc')
                             ->get();
-        return View('relatorios.veiculos.media_modelo_veiculo_param', [
-            'marcaVeiculos' => $marcaVeiculos
-        ]);
+        $modelo        = ModeloVeiculo::where('ativo',true)
+                            ->orderBy('modelo_veiculo','asc')
+                            ->get();
+
+        return View('relatorios.veiculos.media_modelo_veiculo_param')->withmodelo($modelo)
+        ->withmarcaVeiculos($marcaVeiculos);
+        
     }
 
     public function relatorioMediaModelo(Request $request) {
@@ -449,23 +453,51 @@ class VeiculoController extends Controller
             $whereModelo = '1 = 1';
         }
 
-        //dd($request);
+        
+        $modeloVeiculos = DB::table('abastecimentos')
+                         ->select('modelo_veiculos.modelo_veiculo','modelo_veiculos.id')
+                         ->leftJoin('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
+                         ->leftJoin('modelo_veiculos', 'modelo_veiculos.id', 'veiculos.modelo_veiculo_id')
+                         ->whereRaw('abastecimentos.veiculo_id is not null')
+                         ->whereRaw($whereData)
+                         ->whereRaw($whereMarca)
+                         ->whereRaw($whereModelo)
+                         ->orderBy('modelo_veiculos.modelo_veiculo', 'asc')
+                         ->distinct()
+                         ->get();
 
-        $modeloVeiculos = Abastecimento::select('marca_veiculos.marca_veiculo', 'modelo_veiculos.id', 'modelo_veiculos.modelo_veiculo')
+                          // dd($modeloVeiculos);
+        foreach ($modeloVeiculos as $modeloVeiculo) {
+            $abastecimentos = DB::table('abastecimentos')
+                            ->select(
+                           'veiculos.placa',
+                           DB::raw('MIN(abastecimentos.km_veiculo) AS km_inicial'),
+                           DB::raw('MAX(abastecimentos.km_veiculo) AS km_final'),
+                           DB::raw('SUM(abastecimentos.volume_abastecimento) AS consumo'),
+                           DB::raw('AVG(abastecimentos.media_veiculo) AS media')
+                            )
                             ->join('veiculos', 'veiculos.id', 'abastecimentos.veiculo_id')
                             ->join('modelo_veiculos', 'modelo_veiculos.id', 'veiculos.modelo_veiculo_id')
                             ->join('marca_veiculos', 'marca_veiculos.id', 'modelo_veiculos.marca_veiculo_id')
                             ->whereRaw($whereData)
                             ->whereRaw($whereMarca)
-                            ->whereRaw($whereModelo)
-                            ->distinct()
-                            ->orderBy('marca_veiculo', 'asc')
-                            ->orderBy('modelo_veiculo', 'asc')
+                            ->where('modelo_veiculos.id', $modeloVeiculo->id)
+                            ->groupBy('veiculos.placa')
+                            ->orderBy('media','desc')
+                            //->orderBy('marca_veiculo', 'asc')
+                            //->orderBy('modelo_veiculo', 'asc')
+                            //->tosql();
                             ->get();
-
-        foreach ($modeloVeiculos as $modeloVeiculo) {
+                        
+                        //dd($abastecimentos);
+            $modeloVeiculo->abastecimentos =  $abastecimentos;             
             
         }
+           
+         //dd($modeloVeiculo);
+        return View('relatorios.veiculos.media_modelo_veiculo')->withmodeloVeiculos($modeloVeiculos)->withTitulo('Relatório de Abastecimentos - Modelo Veículo')->withParametros($parametros)->withParametro(Parametro::first());
+
+       
     }
 
     public function apiIndex() {

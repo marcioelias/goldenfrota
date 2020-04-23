@@ -227,6 +227,9 @@
                     @permission('acesso-relatorio-abastecimentos-bico')
                     <li><a class="dropdown-item" href="{{route('param_relatorio_abastecimentos_bico')}}">Relatório de Abastecimentos - Bico</a></li>
                     @endpermission
+                    @permission('acesso-relatorio-afericoes')
+                    <li><a class="dropdown-item" href="{{route('param_relatorio_afericoes')}}">Relatório de Aferições</a></li>
+                    @endpermission
                     @permission('acesso-relatorio-media-consumo-modelo')
                     <li><a class="dropdown-item" href="{{route('param_relatorio_media_modelo')}}">Relatório de Média de Consumo por Modelo</a></li>
                     @endpermission
