@@ -71,6 +71,7 @@ Route::middleware(['auth:web'])->group(function() {
     Route::get('/importacao', 'IntegracaoAutomacaoController@ImportarAbastecimentos')->name('importacao');
 
     Route::post('modelo_veiculo/json', 'ModeloVeiculoController@getModelosJson')->name('modelo_veiculos.json');
+    Route::post('modelo_veiculo/json', 'ModeloVeiculoController@getModeloMarcaJson')->name('modelo_veiculos_marca.json');
     Route::post('departamento/json', 'DepartamentoController@getDepartamentosJson')->name('departamentos.json');
     Route::post('veiculo/json', 'VeiculoController@getVeiculosJson')->name('veiculos.json');
     Route::post('bico/json', 'BicoController@getBicoJson')->name('bico.json');
@@ -102,6 +103,10 @@ Route::middleware(['auth:web'])->group(function() {
     Route::post('relatorios/estoque_minimo', 'MovimentacaoProdutoController@relatorioEstoqueMinimo')->name('relatorio_estoque_minimo');
     Route::get('relatorios/movimentacao_produto', 'MovimentacaoProdutoController@paramRelatorioMovimetacaoEstoque')->name('param_relatorio_movimentacao_estoque');
     Route::post('relatorios/movimentacao_produto', 'MovimentacaoProdutoController@relatorioMovimentacaoEstoque')->name('relatorio_movimentacao_estoque');
+    Route::get('relatorios/grupo_produto', 'GrupoProdutoController@listagemGrupoProduto')->name('relatorio_listagem_grupo_produto');
+    Route::get('relatorios/afericoes', 'AfericaoController@relatorioAfericaoParam')->name('param_relatorio_afericoes');
+    Route::post('relatorios/afericoes', 'AfericaoController@relatorioAfericao')->name('relatorio_afericoes');
+
 
     Route::get('setting', 'SettingController@index')->name('setting.index');
     Route::put('setting', 'SettingController@update')->name('setting.update');

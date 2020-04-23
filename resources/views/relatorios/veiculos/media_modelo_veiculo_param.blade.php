@@ -8,9 +8,10 @@
     <div class="card m-0 border-0">
         @component('components.form', [
             'title' => 'Relatório de Média de Consumo por Modelo', 
-            'routeUrl' => route('relatorio_media_modelo'), 
+            'routeUrl' => route('param_relatorio_media_modelo'), 
             'formTarget' => '_blank',
             'method' => 'POST',
+            'cancelRoute' => 'home',
             'formButtons' => [
                 ['type' => 'submit', 'label' => 'Gerar Relatório', 'icon' => 'chart-line'],
                 ['type' => 'button', 'label' => 'Cancelar', 'icon' => 'times']
@@ -77,13 +78,13 @@
                             'field' => 'modelo_veiculo_id',
                             'label' => 'Modelo',
                             'required' => true,
-                            'items' => null,
+                            'items' => $modelo,
                             'autofocus' => true,
                             'displayField' => 'modelo_veiculo',
                             'liveSearch' => true,
                             'keyField' => 'id',
                             'defaultNone' => true,
-                            'disabled' => true,
+                            'disabled' => false,
                             'inputSize' => 6
                         ]
                     ]
@@ -92,7 +93,7 @@
             @endsection
         @endcomponent
     </div>
-    <script>
+    @push('document-ready')
         $(document).ready(function() {
             var buscarModeloVeiculos = function() {
                 var marca = {};
@@ -102,7 +103,7 @@
 
                 console.log(marca);
                 $.ajax({
-                    url: '{{ route("modelo_veiculos.json") }}',
+                    url: '{{ route("modelo_veiculos_marca.json") }}',
                     type: 'POST',
                     data: marca,
                     dataType: 'JSON',
@@ -113,6 +114,11 @@
                             .removeAttr('disabled')
                             .find('option')
                             .remove();
+
+                            $('#modelo_veiculo_id').append($('<option>', { 
+                                value: -1,
+                                text : 'Nada Selecionado'
+                        }));
 
 
                         $.each(data, function (i, item) {
@@ -136,5 +142,5 @@
                 buscarModeloVeiculos();
             }
         });
-    </script>
+    @endpush
 @endsection

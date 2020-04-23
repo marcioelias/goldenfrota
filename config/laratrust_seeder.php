@@ -53,7 +53,9 @@ return [
             'relatorio_estoque_minimo' => 'a',
             'relatorio-movimentacao-estoque' => 'a',
             'importar_abastecimentos' => 'a',
-            'exportar_exportar_dados_cadastrais' => 'a'
+            'exportar_exportar_dados_cadastrais' => 'a',
+            'relatorio_listagem_grupo_produto' => 'a',
+            'relatorio_afericoes' => 'a'
         ],
         'administrador' => [
             'user' => 'c,r,u,d',

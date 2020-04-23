@@ -215,6 +215,15 @@ class ModeloVeiculoController extends Controller
         return response()->json($modeloVeiculos);
     }
 
+    public function getModeloMarcaJson(Request $request) {
+        $modeloVeiculos = ModeloVeiculo::where([
+                        ['marca_veiculo_id', '=', $request->id],
+                        ['ativo', '=', 1]
+                    ])->get();
+
+        return response()->json($modeloVeiculos);
+    }
+
     public function apiModeloVeiculos() {
         return response()->json(ModeloVeiculo::ativo()->get());
     }
@@ -222,4 +231,5 @@ class ModeloVeiculoController extends Controller
     public function apiModeloVeiculo($id) {
         return response()->json(ModeloVeiculo::ativo()->where('id', $id)->get());
     }
+
 }

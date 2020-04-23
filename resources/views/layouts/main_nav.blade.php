@@ -212,6 +212,9 @@
                     @permission('acesso-listagem-clientes')
                     <li><a class="dropdown-item" href="{{route('relatorio_listagem_clientes')}}" target="_blank">Listagem de Clientes</a></li>
                     @endpermission
+                    @permission('acesso-relatorio-listagem-grupo-produto')
+                    <li><a class="dropdown-item" href="{{route('relatorio_listagem_grupo_produto')}}">Listagem de Grupo de Produtos</a></li>
+                    @endpermission
                     @permission('acesso-listagem-veiculos')
                     <li><a class="dropdown-item" href="{{route('relatorio_listagem_veiculos')}}">Listagem de Veículos</a></li>
                     @endpermission
@@ -223,6 +226,9 @@
                     @endpermission
                     @permission('acesso-relatorio-abastecimentos-bico')
                     <li><a class="dropdown-item" href="{{route('param_relatorio_abastecimentos_bico')}}">Relatório de Abastecimentos - Bico</a></li>
+                    @endpermission
+                    @permission('acesso-relatorio-afericoes')
+                    <li><a class="dropdown-item" href="{{route('param_relatorio_afericoes')}}">Relatório de Aferições</a></li>
                     @endpermission
                     @permission('acesso-relatorio-media-consumo-modelo')
                     <li><a class="dropdown-item" href="{{route('param_relatorio_media_modelo')}}">Relatório de Média de Consumo por Modelo</a></li>

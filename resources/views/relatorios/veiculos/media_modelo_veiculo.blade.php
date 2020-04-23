@@ -7,30 +7,25 @@
     $departamentoVolume = 0;
     $departamentoDistancia = 0;
     $distanciaTotal = 0;
+    $modeloVolumeTotal = 0;
     $volumeTotal = 0;
+    
 @endphp
 {{--  {{dd($clientes)}}  --}}
-@foreach($clientes as $cliente) 
-@php
-    
-    $clienteVolume = 0;
-    $clienteDistancia = 0;
-@endphp
+
 <div class="panel-sm">
     <div class="panel-sm">
-        <div class="card-header report-subtitle-1">
-            <h4> Cliente: {{$cliente->nome_razao}} </h4>
-        </div>    
+  
         <div class="card-body">
-            @foreach($cliente->departamentos as $departamento)
+            @foreach($modeloVeiculos as $modeloVeiculo)
             @php
                 $departamentoVolume = 0;
                 $departamentoDistancia = 0; 
-                    
+                //dd($modeloVeiculos);    
             @endphp
             <div class="panel-sm">
                 <div class="card-header report-subtitle-1">
-                    <h5>Departamento: {{$departamento->departamento}}</h5>
+                    <h5>Modelo: {{$modeloVeiculo->modelo_veiculo}}</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-sm report-table">
@@ -39,34 +34,35 @@
                             <td align="right">KM Inicial</td>
                             <td align="right">KM Final</td>
                             <td align="right">Distância Percorrida</td>
-                            <td align="right">Consumo Médio/KM</td>
-                            <td align="right">Consumo Total</td>
+                            <td align="right">Consumo Lts</td>
+                            <td align="right">Média KM/L</td>
                         </thead>
                         <tbody>
-                            @foreach($departamento->abastecimentos as $abastecimento)
+                            @foreach($modeloVeiculo->abastecimentos as $abastecimento)
                             @php
-                                $clienteVolume += $abastecimento->consumo;
-                                $clienteDistancia += $abastecimento->km_final - $abastecimento->km_inicial;
-                                $departamentoVolume += $abastecimento->consumo; 
-                                $departamentoDistancia += $abastecimento->km_final - $abastecimento->km_inicial;  
-                                $distanciaTotal += $abastecimento->km_final - $abastecimento->km_inicial;  
-                                $volumeTotal += $abastecimento->consumo;
+                               // $clienteVolume += $abastecimento->consumo;
+                               // $clienteDistancia += $abastecimento->km_final - $abastecimento->km_inicial;
+                               // $departamentoVolume += $abastecimento->consumo; 
+                               $modeloVolumeTotal += $abastecimento->consumo;  
+                               // $distanciaTotal += $abastecimento->km_final - $abastecimento->km_inicial;  
+                               // $volumeTotal += $abastecimento->consumo;
                             @endphp
                             <tr> 
                                 <td> {{$abastecimento->placa}} </td>
+                                
                                 <td align="right"> {{number_format($abastecimento->km_inicial, 1, ',', '.')}} </td>
                                 <td align="right"> {{number_format($abastecimento->km_final, 1, ',', '.')}} </td>
                                 <td align="right"> {{number_format($abastecimento->km_final - $abastecimento->km_inicial, 1, ',', '.')}} </td>
-                                <td align="right"> {{number_format($abastecimento->media, 2, ',', '.')}} </td>
                                 <td align="right"> {{number_format($abastecimento->consumo, 2, ',', '.')}} </td>
-                            </tr>
+                                <td align="right"> {{number_format($abastecimento->media, 2, ',', '.')}} </td>
+                               
                             @endforeach
                             <tr class="success"> 
-                                <td colspan=2>Total do Departamento</td>
+                                <td colspan=2>Total do Modelo</td>
                                 <td align="right"></td>
-                                <td align="right">{{number_format($departamentoDistancia, 1, ',', '.')}} </td>
+                                <td align="right">{{number_format($modeloVolumeTotal, 1, ',', '.')}} </td>
                                 <td align="right"> </td>
-                                <td align="right">{{number_format($departamentoVolume, 3, ',', '.')}}</td>
+                               
                             </tr>
                         </tbody>
                     </table>
@@ -76,7 +72,6 @@
         </div>
     </div>
 </div>
-@endforeach
 <table class="table table-sm report-table">
     <tbody>
         <tr class="default">

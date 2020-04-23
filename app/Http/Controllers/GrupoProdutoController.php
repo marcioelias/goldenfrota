@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Estoque;
 use App\GrupoProduto;
+use App\Parametro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -208,4 +209,13 @@ class GrupoProdutoController extends Controller
     public function apiGrupoProduto($id) {
         return response()->json(GrupoProduto::ativo()->where('id', $id)->get());
     }
+
+    public function listagemGrupoProduto() {
+        $grupoproduto = DB::table('grupo_produtos')
+        ->select('grupo_produtos.*')
+        ->orderBy('grupo_produto', 'desc')
+        ->get();
+        return View('relatorios.grupo_produto.listagem_grupo_produto')->withgrupoproduto($grupoproduto)->withTitulo('Listagem de Grupo de Produto')->withParametro(Parametro::first());
+    }
+
 }
